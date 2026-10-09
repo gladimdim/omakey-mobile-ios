@@ -276,18 +276,28 @@ final class AppModel {
     }
 
     /// The keyboard for [host] again, in the other orientation: portrait mode was picked or left.
+    /// The connect screen turns back upright first, and only then does the other keyboard come
+    /// up: presented while the phone is still turning, it would land sideways and half off screen.
     func reopenKeyboard(_ host: HostRecord, replacing keyboard: KeyboardViewController) {
         keyboard.onClose = nil
-        keyboard.dismiss(animated: false) { [weak self] in self?.open(host) }
+        keyboard.dismiss(animated: false) { [weak self] in
+            Self.lockOrientation(.allButUpsideDown, turnTo: .portrait) { self?.open(host) }
+        }
     }
 
-    /// Which way the screen may turn, and turn it now (iOS doesn't for a presented screen by itself).
-    static func lockOrientation(_ mask: UIInterfaceOrientationMask, turnTo: UIInterfaceOrientationMask) {
+    /// Which way the screen may turn, and turn it now (iOS doesn't for a presented screen by
+    /// itself). [then] runs once the screen faces one of [turnTo].
+    static func lockOrientation(_ mask: UIInterfaceOrientationMask, turnTo: UIInterfaceOrientationMask,
+                                then done: (@MainActor () -> Void)? = nil) {
         AppDelegate.orientations = mask
-        for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        for scene in scenes {
             for w in scene.windows { w.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations() }
             scene.requestGeometryUpdate(.iOS(interfaceOrientations: turnTo)) { _ in }
         }
+        guard let done else { return }
+        guard let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first else { return done() }
+        OrientationWait(scene: scene, target: turnTo, done: done)
     }
 
     /// Where to present from: the key window's frontmost view controller.
@@ -309,4 +319,56 @@ final class AppModel {
             if self?.toast == t { self?.toast = nil }
         }
     }
+}
+
+/// Waits for a window scene to face one of [target], then for its turn to
+/// settle, then runs [done] once; after a second it runs it anyway.
+@MainActor
+private final class OrientationWait {
+    private static var waiting: [OrientationWait] = []
+    private var observation: NSKeyValueObservation?
+    private var done: (@MainActor () -> Void)?
+
+    @discardableResult
+    init(scene: UIWindowScene, target: UIInterfaceOrientationMask, done: @escaping @MainActor () -> Void) {
+        self.done = done
+        if Self.faces(scene, target) {
+            finish(after: 0)
+            return
+        }
+        OrientationWait.waiting.append(self)
+        observation = scene.observe(\.effectiveGeometry) { [weak self] scene, _ in
+            let turned = MainActor.assumeIsolated { Self.faces(scene, target) }
+            // The geometry flips as the turn starts: give its animation time to land.
+            if turned { DispatchQueue.main.async { MainActor.assumeIsolated { self?.finish(after: Self.settle) } } }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in MainActor.assumeIsolated { self?.finish(after: 0) } }
+    }
+
+    private static func faces(_ scene: UIWindowScene, _ target: UIInterfaceOrientationMask) -> Bool {
+        let mask: UIInterfaceOrientationMask = switch scene.effectiveGeometry.interfaceOrientation {
+        case .portrait: .portrait
+        case .portraitUpsideDown: .portraitUpsideDown
+        case .landscapeLeft: .landscapeLeft
+        case .landscapeRight: .landscapeRight
+        default: []
+        }
+        return !mask.isEmpty && target.contains(mask)
+    }
+
+    private func finish(after delay: TimeInterval) {
+        observation?.invalidate()
+        observation = nil
+        guard let run = done else { return }
+        done = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            MainActor.assumeIsolated {
+                run()
+                OrientationWait.waiting.removeAll { $0 === self }
+            }
+        }
+    }
+
+    /// About a screen turn's animation.
+    private static let settle: TimeInterval = 0.45
 }

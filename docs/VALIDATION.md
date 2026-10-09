@@ -3,6 +3,16 @@
 What has been checked, where, and what still needs a device or a real
 desktop. Newest first.
 
+## 2026-10-09: portrait mode from the keyboard
+
+Reported: portrait mode showed no controls. Reproduced by picking portrait
+mode from the landscape keyboard's ⌨: the portrait keyboard was presented
+while the phone was still turning upright and landed sideways, half off
+screen, never connecting. Fixed by turning first and presenting after.
+`PortraitRoutesTour` covers the three ways in (from the keyboard, from a
+paired computer, with the phone held sideways), each until connected with
+the phone's keyboard up.
+
 ## 2026-10-09: M1–M10 in the simulator (Xcode 27.0, iOS 27 simulator, iPhone 17 Pro)
 
 **On the Mac (`swift test --package-path OmakeyKit`), 89 tests and one opt-in live test:**
@@ -22,8 +32,9 @@ desktop. Newest first.
 - `OMAKEY_LIVE=1`: Discovery found a real omakeyd (a Steam Deck) on the LAN
   with its host id and address.
 
-**In the simulator (`scripts/ui-test.sh`), one app test and ten tours, all
-passing, against the stand-in hosted by the test runner:**
+**In the simulator (`scripts/ui-test.sh`), one app test and ten tours (thirteen
+with the portrait routes added since), all passing, against the stand-in
+hosted by the test runner:**
 
 - Pairing by link: fingerprint, "came from another app", online, unlink;
   the loud warning for a pairing with another key.
