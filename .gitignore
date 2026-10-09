@@ -1,0 +1,21 @@
+.DS_Store
+
+# Xcode and SwiftPM
+build/
+DerivedData/
+.build/
+.build-*.log
+.swiftpm/
+xcuserdata/
+*.xcuserstate
+
+# Signing and App Store Connect: never commit
+*.ipa
+*.dSYM/
+*.mobileprovision
+*.p12
+*.p8
+.asc/
+
+# Local agent settings (machine-specific paths)
+.claude/
