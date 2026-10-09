@@ -53,7 +53,7 @@ struct SettingsView: View {
                         .monoFont(12).foregroundStyle(p.fgDim).padding(.top, 6)
 
                     SectionHeader(title: "KEYBOARD", palette: p)
-                    toggle("Haptic feedback", "Touchpad clicks, scrolling and keys feel like a MacBook trackpad.", $haptics)
+                    toggle("Haptic feedback", "Touchpad clicks, scrolling and keys feel like a MacBook trackpad, and the touchpad answers every touch and glide with a faint buzz.", $haptics)
                     toggle("Show typed text", "What you type runs along above the keyboard. Turn it off for passwords on a shared screen.", $typedText)
 
                     Text("Omakey \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")

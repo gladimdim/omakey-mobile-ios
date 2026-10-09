@@ -4,6 +4,10 @@ import UIKit
 /// click as a button goes down and a softer one as it comes back up, a
 /// deeper double click for a long press (a force click), and faint ticks
 /// while scrolling. Keys get the same down and up pair, a little lighter.
+///
+/// Beyond Android: the touchpad's surface answers a finger landing with
+/// a soft touch, and a finger gliding (moving the pointer or scrolling)
+/// with the faintest ticks, so it feels live under the finger.
 @MainActor
 final class Haptics {
     /// Off in Settings: nothing plays.
@@ -12,7 +16,10 @@ final class Haptics {
     private let rigid = UIImpactFeedbackGenerator(style: .rigid)
     private let soft = UIImpactFeedbackGenerator(style: .soft)
     private let heavy = UIImpactFeedbackGenerator(style: .heavy)
+    private let light = UIImpactFeedbackGenerator(style: .light)
     private let tick = UISelectionFeedbackGenerator()
+    /// When the last glide tick played, to keep a fast swipe from becoming a rumble.
+    private var lastGlide: CFTimeInterval = 0
 
     init() {
         prepare()
@@ -36,6 +43,17 @@ final class Haptics {
 
     /// A scroll strip passed a wheel notch.
     func notch() { play { tick.selectionChanged() } }
+
+    /// A finger landed on the touchpad: barely there.
+    func touch() { play { soft.impactOccurred(intensity: 0.45) } }
+
+    /// A finger glided a step on the touchpad, moving the pointer or scrolling: fainter still.
+    func glide() {
+        let now = CACurrentMediaTime()
+        guard now - lastGlide >= Haptics.glideGap else { return }
+        lastGlide = now
+        play { light.impactOccurred(intensity: 0.3) }
+    }
 
     func key(down: Bool) {
         play { down ? rigid.impactOccurred(intensity: 0.6) : soft.impactOccurred(intensity: 0.3) }
@@ -62,6 +80,10 @@ final class Haptics {
         rigid.prepare()
         soft.prepare()
         heavy.prepare()
+        light.prepare()
         tick.prepare()
     }
+
+    /// At most about 30 glide ticks a second.
+    private static let glideGap: CFTimeInterval = 0.033
 }

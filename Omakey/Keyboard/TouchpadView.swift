@@ -192,6 +192,8 @@ final class TouchpadView: UIView {
     private var maxFingers = 0
     /// Finger travel, for telling taps from moves.
     private var travelled: CGFloat = 0
+    /// Finger travel since the last glide tick, in points.
+    private var glided: CGFloat = 0
     private var moving = false
     private var longPressed = false
 
@@ -394,6 +396,7 @@ final class TouchpadView: UIView {
         }
         if let sc = scrollTouch.firstIndex(where: { $0.contains(p) }) {
             roles[id] = .scroll(sc)
+            haptics?.touch()
             scrollHeld[sc] += 1
             setNeedsDisplay(scrollers[sc].insetBy(dx: -2, dy: -2))
             return
@@ -450,12 +453,15 @@ final class TouchpadView: UIView {
                 dragMoved = false
                 sink?.button(Wire.btnLeft, down: true)
                 haptics?.down()
+            } else {
+                haptics?.touch()
             }
             gestureStart = t.timestamp
             startTouch = id
             startPoint = p
             maxFingers = 1
             travelled = 0
+            glided = 0
             moving = false
             longPressed = false
             let lp = DispatchWorkItem { [weak self] in self?.longPressFired() }
@@ -530,11 +536,24 @@ final class TouchpadView: UIView {
                 dragMoved = true
                 longPress?.cancel()
             }
-            if moving { s.motion(dx: Float(dx * scale) * motionScale * sensitivity, dy: Float(dy * scale) * motionScale * sensitivity) }
+            if moving {
+                s.motion(dx: Float(dx * scale) * motionScale * sensitivity, dy: Float(dy * scale) * motionScale * sensitivity)
+                glide(dx, dy)
+            }
         } else if padFingers >= 2 {
             // Content follows the fingers: fingers up scrolls down.
             s.scroll(v: Float(dy * scale) * scrollScale, h: Float(-dx * scale) * scrollScale)
+            glide(dx, dy)
         }
+    }
+
+    /// The faintest tick every few points the fingers glide, whatever the
+    /// pointer speed: a texture under the finger, quicker as it moves faster.
+    private func glide(_ dx: CGFloat, _ dy: CGFloat) {
+        glided += hypot(dx, dy)
+        guard glided >= TouchpadView.glideStep else { return }
+        glided = glided.truncatingRemainder(dividingBy: TouchpadView.glideStep)
+        haptics?.glide()
     }
 
     private func fingerUp(_ t: UITouch, _ event: UIEvent?) {
@@ -942,4 +961,6 @@ final class TouchpadView: UIView {
     static let minSens: Float = 0.3
     static let maxSens: Float = 3
     static let notch: Float = 120
+    /// Points of finger travel between glide ticks: about a wheel notch's worth of two-finger scroll.
+    static let glideStep: CGFloat = 16
 }
