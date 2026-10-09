@@ -31,38 +31,13 @@ final class DemoComputer {
 
     func isDemo(_ host: HostRecord) -> Bool { server?.host.hostId == host.hostId }
 
-    /// "Super", "A", "←": how a key reads.
+    /// What it shows for something other than a key (keys are `KeyEcho`'s).
     static func describe(_ e: StandInServer.Event) -> String? {
         switch e {
-        case .key(let code, let down):
-            guard down else { return nil }
-            return KeyNames.shared.label(code)
         case .pointer: return "pointer"
         case .clipboardSet(_, let paste): return paste ? "paste from phone" : "clipboard from phone"
         case .clipboardRead(let copy): return copy ? "copy to phone" : "clipboard to phone"
-        case .hello, .layout, .bye, .releasedAll: return nil
+        case .key, .hello, .layout, .bye, .releasedAll: return nil
         }
     }
-}
-
-/// Key labels by code, from keycodes.json: what a key says on a keyboard.
-@MainActor
-final class KeyNames {
-    static let shared = KeyNames()
-    private var labels: [Int: String] = [:]
-
-    private init() {
-        guard let root = try? JSONSerialization.jsonObject(with: Data(BundledSpec.keycodesJSON().utf8)) as? [String: Any],
-              let keys = root["keys"] as? [[String: Any]] else { return }
-        for k in keys {
-            guard let code = (k["code"] as? NSNumber)?.intValue, labels[code] == nil else { continue }
-            let name = k["name"] as? String ?? "code \(code)"
-            labels[code] = (k["label"] as? String).flatMap { $0.isEmpty ? nil : $0 } ?? name.replacingOccurrences(of: "KEY_", with: "")
-        }
-        labels[Wire.btnLeft] = "left click"
-        labels[Wire.btnRight] = "right click"
-        labels[Wire.btnMiddle] = "middle click"
-    }
-
-    func label(_ code: Int) -> String { labels[code] ?? "code \(code)" }
 }

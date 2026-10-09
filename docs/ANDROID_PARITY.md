@@ -100,6 +100,8 @@ the baseline.
 | Feature | iOS |
 |---|---|
 | Demo computer inside the app ("Try the demo"), for App Review and trying it without a desktop | ✅ M10 |
+| Demo popup: what the demo computer received, as typed ("k", "K", "Ctrl+C"), up while typing, gone after 1.5 s | ✅ |
+| Touchpad haptics beyond Android's clicks and notches: a soft touch when a finger lands, faint ticks as it glides | ✅ |
 | Phone name setting (iOS doesn't give apps the device's name) | ✅ M4, M9 |
 | Local Network help card when access is off | ✅ M4 |
 | Dynamic Type on the connect, layouts and settings screens | ✅ M10 |

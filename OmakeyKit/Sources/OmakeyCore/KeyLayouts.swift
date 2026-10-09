@@ -1,5 +1,5 @@
 /// One key stroke for a character: the key, and whether Shift is held.
-public struct KeyStroke: Equatable, Sendable {
+public struct KeyStroke: Hashable, Sendable {
     public let code: Int
     public let shift: Bool
 
@@ -74,13 +74,18 @@ public enum UsKeys {
 public struct KeyLayout: Sendable {
     public let xkb: String
     private let chars: [Character: KeyStroke]
+    private let byStroke: [KeyStroke: Character]
 
     init(xkb: String, chars: [Character: KeyStroke]) {
         self.xkb = xkb
         self.chars = chars
+        byStroke = Dictionary(chars.map { ($0.value, $0.key) }, uniquingKeysWith: { a, b in min(a, b) })
     }
 
     public func forChar(_ c: Character) -> KeyStroke? { chars[c] }
+
+    /// What the key types in this layout, with Shift or without; nil for none.
+    public func char(_ code: Int, shift: Bool) -> Character? { byStroke[KeyStroke(code, shift: shift)] }
 }
 
 public enum KeyLayouts {
@@ -111,6 +116,9 @@ public enum KeyLayouts {
         m["\t"] = KeyStroke(UsKeys.keyTab, shift: false)
         return KeyLayout(xkb: "ua", chars: m)
     }()
+
+    /// The layout by its xkb name, if the phone has it.
+    public static func named(_ xkb: String) -> KeyLayout? { [us, ua].first { $0.xkb == xkb } }
 
     /// The phone keyboard's language, first choice first: Ukrainian puts ua before us.
     public static func preferred(_ languageTag: String?) -> [KeyLayout] {

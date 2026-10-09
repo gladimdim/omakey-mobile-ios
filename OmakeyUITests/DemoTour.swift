@@ -18,10 +18,20 @@ final class DemoTour: XCTestCase {
         XCUIDevice.shared.orientation = .landscapeLeft
         defer { XCUIDevice.shared.orientation = .portrait }
 
-        app.keys["key.q"].firstMatch.tap()
+        // It comes up with what was typed, as typed: q, then Shift (latched) + q.
         let shown = app.staticTexts["keyboard.demo"]
-        XCTAssertTrue(eventually { shown.label.contains("Q") }, shown.label)
+        XCTAssertTrue(eventually(6) { !shown.exists }, "the greeting goes by itself")
+        app.keys["key.q"].firstMatch.tap()
+        XCTAssertTrue(eventually { shown.exists && shown.label == "PC received: q" }, shown.label)
+        app.buttons["Sticky keys"].tap()
+        app.keys["key.center-shift"].firstMatch.tap()
+        app.keys["key.q"].firstMatch.tap()
+        XCTAssertTrue(eventually { shown.label == "PC received: q Q" }, shown.label)
         attach("demo", app)
+        // And goes after a pause; the next key starts afresh.
+        XCTAssertTrue(eventually(4) { !shown.exists }, "still up: \(shown.label)")
+        app.keys["key.q"].firstMatch.tap()
+        XCTAssertTrue(eventually { shown.exists && shown.label == "PC received: q" }, shown.label)
 
         // Nothing was paired: the demo stays out of the computers list.
         app.buttons["keyboard.close"].tap()

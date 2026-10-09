@@ -50,9 +50,12 @@ final class KeyboardViewController: UIViewController {
     private let panel = UIView()
 
     private let toastLabel = PaddedLabel()
-    /// On the demo computer: what it received, as a computer screen would show it.
+    /// On the demo computer: what it received, as a computer screen would show
+    /// it, in a popup that comes up with the first key and goes after a pause.
     private let demoLabel = PaddedLabel()
     private var demoWords: [String] = []
+    private var demoEcho = KeyEcho()
+    private var demoHide: DispatchWorkItem?
     private var toastTask: Task<Void, Never>?
     private lazy var sink = SinkProxy(self)
     /// Copy and Paste, with the phone's clipboard when omakeyd has the computer's.
@@ -164,13 +167,16 @@ final class KeyboardViewController: UIViewController {
         if DemoComputer.shared.isDemo(host) {
             demoLabel.font = .mono(12, bold: true)
             demoLabel.textAlignment = .center
+            demoLabel.lineBreakMode = .byTruncatingHead
+            demoLabel.insets = UIEdgeInsets(top: 7, left: 14, bottom: 7, right: 14)
             demoLabel.layer.cornerRadius = 14
             demoLabel.layer.masksToBounds = true
             demoLabel.layer.borderWidth = 1
             demoLabel.isUserInteractionEnabled = false
             demoLabel.accessibilityIdentifier = "keyboard.demo"
-            demoLabel.text = "The demo computer shows what it gets here"
+            demoLabel.isHidden = true
             view.addSubview(demoLabel)
+            showDemo("The demo computer shows what it gets here", for: 3)
             DemoComputer.shared.onEvent = { [weak self] e in self?.demoReceived(e) }
         }
 
@@ -331,19 +337,61 @@ final class KeyboardViewController: UIViewController {
         if demoLabel.superview != nil {
             let fit = demoLabel.sizeThatFits(CGSize(width: safe.width * 0.8, height: 60))
             let w = min(fit.width, safe.width * 0.8)
-            // Over the touchpad's hint in portrait; over the keyboard's top row in landscape.
-            demoLabel.frame = CGRect(x: safe.midX - w / 2, y: stage.frame.minY + (portrait ? stage.bounds.height * 0.62 : 6), width: w, height: fit.height)
+            // Over the touchpad's hint in portrait; in landscape, under the status, clear of the keys.
+            let y = portrait ? stage.frame.minY + stage.bounds.height * 0.45 : header.frame.minY + 34
+            demoLabel.bounds.size = CGSize(width: w, height: fit.height)
+            demoLabel.center = CGPoint(x: safe.midX, y: y + fit.height / 2)
         }
     }
 
     /// The demo computer got something: show it, newest last.
     private func demoReceived(_ e: OmakeydStandIn.StandInServer.Event) {
-        guard let word = DemoComputer.describe(e) else { return }
-        if word == "pointer", demoWords.last == "pointer" { return }
+        let word: String?
+        switch e {
+        case .key(let code, let down): word = demoEcho.key(code, down: down)
+        case .layout(let xkb): demoEcho.setLayout(xkb); word = nil
+        case .releasedAll, .bye: demoEcho.releaseAll(); word = nil
+        default: word = DemoComputer.describe(e)
+        }
+        guard let word else { return }
+        if word == "pointer", demoWords.last == "pointer" { return showDemo(nil) }
         demoWords.append(word)
-        if demoWords.count > 6 { demoWords.removeFirst(demoWords.count - 6) }
-        demoLabel.text = "demo computer got: " + demoWords.joined(separator: " · ")
+        if demoWords.count > 40 { demoWords.removeFirst(demoWords.count - 40) }
+        showDemo("PC received: " + demoWords.joined(separator: " "))
+    }
+
+    /// Bring the demo popup up with [text] (nil: as it is), and take it away
+    /// once nothing more has come for [seconds]; the next key starts afresh.
+    private func showDemo(_ text: String?, for seconds: TimeInterval = 1.5) {
+        if let text { demoLabel.text = text }
         view.setNeedsLayout()
+        demoHide?.cancel()
+        if demoLabel.isHidden || demoLabel.alpha < 1 {
+            demoLabel.layer.removeAllAnimations()
+            if demoLabel.isHidden {
+                demoLabel.isHidden = false
+                demoLabel.alpha = 0
+                if !UIAccessibility.isReduceMotionEnabled { demoLabel.transform = CGAffineTransform(translationX: 0, y: 6).scaledBy(x: 0.94, y: 0.94) }
+            }
+            UIView.animate(withDuration: 0.22, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
+                self.demoLabel.alpha = 1
+                self.demoLabel.transform = .identity
+            }
+        }
+        let hide = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
+                self.demoLabel.alpha = 0
+                if !UIAccessibility.isReduceMotionEnabled { self.demoLabel.transform = CGAffineTransform(translationX: 0, y: -4) }
+            } completion: { done in
+                guard done, self.demoHide?.isCancelled == false else { return }
+                self.demoLabel.isHidden = true
+                self.demoLabel.transform = .identity
+                self.demoWords.removeAll()
+            }
+        }
+        demoHide = hide
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: hide)
     }
 
     private func layoutLandscape() {
