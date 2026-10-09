@@ -343,7 +343,7 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   debug screen connects to a real `omakeyd run --dry-run`, which prints the
   keys.
 
-### M4: Connect screen, pairing, stores, links
+### M4: Connect screen, pairing, stores, links (done)
 - `HostStore` (Keychain, wipe on fresh install), `AppSettings`,
   `LayoutStore`.
 - `ConnectView`: header with ⚙, **Select computer to use** (status lines
@@ -353,7 +353,10 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   `omakey://` links from outside (with the "came from another app" note).
 - Local Network help screen.
 - **Done when:** pairing with a real desktop works from both QR and link,
-  survives a relaunch, and an unlinked computer disappears.
+  survives a relaunch, and an unlinked computer disappears. Checked so far
+  by `OmakeyUITests` against the omakeyd stand-in (link pairing, the
+  fingerprint, the replace warning, online, unlink); the QR scanner needs
+  a device and a real desktop.
 
 ### M5: Landscape keyboard
 - `KeyboardViewController`: top bar (⌄ touchpad handle, status pill,

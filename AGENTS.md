@@ -25,8 +25,14 @@
   (layouts, keyboard logic). Its tests run on the Mac:
   `swift test --package-path OmakeyKit`.
 - Run `scripts/check.sh` before committing: package tests plus an unsigned
-  device build. App-level tests: `xcodebuild … -scheme Omakey test` on an
-  iPhone simulator.
+  device build. App and UI tests: `xcodebuild -project Omakey.xcodeproj
+  -scheme Omakey -destination 'id=<iPhone simulator>' test`. The UI tests
+  host the omakeyd stand-in (`OmakeydStandIn`) in their own process and
+  launch the app with `OMAKEY_RESET=<token>` (Debug only), which starts it
+  as a fresh install once per token.
+- `swift run --package-path OmakeyKit omakey-dev-server` is a computer for
+  the simulator to pair with: it prints a pairing link and every key it
+  gets, and types nothing.
 - Swift 6 language mode. UI code is `@MainActor`. Types shared with the
   network thread take a lock and say so in their doc comment.
 - iPhone only (`TARGETED_DEVICE_FAMILY = 1`) until the iPad milestone.

@@ -25,15 +25,15 @@ the baseline.
 
 | Feature | iOS |
 |---|---|
-| QR code scanner | ⏳ M4 |
-| Paste a pairing link | ⏳ M4 |
-| `omakey://pair` and `omakey://layout` links | ⏳ M4 (URL scheme registered in M1) |
-| Pairing confirmation: fingerprint, replace warning, link from another app | ⏳ M4 |
-| Paired list with Online / Checking / Offline | 🚧 probes ✅ M3 (`Reachability`); list ⏳ M4 |
-| Nearby computers (mDNS) | 🚧 browsing ✅ M3 (`Discovery`); list ⏳ M4 |
+| QR code scanner | ✅ M4 (AVFoundation) |
+| Paste a pairing link | ✅ M4 (`PasteButton`, no paste prompt) |
+| `omakey://pair` and `omakey://layout` links | ✅ M4 (layout preview without the drawing until M9) |
+| Pairing confirmation: fingerprint, replace warning, link from another app | ✅ M4 |
+| Paired list with Online / Checking / Offline | ✅ M3–M4 (Android's "will try Bluetooth" line ✖) |
+| Nearby computers (mDNS) | ✅ M3–M4, plus a Local Network help card |
 | Find a computer again after its IP changes | ✅ M3 (`UDPLink.addCandidate`) |
-| Remember the address that answered | 🚧 `UDPLink.peer` ✅ M3; saving ⏳ M4 |
-| Unlink a computer | ⏳ M4 |
+| Remember the address that answered | 🚧 `HostStore.rememberAddress` ✅ M4; called from the keyboard ⏳ M5 |
+| Unlink a computer | ✅ M4 (context menu) |
 | REJECT → "Pair again" | 🚧 state ✅ M3; message ⏳ M5 |
 | UDP link: timing rules, DSCP EF | ✅ M3 |
 | Bluetooth fallback to omakeyd | ⏳ M11 over Bluetooth LE (RFCOMM ✖) |
@@ -88,5 +88,5 @@ the baseline.
 | Layout parser and validation | ✅ M2 |
 | Layout links (raw DEFLATE, base64url) | ✅ M2 |
 | Layouts page, previews, share, import, remove | ⏳ M9 |
-| Settings: layout, theme, computers, haptics, typed text | ⏳ M9 |
-| Phone name (iOS only) | ⏳ M9 |
+| Settings: layout, theme, computers, haptics, typed text | 🚧 haptics, typed text ✅ M4; the rest ⏳ M9 |
+| Phone name (iOS only) | ✅ M4 (Settings) |
