@@ -55,8 +55,60 @@ final class PortraitTour: XCTestCase {
         app.typeText(XCUIKeyboardKey.delete.rawValue)
         XCTAssertTrue(eventually { seen.keys.suffix(2) == ["+14", "-14"] }, "\(seen.keys)")
 
-        // The upper key strip starts on navigation.
-        app.keys["strip.Esc"].firstMatch.tap()
-        XCTAssertTrue(eventually { seen.keys.suffix(2) == ["+1", "-1"] }, "\(seen.keys)")
+        // The key pages start on digits.
+        app.keys["strip.1"].firstMatch.tap()
+        XCTAssertTrue(eventually { seen.keys.suffix(2) == ["+2", "-2"] }, "\(seen.keys)")
+    }
+
+    func testTheUpperRowIsYours() throws {
+        func slot(_ i: Int) -> XCUIElement { app.descendants(matching: .any)["slot.\(i)"].firstMatch }
+        func page(_ label: String) -> XCUIElement { app.descendants(matching: .any)["strip.\(label)"].firstMatch }
+        func drag(_ from: XCUIElement, to: XCUICoordinate, hold: TimeInterval) {
+            from.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                .press(forDuration: hold, thenDragTo: to, withVelocity: .slow, thenHoldForDuration: 0.2)
+        }
+        func middle(_ e: XCUIElement) -> XCUICoordinate { e.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)) }
+
+        // Empty at first, saying how to fill it.
+        let edit = app.descendants(matching: .any)["strip.edit"].firstMatch
+        XCTAssertTrue(edit.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Tap the pencil to choose keys for this row"].exists)
+        XCTAssertFalse(slot(0).exists)
+        edit.tap()
+        XCTAssertTrue(eventually { edit.label == "Done arranging" }, edit.label)
+        attach("arranging", app)
+
+        // A tap on the pages takes the first empty slot; a drag up, the slot it's dropped on.
+        page("1").tap()
+        XCTAssertTrue(eventually { slot(0).label == "1" }, slot(0).label)
+        drag(page("2"), to: middle(slot(3)), hold: 0.6)
+        XCTAssertTrue(eventually { slot(3).label == "2" }, slot(3).label)
+        // Along the row: the key there swaps places.
+        drag(slot(0), to: middle(slot(3)), hold: 0.2)
+        XCTAssertTrue(eventually { slot(0).label == "2" && slot(3).label == "1" }, "\(slot(0).label) \(slot(3).label)")
+        // Down off the row, or a tap on it: the slot empties.
+        drag(slot(0), to: page("5").coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)), hold: 0.2)
+        XCTAssertTrue(eventually { slot(0).label == "Empty slot" }, slot(0).label)
+        page("3").tap()
+        XCTAssertTrue(eventually { slot(0).label == "3" }, slot(0).label)
+        slot(0).tap()
+        XCTAssertTrue(eventually { slot(0).label == "Empty slot" }, slot(0).label)
+        // Nothing typed while arranging.
+        XCTAssertFalse(seen.keys.contains("+2") || seen.keys.contains("+3") || seen.keys.contains("+4"), "\(seen.keys)")
+
+        // Done: the row's keys type, and empty slots aren't there.
+        edit.tap()
+        XCTAssertTrue(eventually { edit.label == "Choose keys for the upper row" }, edit.label)
+        XCTAssertFalse(slot(0).exists)
+        attach("arranged", app)
+        slot(3).tap()
+        XCTAssertTrue(eventually { seen.keys.suffix(2) == ["+2", "-2"] }, "\(seen.keys)")
+
+        // Kept for next time.
+        app.buttons["keyboard.close"].tap()
+        let card = app.buttons["omakey.host.\(server.host.hostId)"]
+        XCTAssertTrue(card.waitForExistence(timeout: 5))
+        card.tap()
+        XCTAssertTrue(eventually { slot(3).exists && slot(3).label == "1" }, "after reopening: \(slot(3).exists)")
     }
 }

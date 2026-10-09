@@ -2,7 +2,7 @@
 
 What the iPhone app has of the Android app's features.
 
-**Android baseline:** `omakey-mobile` `a1ad3f9` (1.2.1 + Bluetooth icon).
+**Android baseline:** `omakey-mobile` `404a43f` (1.3.0).
 When Android moves on, diff from this commit, update the rows, then move
 the baseline.
 
@@ -71,6 +71,7 @@ the baseline.
 | Phone keyboard mirrored (`LineDiff`, `Typist`) | ✅ M2, M7 (hidden `UITextView`) |
 | Per-character layout (`us`, `ua`) | ✅ M2, M7 (`textInputMode.primaryLanguage`) |
 | Key strips | ✅ M7 |
+| Upper key row you arrange (1.3.0): ten slots, pencil, trembling keys, drag up, move, swap, clear | ✅ (VoiceOver: tap to add or remove, Move left / Move right actions) |
 | Compact touchpad | ✅ M6–M7 |
 
 | Copy and Paste icons in the portrait top bar | ✅ M7–M8 |

@@ -117,7 +117,7 @@ on a log scale snapped to 0.05.
 | The phone's own keyboard types into the computer, autocorrect included: each change of a one-line buffer goes out as arrows, Backspaces and characters | `ImeCapture` + `LineDiff` | hidden `UITextView` subclass: `textViewDidChange` and selection changes run `LineDiff`; `deleteBackward()` on an empty line sends Backspace; `"\n"` sends Enter and starts the line again | 7 |
 | Strokes paced every 8 ms, held back while 24+ events are unacknowledged | `Typist` | same, `DispatchSourceTimer` on main | 2, 7 |
 | Each character goes with an xkb layout that has it (`us`, `ua`); switching waits until everything before is acknowledged | `KeyLayouts.pick`, IME subtype | same, language from `textInputMode.primaryLanguage` | 2, 7 |
-| Two key strips above the keyboard, each swiped through its own pages: digits, F1–F12, navigation, system (Super/Ctrl/Alt/Shift sticky, PrtSc, media) | `KeyStrip` | `KeyStripView`, pinned to `keyboardLayoutGuide` | 7 |
+| Key strip above the keyboard: an upper row of ten slots you arrange (pencil, trembling keys, drag up, move, swap, clear) over pages swiped sideways: digits, F1–F12, navigation, system (Super/Ctrl/Alt/Shift sticky, PrtSc, media) | `KeyStrip` | `KeyStripView`, pinned to `keyboardLayoutGuide` | 7 |
 | Compact touchpad: plain Ctrl and Shift buttons that latch | `compact` | same | 7 |
 | "Tap to open the keyboard" in the keyboard's place when it's hidden | | same, sized to the last keyboard height | 7 |
 | Copy and Paste icons in the top bar | `ClipIcon` | SF Symbols or drawn outlines | 8 |
@@ -398,8 +398,9 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   the computer layouts can't type `’` or `—`.
 - `Typist` with the layout gate (`keys.layout`, `unacked == 0`) and the busy
   rule (`unacked > 24`).
-- Two `KeyStripView`s pinned to `keyboardLayoutGuide`, pages remembered
-  (`stripPage`, `stripPage2`). Compact touchpad above. Reopen placeholder.
+- `KeyStripView` pinned to `keyboardLayoutGuide`: the upper row as arranged
+  (`stripSlots`), the pages as last left (`stripPage`). Android 1.2 had two
+  swiped strips; 1.3.0 made the upper one a row you arrange. Compact touchpad above. Reopen placeholder.
 - Portrait as a pseudo-layout: picking it switches screens for the same
   computer.
 - **Done when:** typing, autocorrection, cursor moves with the space bar,

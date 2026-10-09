@@ -71,9 +71,17 @@ final class AppSettings {
         d.set(preset, forKey: "preset:\(target)")
     }
 
-    /// Portrait mode's key strips remember their page.
-    func stripPage(_ key: String, default value: Int) -> Int { d.object(forKey: key) as? Int ?? value }
-    func setStripPage(_ key: String, _ page: Int) { d.set(page, forKey: key) }
+    /// Portrait mode's key pages remember where they were left: digits at first.
+    var stripPage: Int {
+        get { d.integer(forKey: "stripPage") }
+        set { d.set(newValue, forKey: "stripPage") }
+    }
+
+    /// Portrait mode's upper key row, as arranged: key codes, 0 for an empty slot.
+    var stripSlots: [Int] {
+        get { (d.string(forKey: "stripSlots") ?? "").split(separator: ",", omittingEmptySubsequences: false).map { Int($0) ?? 0 } }
+        set { d.set(newValue.map(String.init).joined(separator: ","), forKey: "stripSlots") }
+    }
 
     /// SHA-256 of the text the phone and the computer last swapped, so Paste
     /// can tell whether the phone's clipboard has something newer. Only the

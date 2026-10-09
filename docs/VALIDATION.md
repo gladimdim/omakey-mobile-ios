@@ -3,6 +3,20 @@
 What has been checked, where, and what still needs a device or a real
 desktop. Newest first.
 
+## 2026-10-09: the upper key row you arrange (Android 1.3.0)
+
+- `StripSlotsTests` (Android's `StripSlotsTest`, ported) pass on the Mac.
+- `PortraitTour.testTheUpperRowIsYours` on the iOS 27.0 simulator: the
+  empty row says how to fill it; with the pencil, a tap on the pages takes
+  the first empty slot, a key held and dragged up lands on the slot it's
+  dropped on, one dragged along the row swaps places, one dragged down off
+  the row or tapped leaves it; nothing types while arranging; after the
+  tick the row's keys type, and the row is still there after the keyboard
+  is closed and opened again.
+- All fifteen app and UI tests pass, on the simulator kept for them.
+- Not yet tried: the trembling and drag feel on a phone, and VoiceOver's
+  Move left / Move right actions.
+
 ## 2026-10-09: orientation, and Paste on iOS 27
 
 - **Orientation.** Closing a keyboard forced the screen upright instead of

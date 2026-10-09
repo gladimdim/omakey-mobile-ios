@@ -11,8 +11,9 @@ import UIKit
 /// here without leaving the keyboard.
 ///
 /// Portrait mode is the same screen upright: the phone's own keyboard at
-/// the bottom (mirrored onto the computer through `TextCapture`), two key
-/// strips above it, and the touchpad filling the rest. No layout, no panel.
+/// the bottom (mirrored onto the computer through `TextCapture`), the key
+/// strip above it (a row you arrange over swiped pages), and the touchpad
+/// filling the rest. No layout, no panel.
 @MainActor
 final class KeyboardViewController: UIViewController {
     private let model: AppModel
@@ -68,7 +69,7 @@ final class KeyboardViewController: UIViewController {
     private var typist: Typist?
     private var capture: TextCapture?
     /// Two rows of digits, F-keys, navigation and system keys above the phone's keyboard, each paged on its own.
-    private var keyStrips: [KeyStripView] = []
+    private var keyStrip: KeyStripView?
     private let showKeyboardButton = UIButton(type: .system)
     private let copyButton = UIButton(type: .system)
     private let pasteButton = UIButton(type: .system)
@@ -252,15 +253,15 @@ final class KeyboardViewController: UIViewController {
         }
         capture = c
         stage.addSubview(c)
-        // Two strips, swiped separately: the upper one starts on navigation, the lower on digits.
-        keyStrips = [("stripPage2", 2), ("stripPage", 0)].map { key, first in
-            let strip = KeyStripView(theme: theme, typist: t, sink: sink)
-            strip.haptics = haptics
-            strip.page = model.settings.stripPage(key, default: first)
-            strip.onPageChanged = { [weak self] in self?.model.settings.setStripPage(key, $0) }
-            view.addSubview(strip)
-            return strip
-        }
+        // The upper row as arranged; the pages as last left, digits at first.
+        let strip = KeyStripView(theme: theme, typist: t, sink: sink)
+        strip.haptics = haptics
+        strip.page = model.settings.stripPage
+        strip.onPageChanged = { [weak self] in self?.model.settings.stripPage = $0 }
+        strip.slotCodes = model.settings.stripSlots
+        strip.onSlotsChanged = { [weak self] in self?.model.settings.stripSlots = $0 }
+        view.addSubview(strip)
+        keyStrip = strip
         for (b, symbol, label, action) in [
             (showKeyboardButton, "keyboard", "Show the keyboard", #selector(showPhoneKeyboard)),
             (copyButton, "doc.on.doc", "Copy on the computer, to the phone too", #selector(copyOnComputer)),
@@ -397,7 +398,7 @@ final class KeyboardViewController: UIViewController {
         status.frame = CGRect(x: room.midX - fit / 2, y: room.minY, width: fit, height: 24)
         ticker?.frame = CGRect(x: 0, y: barH, width: w, height: 22)
 
-        // The phone's keyboard at the bottom, or the button in its place; the strips just above.
+        // The phone's keyboard at the bottom, or the button in its place; the key strip just above.
         let keyboardTop: CGFloat
         if keyboardHeight > 0 {
             keyboardTop = view.bounds.maxY - keyboardHeight
@@ -408,12 +409,10 @@ final class KeyboardViewController: UIViewController {
             reopen.frame = CGRect(x: safe.minX + 12, y: keyboardTop + 8, width: safe.width - 24,
                                   height: view.bounds.maxY - keyboardTop - 8 - max(view.safeAreaInsets.bottom, 12))
         }
-        let stripH: CGFloat = 52
-        for (i, strip) in keyStrips.enumerated() {
-            strip.frame = CGRect(x: safe.minX, y: keyboardTop - stripH * CGFloat(keyStrips.count - i), width: safe.width, height: stripH)
-        }
-        let stripsTop = keyboardTop - stripH * CGFloat(keyStrips.count)
-        stage.frame = CGRect(x: safe.minX, y: header.frame.maxY, width: safe.width, height: max(stripsTop - header.frame.maxY, 0))
+        let stripH: CGFloat = 96
+        keyStrip?.frame = CGRect(x: safe.minX, y: keyboardTop - stripH, width: safe.width, height: stripH)
+        let stripTop = keyboardTop - stripH
+        stage.frame = CGRect(x: safe.minX, y: header.frame.maxY, width: safe.width, height: max(stripTop - header.frame.maxY, 0))
         touchpad.frame = stage.bounds
         capture?.frame = CGRect(x: 0, y: stage.bounds.maxY - 1, width: 1, height: 1)
     }
@@ -447,7 +446,7 @@ final class KeyboardViewController: UIViewController {
         grip.color = UIColor(rgb: theme.fgDim)
         for b in [switchButton, layoutButton, closeButton] { b.setTitleColor(UIColor(rgb: theme.accent), for: .normal) }
         for b in [showKeyboardButton, copyButton, pasteButton] { b.tintColor = UIColor(rgb: theme.accent) }
-        keyStrips.forEach { $0.theme = theme }
+        keyStrip?.theme = theme
         reopen.backgroundColor = UIColor(rgb: theme.surface)
         reopen.layer.borderColor = UIColor(rgb: theme.accent).cgColor
         reopen.tintColor = UIColor(rgb: theme.accent)
@@ -488,7 +487,7 @@ final class KeyboardViewController: UIViewController {
         // A key went out: Ctrl or Shift latched on the touchpad, Super or Alt on the key strip, were for it.
         if !UsKeys.modifiers.contains(code) {
             touchpad.modifiersUsed()
-            keyStrips.forEach { $0.modifiersUsed() }
+            keyStrip?.modifiersUsed()
         }
     }
 
@@ -499,7 +498,7 @@ final class KeyboardViewController: UIViewController {
             if down { ticker?.keyDown(code) } else { ticker?.keyUp(code) }
         }
         // A click let go: Super or Alt latched on the key strip was for it (Super + drag moves a window).
-        if !down && (Wire.btnLeft...Wire.btnMiddle).contains(code) { keyStrips.forEach { $0.modifiersUsed() } }
+        if !down && (Wire.btnLeft...Wire.btnMiddle).contains(code) { keyStrip?.modifiersUsed() }
     }
 
     fileprivate func padMotion(dx: Float, dy: Float) {
@@ -528,7 +527,7 @@ final class KeyboardViewController: UIViewController {
     /// Never leave a key held on the computer while we're not looking.
     private func letGo() {
         typist?.clear()
-        keyStrips.forEach { $0.reset() }
+        keyStrip?.reset()
         keyboard.releaseAll()
         touchpad.releaseAll()
         keys.releaseAll()
