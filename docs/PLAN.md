@@ -15,6 +15,17 @@ keyboard and touchpad for a computer running `omakeyd`. It speaks the same
 protocol, reads the same layout files and pairs with the same QR code, so
 the desktop needs no changes.
 
+**Decided (2026-10-09):**
+
+| Question | Decision |
+|---|---|
+| Team and signing | the one developer team used by `super-desktop-ios` (`29UL2Y36R9`), automatic signing |
+| Bundle id | `com.gladimdim.omakey` (the Android id, and the `com.gladimdim.*` pattern of the other apps) |
+| Release path | the App Store from the first public release. TestFlight only for builds on our own devices |
+| License | MIT, as `omakey-omarchy-plugin` |
+| iPad | later (M12). iPhone only until then |
+| Bluetooth Low Energy | planned for later (M11, §12) |
+
 ---
 
 ## 1. Scope
@@ -35,9 +46,9 @@ typed-text ticker, layout sharing and import, and settings.
   isn't there on iOS.
 - **Bluetooth fallback to omakeyd** (RFCOMM). iOS has no public RFCOMM
   API: ExternalAccessory only works with MFi accessories. iOS is Wi-Fi only
-  at first. The `b` address in a pairing link and the `bt_address` in
-  WELCOME are still parsed and stored, so a later transport can use them
-  (see §10, *Bluetooth Low Energy*).
+  until M11, which adds a Bluetooth Low Energy fallback (§12). The `b`
+  address in a pairing link and the `bt_address` in WELCOME are still
+  parsed and stored.
 
 ---
 
@@ -186,6 +197,7 @@ omakey-mobile-ios/
   docs/                      PLAN.md (this file), ANDROID_PARITY.md, VALIDATION.md
   store/                     App Store metadata, privacy answers, review notes (M10)
   AGENTS.md                  contributor and agent rules
+  LICENSE                    MIT
 ```
 
 ### Kotlin → Swift map
@@ -263,8 +275,9 @@ omakey-mobile-ios/
 5. **AVFoundation QR scanner.** It works on every supported iPhone and
    needs no model download. VisionKit's `DataScannerViewController` needs
    an A12 or newer and adds nothing for a QR code.
-6. **iOS 17 minimum, iPhone first, Xcode 27, no dependencies.** This
-   matches `super-desktop-ios`. iPad is a later step (§10).
+6. **iOS 17 minimum, iPhone only, Xcode 27, no dependencies.** This
+   matches `super-desktop-ios`. `TARGETED_DEVICE_FAMILY = 1` until iPad
+   support (M12).
 7. **Same layouts and keycodes as Android**, synced from
    `omakey-layout-studio/spec` by `scripts/sync-spec.sh`, the same script
    with an iOS destination.
@@ -278,14 +291,19 @@ Each milestone ends with a commit that builds and passes its tests.
 `scripts/check.sh` runs `swift test --package-path OmakeyKit` plus an
 unsigned generic iOS build.
 
-### M0: Plan and repository (this commit)
-Plan, README, `.gitignore`, a public GitHub repository.
+### M0: Plan and repository (done)
+Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
+`gladimdim/omakey-mobile-ios`.
 
 ### M1: Project skeleton and `OmakeyProtocol`
 - `Omakey.xcodeproj` (app + unit test targets), `OmakeyKit` package linked
   as a local package, `AGENTS.md`, `docs/ANDROID_PARITY.md` (one row per
   feature in §2, with Android baseline `a1ad3f9`), `scripts/check.sh`,
   `scripts/sync-vectors.sh`.
+- Signing: team `29UL2Y36R9`, automatic, bundle id `com.gladimdim.omakey`,
+  test target `com.gladimdim.omakey.tests`, version 1.0.0 (1).
+- Reserve the name: register the bundle id and create the App Store Connect
+  app record with `asc`. This is an account change, so ask first.
 - Port `Packets`, `Crypto`, `ClientSession`, `KeyState`, `Pairing`,
   `ClipTransfer`, `Hex`.
 - Port the tests: `TestVectorsTest` (4), `ProtocolTest` (22),
@@ -397,16 +415,27 @@ Plan, README, `.gitignore`, a public GitHub repository.
   the package's encoders, and shows what it receives. Add review notes and a
   video of a real Omarchy desktop.
 - `PrivacyInfo.xcprivacy` (UserDefaults reason `CA92.1`), App Privacy
-  "Data Not Collected", export compliance answers, `store/` metadata,
-  TestFlight through the `asc` CLI. Credentials stay outside the repository,
+  "Data Not Collected", export compliance answers, `store/` metadata
+  (`store/README.md` is the submission checklist), screenshots. The `asc`
+  CLI talks to App Store Connect. Credentials stay outside the repository,
   as in `super-desktop-ios`.
+- Release 1.0.0 straight to the App Store, free, iPhone only. Opt out of
+  availability on Apple silicon Macs: there's no multi-touch there. Internal
+  TestFlight builds only for testing on our own devices, with no external
+  beta. Submitting for review needs your OK.
 - `docs/VALIDATION.md`: what ran on which device and simulator.
 
-### Later
-- **Bluetooth Low Energy transport** (§10).
+### M11 (later): Bluetooth Low Energy fallback
+Off Wi-Fi, the iPhone reaches omakeyd over Bluetooth LE. This needs a
+daemon release first. Design in §12.
+
+### M12 (later): iPad
+A large keyboard surface (up to 11 touches) without haptics: universal
+layout work, all four orientations or full-screen only, and the keyboard
+sized for a 13″ screen.
+
+### Later, unscheduled
 - **Share extension** for importing layouts from other apps' share sheets.
-- **iPad**: a large keyboard surface (up to 11 touches) without haptics.
-  Needs universal layout work and a multitasking decision.
 
 ---
 
@@ -433,9 +462,9 @@ Plan, README, `.gitignore`, a public GitHub repository.
 
 ## 7. Desktop side
 
-Nothing is required. omakeyd accepts platform `2` in HELLO and lists the
-phone by the name it sends. Follow-ups in sibling repositories, each only
-with approval:
+Nothing is required for M1–M10. omakeyd accepts platform `2` in HELLO and
+lists the phone by the name it sends. M11 needs a daemon release (§12).
+Follow-ups in sibling repositories, each only with approval:
 
 - `omakey-mobile/README.md`: its `ios/` row ("Planned (M3)") should point to
   this repository.
@@ -446,7 +475,9 @@ with approval:
 
 ## 8. Release checklist (M10)
 
-- Bundle id (proposed `com.gladimdim.omakey`, as on Android), team, signing.
+- Bundle id `com.gladimdim.omakey`, team `29UL2Y36R9`, automatic signing.
+- App Store Connect record (made in M1), category Utilities, price free,
+  age rating, privacy policy URL (a page in this repository).
 - `Info.plist`: `NSLocalNetworkUsageDescription`, `NSBonjourServices`,
   `NSCameraUsageDescription`, `CFBundleURLTypes` (`omakey`),
   `CFBundleDocumentTypes` (`public.json`, opened as a copy),
@@ -474,17 +505,8 @@ with approval:
 
 ## 10. Open questions
 
-1. **Bundle id and team.** `com.gladimdim.omakey`, the same id as Android?
-   Which Apple Developer team?
-2. **Distribution.** App Store from the start, or TestFlight first?
-3. **License.** This repository is public. `omakey-omarchy-plugin` is MIT;
-   `omakey-mobile` has no license file. MIT here too?
-4. **Bluetooth Low Energy.** Off Wi-Fi, an iPhone could reach omakeyd over a
-   BLE GATT service: the phone as central, the same encrypted datagrams in
-   characteristic writes and notifications. That needs a GATT server in
-   omakeyd (BlueZ), a PROTOCOL.md section, and probably Android support too.
-   Worth doing after M10, or Wi-Fi only on iPhone?
-5. **iPad.** After the iPhone release, or not at all?
+The questions from the first draft are decided (top of this file). Still
+open, for M11: see the end of §12.
 
 ---
 
@@ -495,3 +517,94 @@ status, and records the Android commit it was checked against (`a1ad3f9`).
 When the Android app changes: diff from that baseline, port or mark each
 change, then move the baseline. The protocol vectors are re-synced with
 `scripts/sync-vectors.sh` and must keep passing byte for byte.
+
+---
+
+## 12. M11 (later): Bluetooth Low Energy fallback
+
+**Goal:** as on Android, typing keeps working when Wi-Fi can't reach the
+computer. iOS apps can't use RFCOMM, so this uses GATT over Bluetooth LE,
+the one Bluetooth path open to them. Only the carrier changes: the packets,
+keys, nonces and counters are the same as over UDP, as with RFCOMM.
+
+### Protocol: a new "Bluetooth LE" section in PROTOCOL.md
+
+- **Service** `4f4b6579-6d61-4b79-9001-6f6d616b6579` (the RFCOMM UUID with
+  `9000` → `9001`), with two characteristics:
+  - `…-9002-…`, **to the desktop**: Write Without Response (and Write).
+  - `…-9003-…`, **to the phone**: Notify.
+- **Framing.** Each direction is a byte stream made of the characteristic
+  values in order. It carries the RFCOMM framing: a 2-byte big-endian
+  length, then the datagram, where a length of 0 or over 1200 closes the
+  connection. A datagram longer than one value (ATT MTU − 3; iOS usually
+  gets 182–244 bytes) spans several values. An INPUT fits in one; a CLIP
+  piece of about 1.1 KB takes a few.
+- **Finding the computer.** The advertisement carries the service UUID,
+  with the 8-byte host id as its service data. iOS hides Bluetooth
+  addresses from apps (CoreBluetooth gives per-app identifiers), so the `b`
+  address can't be used to connect, but the host id identifies the
+  computer. mDNS already broadcasts the host id on the LAN. Over BLE,
+  anyone nearby can see it too. It's no key material, but it is a stable
+  identifier.
+- **WELCOME `features` bit 2** (value 4): the server offers Bluetooth LE.
+  The phone asks for Bluetooth permission only once a computer says it has
+  it, as Android asks for RFCOMM only when there's a `bt_address`.
+- **The rest is as for RFCOMM.** Bluetooth pairing and link encryption are
+  neither needed nor relied on (the characteristics need none). The link
+  layer is reliable and ordered, so there are no resends. The 100 ms
+  heartbeat stays. At most 8 connections, closed after 30 s of silence,
+  keys released when a connection drops, and held keys stay down across a
+  transport switch.
+- **Latency.** An iOS central gets a 15 ms connection interval at best
+  (30 ms is typical), so a key costs 15–30 ms more than over Wi-Fi. That's
+  fine for a fallback, and UDP stays preferred.
+
+### Daemon (`omakeyd`, Rust and zbus, next to `bluetooth.rs`)
+
+- `ble.rs`: register a GATT application (`org.bluez.GattManager1`: an
+  ObjectManager with the service and its two characteristics) and an LE
+  advertisement (`org.bluez.LEAdvertisingManager1`). Register again when
+  `bluetoothd` restarts, as the RFCOMM profile does.
+- `AcquireWrite` and `AcquireNotify` hand over a socket per connection.
+  Read and write them like the RFCOMM streams, reusing the framing and the
+  `Peer::Bluetooth` handling. Report the transport as `bluetooth-le` in
+  `state.json` and the bar widget.
+- Advertise only while the adapter is powered and supports LE. `BtStatus`
+  reports LE separately.
+- Tests next to the RFCOMM ones: a datagram split across many values,
+  several datagrams in one value, and a length of 0 or over 1200 closing
+  the connection.
+- The Steam Deck has BlueZ too, so the same code runs there.
+
+### iOS
+
+- `BLELink` (CoreBluetooth central): scan for the service, match the host
+  id in the service data, connect, subscribe to notifications, then follow
+  `RfcommLink`'s rules. A writer sends the newest state whenever
+  `canSendWriteWithoutResponse` allows, so a burst of touchpad moves becomes
+  one packet. No resends; heartbeat and ping as usual.
+- Port `FallbackLink` and its 6 tests. UDP runs all along. BLE starts after
+  1.2 s without a WELCOME, or when the session in use goes quiet. The first
+  transport to be welcomed owns the session. A WELCOME over UDP moves the
+  phone back to Wi-Fi and BLE stops.
+- `NSBluetoothAlwaysUsageDescription`, asked for once per computer when it
+  first reports the feature. The status pill and the lists show the
+  Bluetooth sign, as on Android.
+- Foreground only. The keyboard only types while it's on screen anyway.
+
+### Android
+
+Nothing is required: Android keeps RFCOMM. The protocol section is written
+so Android could use BLE as well later, for example on phones where RFCOMM
+misbehaves.
+
+### Order and open points
+
+1. Daemon first: a plugin release with BLE, then iOS 1.x with `BLELink`.
+   Phones and desktops without it carry on over Wi-Fi and RFCOMM.
+2. Advertise the fixed host id (simplest, as above), or something that
+   rotates? A rotating id only helps if it can't be derived from the host
+   id, which mDNS already publishes. Start with the fixed id.
+3. Advertise all the time, or only while a paired phone has been seen
+   recently? Desktops don't mind; on a Steam Deck running on battery it may
+   matter. Measure before deciding.

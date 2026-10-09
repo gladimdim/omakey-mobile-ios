@@ -24,4 +24,10 @@ screens, UIKit multi-touch views, CryptoKit, Network.framework, and no
 third-party dependencies.
 
 What iOS can't do: be a plain Bluetooth keyboard for any computer, or reach
-`omakeyd` over Bluetooth Classic. The iPhone app connects over Wi-Fi.
+`omakeyd` over Bluetooth Classic. The iPhone app connects over Wi-Fi; a
+Bluetooth Low Energy fallback is planned for later. iPhone first, iPad
+later. It will be published on the App Store.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
