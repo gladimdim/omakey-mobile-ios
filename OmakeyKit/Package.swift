@@ -9,6 +9,7 @@ let package = Package(
     products: [
         .library(name: "OmakeyProtocol", targets: ["OmakeyProtocol"]),
         .library(name: "OmakeyCore", targets: ["OmakeyCore"]),
+        .library(name: "OmakeyNet", targets: ["OmakeyNet"]),
     ],
     targets: [
         .target(name: "OmakeyProtocol"),
@@ -17,11 +18,13 @@ let package = Package(
             dependencies: ["OmakeyProtocol"],
             resources: [.copy("Spec")]
         ),
+        .target(name: "OmakeyNet", dependencies: ["OmakeyProtocol"]),
         .testTarget(
             name: "OmakeyProtocolTests",
             dependencies: ["OmakeyProtocol"],
             resources: [.copy("Fixtures")]
         ),
         .testTarget(name: "OmakeyCoreTests", dependencies: ["OmakeyCore", "OmakeyProtocol"]),
+        .testTarget(name: "OmakeyNetTests", dependencies: ["OmakeyNet", "OmakeyProtocol"]),
     ]
 )

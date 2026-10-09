@@ -7,8 +7,9 @@ so Hyprland binds, `SUPER + SPACE`, F-keys, Esc and the lock screen all
 work as they do with a hardware keyboard.
 
 **Status: in development.** The protocol (M1) reproduces the daemon's
-test vectors byte for byte, and the keyboard logic and the 10 stock
-layouts are ported (M2). Networking and the screens come next. See
+test vectors byte for byte, the keyboard logic and the 10 stock layouts
+are ported (M2), and so is the UDP link with its timing rules and mDNS
+discovery (M3). The screens come next. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 
@@ -19,7 +20,8 @@ iPhone or a simulator (iOS 17+). From a terminal:
 
 ```bash
 scripts/check.sh                          # package tests on the Mac + unsigned device build
-swift test --package-path OmakeyKit       # protocol and keyboard logic only
+swift test --package-path OmakeyKit       # protocol, keyboard logic, networking
+OMAKEY_LIVE=1 swift test --package-path OmakeyKit --filter LiveDiscovery   # browse a real omakeyd on the LAN
 ```
 
 It is the iOS counterpart of the Android app:

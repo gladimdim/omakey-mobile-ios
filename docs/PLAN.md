@@ -175,7 +175,6 @@ omakey-mobile-ios/
                              so files under Omakey/ and OmakeyTests/ need no project edit
   Omakey/                    the app target
     App/                     OmakeyApp, AppDelegate (orientation lock), Info.plist, PrivacyInfo.xcprivacy
-    Net/                     Link, UDPLink, Discovery, Reachability, LocalNetworkStatus
     Store/                   HostStore (Keychain), LayoutStore, AppSettings, TouchpadSettings
     Keyboard/                KeyboardViewController, KeyboardView, TouchpadView, PanelController,
                              KeyStripView, TypedTickerView, TextCapture, StatusPill, Haptics, ClipboardBridge
@@ -187,10 +186,13 @@ omakey-mobile-ios/
     Package.swift
     Sources/OmakeyProtocol/  Wire, Packets, Crypto, ClientSession, KeyState, Pairing, ClipTransfer, Hex
     Sources/OmakeyCore/      Keycodes, Layout, LayoutParser, LayoutLink, KeyboardModel, UsKeys,
-                             KeyLayouts, LineDiff, Typist, PointerPresets, ThemeMath
+                             KeyLayouts, LineDiff, Typist, PointerPresets, Themes, Spec/ (layouts)
+    Sources/OmakeyNet/       Link, UDPLink, Reachability, Discovery (no UIKit, so tested on the Mac)
     Tests/OmakeyProtocolTests/  TestVectorsTests, ProtocolTests, ClipTransferTests, Fixtures/test-vectors.json
-    Tests/OmakeyCoreTests/      LayoutAndKeyboardTests, KeyLayoutsTests, LineDiffTests, TypistTests
-  OmakeyTests/               app-level tests: UDPLink against an in-process fake omakeyd on loopback
+    Tests/OmakeyCoreTests/      LayoutAndKeyboardTests, TypingTests (KeyLayouts, LineDiff, Typist, themes)
+    Tests/OmakeyNetTests/       UDPLink and Reachability against a fake omakeyd on loopback;
+                                live Discovery with OMAKEY_LIVE=1
+  OmakeyTests/               app-level tests on a simulator
   scripts/
     sync-spec.sh             layouts + keycodes from ../omakey-layout-studio/spec (mirror, not merge)
     sync-vectors.sh          test-vectors.json from ../omakey-omarchy-plugin/docs
@@ -216,10 +218,10 @@ omakey-mobile-ios/
 | `keyboard/KeyboardModel.kt`, `UsKeys.kt`, `KeyLayouts.kt` | same names in `OmakeyCore` |
 | `ui/PhoneKeyboard.kt` | `LineDiff.swift`, `Typist.swift` (core, scheduler injected for tests); the input capture is `Keyboard/TextCapture.swift` |
 | `ui/PointerPresets.kt`, `ui/Palette.kt` | `PointerPresets.swift`; theme mixing in `ThemeMath.swift`, colors in `Theme/Palette.swift` |
-| `net/Link.kt` | `Link.swift` protocol (states: connecting, connected, rejected) |
-| `net/KeyboardLink.kt` | `UDPLink.swift` |
+| `net/Link.kt` | `OmakeyNet/Link.swift` protocol (states: connecting, connected, rejected) |
+| `net/KeyboardLink.kt` | `OmakeyNet/UDPLink.swift` |
 | `net/FallbackLink.kt`, `RfcommLink.kt`, `BluetoothHidLink.kt` | not ported; `Link` leaves room for a second transport |
-| `net/Discovery.kt`, `Reachability.kt` | `Discovery.swift` (`NWBrowser`), `Reachability.swift` |
+| `net/Discovery.kt`, `Reachability.kt` | `OmakeyNet/Discovery.swift` (`NWBrowser`), `OmakeyNet/Reachability.swift` |
 | `store/Stores.kt` | `HostStore` (Keychain), `LayoutStore` (Application Support/layouts), `AppSettings` (`UserDefaults`) |
 | `ui/MainActivity.kt` | `ConnectView` (SwiftUI) |
 | `ui/KeyboardActivity.kt` (+ portrait subclass) | `KeyboardViewController` (UIKit), one class with a portrait flag |
@@ -261,8 +263,8 @@ omakey-mobile-ios/
    an immediate re-HELLO when the Wi-Fi network changes; otherwise the
    1.5 s lost timer handles it.
 2. **`NWBrowser` for Bonjour**, with `.bonjourWithTXTRecord` for `id` and
-   `n`. An IPv4 address for the socket comes from `DNSServiceResolve` and
-   `DNSServiceGetAddrInfo`. A browser in the policy-denied state is how we
+   `n`. An IPv4 address for the socket comes from a UDP `NWConnection` to
+   the service, which resolves it without sending anything. A browser in the policy-denied state is how we
    learn that Local Network access was refused.
 3. **CryptoKit only.** No third-party code anywhere: no dependencies, as on
    Android, where the only one is zxing.
@@ -326,13 +328,14 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 - **Done when:** the ported tests pass; a layout link made on Android
   decodes on iOS and the other way round.
 
-### M3: Networking
+### M3: Networking (done)
 - `UDPLink` with the timing rules above. `Discovery` routes mDNS candidates
   for the target's host id into the link. `Reachability` probes every paired
   computer every 4 s (HELLO, then BYE as soon as WELCOME comes back,
   1.2 s timeout, 300 ms retry). Local Network status.
-- `OmakeyTests`: a fake omakeyd on `127.0.0.1` built from the package's
-  WELCOME and ACK encoders. Cover the handshake, the claim of the first
+- Networking lives in the package's `OmakeyNet` target, not the app, so
+  its tests run on the Mac. `OmakeyNetTests`: a fake omakeyd on `127.0.0.1`
+  built from the package's WELCOME and ACK encoders. Cover the handshake, the claim of the first
   WELCOME, resend until ACK, the heartbeat, a REJECT taken only from a
   HELLO address, lost → re-HELLO, BYE twice on stop, and theme and LED
   delivery.

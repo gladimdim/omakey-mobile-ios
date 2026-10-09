@@ -29,13 +29,13 @@ the baseline.
 | Paste a pairing link | ⏳ M4 |
 | `omakey://pair` and `omakey://layout` links | ⏳ M4 (URL scheme registered in M1) |
 | Pairing confirmation: fingerprint, replace warning, link from another app | ⏳ M4 |
-| Paired list with Online / Checking / Offline | ⏳ M3–M4 |
-| Nearby computers (mDNS) | ⏳ M3–M4 |
-| Find a computer again after its IP changes | ⏳ M3 |
-| Remember the address that answered | ⏳ M3 |
+| Paired list with Online / Checking / Offline | 🚧 probes ✅ M3 (`Reachability`); list ⏳ M4 |
+| Nearby computers (mDNS) | 🚧 browsing ✅ M3 (`Discovery`); list ⏳ M4 |
+| Find a computer again after its IP changes | ✅ M3 (`UDPLink.addCandidate`) |
+| Remember the address that answered | 🚧 `UDPLink.peer` ✅ M3; saving ⏳ M4 |
 | Unlink a computer | ⏳ M4 |
-| REJECT → "Pair again" | ⏳ M3 |
-| UDP link: timing rules, DSCP EF | ⏳ M3 |
+| REJECT → "Pair again" | 🚧 state ✅ M3; message ⏳ M5 |
+| UDP link: timing rules, DSCP EF | ✅ M3 |
 | Bluetooth fallback to omakeyd | ⏳ M11 over Bluetooth LE (RFCOMM ✖) |
 | Bluetooth keyboard mode | ✖ |
 
