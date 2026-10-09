@@ -7,9 +7,9 @@
 - The wire protocol is `../omakey-omarchy-plugin/docs/PROTOCOL.md`. The
   protocol code must reproduce `docs/test-vectors.json` byte for byte
   (`scripts/sync-vectors.sh` refreshes the copy). Do not change the desktop
-  protocol or the Android app to fit iOS; the planned exception is the
-  Bluetooth LE transport (plan §12), which goes through the plugin repo
-  first.
+  protocol or the Android app to fit iOS.
+- No Bluetooth: the app reaches omakeyd over Wi-Fi only (plan §1). The
+  protocol's Bluetooth address is parsed, as the protocol has it, and unused.
 - Keep `docs/ANDROID_PARITY.md` accurate. When porting an Android change,
   diff from the baseline commit recorded there, update the rows, then move
   the baseline.
@@ -38,8 +38,8 @@
   network thread take a lock and say so in their doc comment.
 - iPhone only (`TARGETED_DEVICE_FAMILY = 1`) until the iPad milestone.
 
-- The demo computer (`DemoComputer`, "Try the demo") is App Review's way in:
-  keep it working without a desktop, a network or a pairing.
+- The demo computer (`DemoComputer`, "Try the demo") is the way to try the
+  app without a desktop: keep it working without a network or a pairing.
 
 ## Safety
 
@@ -49,16 +49,13 @@
 - Never point tests or debugging sessions at a desktop that types for real.
   Use `omakeyd run --dry-run --port 47899`, which prints the keys.
 
-## App Store Connect
+## Open source
 
-- Store material is in `store/`: `store/README.md` is the submission
-  checklist and the App Review notes, `store/metadata` the listing in `asc`'s
-  canonical format (`asc metadata validate --dir ./store/metadata`). Talk to
-  App Store Connect with the `asc` CLI. Credentials stay outside this public repository, as in
-  `super-desktop-ios`: never write key IDs, issuer IDs, key paths or key
-  material into tracked files, commits or logs.
-- Preview every write with `--dry-run`, and ask before creating the app
-  record, submitting for review or changing prices.
+- The repository is public. Nothing personal goes into tracked files,
+  commits or logs: no signing team ids, keys, account names, device
+  identifiers, or real hostnames and addresses (tests use `omarchy desk`,
+  `192.168.1.x`, `10.0.0.x`). Signing lives in the git-ignored
+  `Config/Local.xcconfig` (see `Config/Signing.xcconfig`).
 
 ## UI tests
 

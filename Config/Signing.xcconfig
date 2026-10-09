@@ -1,0 +1,13 @@
+// Signing, for builds on a phone (the simulator needs none of it).
+//
+// Put your own Apple developer team in Config/Local.xcconfig, which git
+// ignores, and, as bundle ids are unique per team, your own bundle id:
+//
+//   DEVELOPMENT_TEAM = ABCDE12345
+//   OMAKEY_BUNDLE_ID = com.example.omakey
+//
+// Your team id is in Xcode → Settings → Accounts, or developer.apple.com.
+
+OMAKEY_BUNDLE_ID = com.gladimdim.omakey
+
+#include? "Local.xcconfig"

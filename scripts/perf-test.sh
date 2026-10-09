@@ -9,6 +9,7 @@
 # be unlocked to start; the app keeps it awake while the tests run, and is
 # left open afterwards (OMAKEY_STAY_AWAKE) so it stays awake between runs.
 set -euo pipefail
+BUNDLE=${OMAKEY_BUNDLE_ID:-com.gladimdim.omakey}
 cd "$(dirname "$0")/.."
 DEV=""
 if [[ ${1:-} == -d ]]; then DEV=$2; shift 2; fi
@@ -24,5 +25,5 @@ TEST_RUNNER_OMAKEY_PERF=1 perl -e 'alarm shift; exec @ARGV' 1800 xcodebuild -pro
   -destination "id=$DEV" -derivedDataPath .build/xcode-device -allowProvisioningUpdates \
   -resultBundlePath ".build/perf-$(date +%s).xcresult" ${ONLY[@]+"${ONLY[@]}"} "$@" test || status=$?
 # Keep the phone awake until the next run.
-xcrun devicectl device process launch --device "$DEV" --terminate-existing -e '{"OMAKEY_STAY_AWAKE":"1"}' com.gladimdim.omakey >/dev/null 2>&1 || true
+xcrun devicectl device process launch --device "$DEV" --terminate-existing -e '{"OMAKEY_STAY_AWAKE":"1"}' "$BUNDLE" >/dev/null 2>&1 || true
 exit $status

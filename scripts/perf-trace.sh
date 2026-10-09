@@ -5,6 +5,7 @@
 #   scripts/perf-trace.sh <template> <output.trace> [seconds] [-d <device udid>]
 #   e.g. scripts/perf-trace.sh 'App Launch' /tmp/launch.trace 6
 set -euo pipefail
+BUNDLE=${OMAKEY_BUNDLE_ID:-com.gladimdim.omakey}
 TEMPLATE=$1; OUT=$2; SECS=${3:-6}
 DEV=""
 if [[ ${4:-} == -d ]]; then DEV=$5; fi
@@ -14,6 +15,6 @@ fi
 rm -rf "$OUT"
 status=0
 xcrun xctrace record --template "$TEMPLATE" --device "$DEV" --time-limit "${SECS}s" --output "$OUT" \
-  --env OMAKEY_STAY_AWAKE=1 --launch -- com.gladimdim.omakey || status=$?
-xcrun devicectl device process launch --device "$DEV" --terminate-existing -e '{"OMAKEY_STAY_AWAKE":"1"}' com.gladimdim.omakey >/dev/null 2>&1 || true
+  --env OMAKEY_STAY_AWAKE=1 --launch -- "$BUNDLE" || status=$?
+xcrun devicectl device process launch --device "$DEV" --terminate-existing -e '{"OMAKEY_STAY_AWAKE":"1"}' "$BUNDLE" >/dev/null 2>&1 || true
 exit $status

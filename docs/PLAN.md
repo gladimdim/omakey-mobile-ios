@@ -4,7 +4,7 @@
 
 | What | Where | Baseline |
 |------|-------|----------|
-| Android app (the reference) | `../omakey-mobile` | `a1ad3f9` (1.2.1 + Bluetooth icon) |
+| Android app (the reference) | `../omakey-mobile` | `a1ad3f9` at first; now `404a43f` (1.3.0), see `ANDROID_PARITY.md` |
 | Desktop daemon `omakeyd`, bar widget | `../omakey-omarchy-plugin` | `cdcc9b4` |
 | Wire protocol | `omakey-omarchy-plugin/docs/PROTOCOL.md` | version 1 |
 | Test vectors | `omakey-omarchy-plugin/docs/test-vectors.json` | identical to Android's copy |
@@ -19,12 +19,12 @@ the desktop needs no changes.
 
 | Question | Decision |
 |---|---|
-| Team and signing | the one developer team used by `super-desktop-ios` (`29UL2Y36R9`), automatic signing |
-| Bundle id | `com.gladimdim.omakey` (the Android id, and the `com.gladimdim.*` pattern of the other apps) |
-| Release path | the App Store from the first public release. TestFlight only for builds on our own devices |
+| Team and signing | automatic signing; each builder's own team and bundle id in the git-ignored `Config/Local.xcconfig` (`Config/Signing.xcconfig`) |
+| Bundle id | `com.gladimdim.omakey` by default (the Android id) |
+| Release path | open source on GitHub, built from source; no App Store for now (changed 2026-10-09) |
 | License | MIT, as `omakey-omarchy-plugin` |
 | iPad | later (M12). iPhone only until then |
-| Bluetooth Low Energy | planned for later (M11, §12) |
+| Bluetooth | none: dropped 2026-10-09 (§1, §12). The app reaches omakeyd over Wi-Fi only |
 
 ---
 
@@ -37,18 +37,18 @@ light, the pull-down touchpad, portrait mode (the phone's own keyboard
 under the touchpad), the shared clipboard, desktop themes, haptics, the
 typed-text ticker, layout sharing and import, and settings.
 
-**Out, because iOS can't do it:**
+**Out: Bluetooth, all of it** (decided 2026-10-09). The app reaches omakeyd
+over Wi-Fi only.
 
 - **Bluetooth keyboard mode** (the phone as a standard HID keyboard for any
-  computer). iOS has no HID Device profile for apps. Classic Bluetooth is
-  closed to apps, and CoreBluetooth won't let an app advertise the HID
-  service (0x1812). The Bluetooth keyboard section of the connect screen
-  isn't there on iOS.
-- **Bluetooth fallback to omakeyd** (RFCOMM). iOS has no public RFCOMM
-  API: ExternalAccessory only works with MFi accessories. iOS is Wi-Fi only
-  until M11, which adds a Bluetooth Low Energy fallback (§12). The `b`
-  address in a pairing link and the `bt_address` in WELCOME are still
-  parsed and stored.
+  computer) isn't possible: iOS has no HID Device profile for apps, classic
+  Bluetooth is closed to them, and CoreBluetooth won't let an app advertise
+  the HID service (0x1812).
+- **Bluetooth fallback to omakeyd**: RFCOMM isn't possible (ExternalAccessory
+  only works with MFi accessories). A Bluetooth LE link was designed (§12),
+  then dropped. The `b` address in a pairing link and the `bt_address` in
+  WELCOME are part of the protocol, so they're still parsed; nothing uses
+  them.
 
 ---
 
@@ -70,8 +70,8 @@ M = milestone (§5).
 | Remember the address that answered, first of at most 6 | `HostStore.rememberAddress` | same | 3 |
 | Unlink a computer | long press | context menu and swipe action | 4 |
 | REJECT shows "doesn't know this phone. Pair again." and never deletes the pairing | | same | 3 |
-| Bluetooth fallback over RFCOMM | `RfcommLink`, `FallbackLink` | not possible (§1) | — |
-| Bluetooth keyboard mode | `BluetoothHidLink`, `Hid.kt` | not possible (§1) | — |
+| Bluetooth fallback over RFCOMM | `RfcommLink`, `FallbackLink` | none (§1) | — |
+| Bluetooth keyboard mode | `BluetoothHidLink`, `Hid.kt` | none (§1) | — |
 
 ### Keyboard (landscape)
 
@@ -197,8 +197,8 @@ omakey-mobile-ios/
     sync-spec.sh             layouts + keycodes from ../omakey-layout-studio/spec (mirror, not merge)
     sync-vectors.sh          test-vectors.json from ../omakey-omarchy-plugin/docs
     check.sh                 swift test + unsigned generic iOS build
-  docs/                      PLAN.md (this file), ANDROID_PARITY.md, VALIDATION.md
-  store/                     App Store metadata, privacy answers, review notes (M10)
+  docs/                      PLAN.md (this file), ANDROID_PARITY.md, VALIDATION.md, PERFORMANCE.md
+  Config/Signing.xcconfig    signing; your team in the git-ignored Config/Local.xcconfig
   AGENTS.md                  contributor and agent rules
   LICENSE                    MIT
 ```
@@ -220,7 +220,7 @@ omakey-mobile-ios/
 | `ui/PointerPresets.kt`, `ui/Palette.kt` | `PointerPresets.swift`; theme mixing in `ThemeMath.swift`, colors in `Theme/Palette.swift` |
 | `net/Link.kt` | `OmakeyNet/Link.swift` protocol (states: connecting, connected, rejected) |
 | `net/KeyboardLink.kt` | `OmakeyNet/UDPLink.swift` |
-| `net/FallbackLink.kt`, `RfcommLink.kt`, `BluetoothHidLink.kt` | not ported; `Link` leaves room for a second transport |
+| `net/FallbackLink.kt`, `RfcommLink.kt`, `BluetoothHidLink.kt` | not ported: no Bluetooth (§1) |
 | `net/Discovery.kt`, `Reachability.kt` | `OmakeyNet/Discovery.swift` (`NWBrowser`), `OmakeyNet/Reachability.swift` |
 | `store/Stores.kt` | `HostStore` (Keychain), `LayoutStore` (Application Support/layouts), `AppSettings` (`UserDefaults`) |
 | `ui/MainActivity.kt` | `ConnectView` (SwiftUI) |
@@ -279,7 +279,7 @@ omakey-mobile-ios/
    needs no model download. VisionKit's `DataScannerViewController` needs
    an A12 or newer and adds nothing for a QR code.
 6. **iOS 17 minimum, iPhone only, Xcode 27, no dependencies.** This
-   matches `super-desktop-ios`. `TARGETED_DEVICE_FAMILY = 1` until iPad
+   matches the other iPhone apps. `TARGETED_DEVICE_FAMILY = 1` until iPad
    support (M12).
 7. **Same layouts and keycodes as Android**, synced from
    `omakey-layout-studio/spec` by `scripts/sync-spec.sh`, the same script
@@ -298,15 +298,14 @@ unsigned generic iOS build.
 Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 `gladimdim/omakey-mobile-ios`.
 
-### M1: Project skeleton and `OmakeyProtocol` (done, except reserving the name)
+### M1: Project skeleton and `OmakeyProtocol` (done)
 - `Omakey.xcodeproj` (app + unit test targets), `OmakeyKit` package linked
   as a local package, `AGENTS.md`, `docs/ANDROID_PARITY.md` (one row per
   feature in §2, with Android baseline `a1ad3f9`), `scripts/check.sh`,
   `scripts/sync-vectors.sh`.
-- Signing: team `29UL2Y36R9`, automatic, bundle id `com.gladimdim.omakey`,
-  test target `com.gladimdim.omakey.tests`, version 1.0.0 (1).
-- Reserve the name: register the bundle id and create the App Store Connect
-  app record with `asc`. This is an account change, so ask first.
+- Signing: automatic, bundle id `com.gladimdim.omakey`, test target
+  `com.gladimdim.omakey.tests`, version 1.0.0 (1). (Since 2026-10-09 the
+  team and bundle id come from `Config/Local.xcconfig`.)
 - Port `Packets`, `Crypto`, `ClientSession`, `KeyState`, `Pairing`,
   `ClipTransfer`, `Hex`.
 - Port the tests: `TestVectorsTest` (4), `ProtocolTest` (22),
@@ -436,36 +435,17 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 - The import preview is a sheet (an iOS alert can't hold the drawing).
   JSON files open in Omakey from the Files app (`CFBundleDocumentTypes`).
 
-### M10: Polish and release (in the repository: done; in App Store Connect: waiting for the owner)
+### M10: Polish (done)
 
-Done: demo mode ("Try the demo", a stand-in omakeyd inside the app on
-loopback, showing what it receives), the privacy manifest, a dark launch
-screen, Dynamic Type on the SwiftUI screens, the privacy policy
-(`docs/PRIVACY.md`), the listing in `store/metadata` (valid for `asc`),
-the submission checklist and App Review notes (`store/README.md`), and
-`docs/VALIDATION.md`. Waiting: the App Store Connect record, the export
-compliance answer, screenshots and the device checks.
+Demo mode ("Try the demo", a stand-in omakeyd inside the app on loopback,
+showing what it receives), the privacy manifest, a dark launch screen,
+VoiceOver labels, Dynamic Type on the SwiftUI screens, the privacy policy
+(`docs/PRIVACY.md`) and `docs/VALIDATION.md`. An App Store release was
+prepared (listing, review notes) and then set aside on 2026-10-09: the app
+is open source, built from source.
 
-- App icon from `artwork/omakey.svg`, launch screen, VoiceOver labels on the
-  bars and connect screen, Dynamic Type on SwiftUI screens.
-- **Demo mode for App Review.** Reviewers have no omakeyd. A "Demo computer"
-  entry talks to an in-process stand-in for omakeyd on loopback, built from
-  the package's encoders, and shows what it receives. Add review notes and a
-  video of a real Omarchy desktop.
-- `PrivacyInfo.xcprivacy` (UserDefaults reason `CA92.1`), App Privacy
-  "Data Not Collected", export compliance answers, `store/` metadata
-  (`store/README.md` is the submission checklist), screenshots. The `asc`
-  CLI talks to App Store Connect. Credentials stay outside the repository,
-  as in `super-desktop-ios`.
-- Release 1.0.0 straight to the App Store, free, iPhone only. Opt out of
-  availability on Apple silicon Macs: there's no multi-touch there. Internal
-  TestFlight builds only for testing on our own devices, with no external
-  beta. Submitting for review needs your OK.
-- `docs/VALIDATION.md`: what ran on which device and simulator.
-
-### M11 (later): Bluetooth Low Energy fallback
-Off Wi-Fi, the iPhone reaches omakeyd over Bluetooth LE. This needs a
-daemon release first. Design in §12.
+### M11: Bluetooth Low Energy fallback (dropped)
+Dropped on 2026-10-09: no Bluetooth in the iOS app (§1, §12).
 
 ### M12 (later): iPad
 A large keyboard surface (up to 11 touches) without haptics: universal
@@ -500,30 +480,20 @@ sized for a 13″ screen.
 
 ## 7. Desktop side
 
-Nothing is required for M1–M10. omakeyd accepts platform `2` in HELLO and
-lists the phone by the name it sends. M11 needs a daemon release (§12).
-Follow-ups in sibling repositories, each only with approval:
-
-- `omakey-mobile/README.md`: its `ios/` row ("Planned (M3)") should point to
-  this repository.
-- Plugin README and website: an App Store link next to the APK once
-  published.
+Nothing is required. omakeyd accepts platform `2` in HELLO and lists the
+phone by the name it sends. The website links to this repository.
 
 ---
 
-## 8. Release checklist (M10)
+## 8. Building and releasing
 
-- Bundle id `com.gladimdim.omakey`, team `29UL2Y36R9`, automatic signing.
-- App Store Connect record (made in M1), category Utilities, price free,
-  age rating, privacy policy URL (a page in this repository).
-- `Info.plist`: `NSLocalNetworkUsageDescription`, `NSBonjourServices`,
-  `NSCameraUsageDescription`, `CFBundleURLTypes` (`omakey`),
-  `CFBundleDocumentTypes` (`public.json`, opened as a copy),
-  `UISupportedInterfaceOrientations` (portrait + both landscapes),
-  `CADisableMinimumFrameDurationOnPhone`, `ITSAppUsesNonExemptEncryption`.
-- Export compliance: the app encrypts its own traffic with AES-256-GCM
-  through CryptoKit. Answer Apple's questions before the first upload.
-- App Review: demo mode, review notes, a video.
+Open source, built from source in Xcode (see the README): your own team and
+bundle id in `Config/Local.xcconfig`. The `Info.plist` keys:
+`NSLocalNetworkUsageDescription`, `NSBonjourServices`,
+`NSCameraUsageDescription`, `CFBundleURLTypes` (`omakey`),
+`CFBundleDocumentTypes` (`public.json`, opened as a copy),
+`UISupportedInterfaceOrientations` (portrait + both landscapes),
+`CADisableMinimumFrameDurationOnPhone`, `ITSAppUsesNonExemptEncryption`.
 
 ---
 
@@ -536,15 +506,14 @@ Follow-ups in sibling repositories, each only with approval:
 | The user refuses Local Network access, so nothing works | a clear help screen that links to Settings, shown as soon as the browser reports the denial |
 | Third-party keyboards (Gboard, SwiftKey for iOS) change text in unusual ways in portrait mode | `LineDiff` sends any text change as edits; test with each |
 | The paste prompt annoys people | `changeCount` avoids reading when nothing changed; `PasteButton` where we can |
-| App Review can't test without omakeyd | demo mode |
+| Trying it needs omakeyd | demo mode |
 | Keychain items outliving a reinstall bring back stale pairings | wipe on first launch of a fresh install |
 
 ---
 
 ## 10. Open questions
 
-The questions from the first draft are decided (top of this file). Still
-open, for M11: see the end of §12.
+None: the questions from the first draft are decided (top of this file).
 
 ---
 
@@ -558,91 +527,10 @@ change, then move the baseline. The protocol vectors are re-synced with
 
 ---
 
-## 12. M11 (later): Bluetooth Low Energy fallback
+## 12. Bluetooth: dropped
 
-**Goal:** as on Android, typing keeps working when Wi-Fi can't reach the
-computer. iOS apps can't use RFCOMM, so this uses GATT over Bluetooth LE,
-the one Bluetooth path open to them. Only the carrier changes: the packets,
-keys, nonces and counters are the same as over UDP, as with RFCOMM.
-
-### Protocol: a new "Bluetooth LE" section in PROTOCOL.md
-
-- **Service** `4f4b6579-6d61-4b79-9001-6f6d616b6579` (the RFCOMM UUID with
-  `9000` → `9001`), with two characteristics:
-  - `…-9002-…`, **to the desktop**: Write Without Response (and Write).
-  - `…-9003-…`, **to the phone**: Notify.
-- **Framing.** Each direction is a byte stream made of the characteristic
-  values in order. It carries the RFCOMM framing: a 2-byte big-endian
-  length, then the datagram, where a length of 0 or over 1200 closes the
-  connection. A datagram longer than one value (ATT MTU − 3; iOS usually
-  gets 182–244 bytes) spans several values. An INPUT fits in one; a CLIP
-  piece of about 1.1 KB takes a few.
-- **Finding the computer.** The advertisement carries the service UUID,
-  with the 8-byte host id as its service data. iOS hides Bluetooth
-  addresses from apps (CoreBluetooth gives per-app identifiers), so the `b`
-  address can't be used to connect, but the host id identifies the
-  computer. mDNS already broadcasts the host id on the LAN. Over BLE,
-  anyone nearby can see it too. It's no key material, but it is a stable
-  identifier.
-- **WELCOME `features` bit 2** (value 4): the server offers Bluetooth LE.
-  The phone asks for Bluetooth permission only once a computer says it has
-  it, as Android asks for RFCOMM only when there's a `bt_address`.
-- **The rest is as for RFCOMM.** Bluetooth pairing and link encryption are
-  neither needed nor relied on (the characteristics need none). The link
-  layer is reliable and ordered, so there are no resends. The 100 ms
-  heartbeat stays. At most 8 connections, closed after 30 s of silence,
-  keys released when a connection drops, and held keys stay down across a
-  transport switch.
-- **Latency.** An iOS central gets a 15 ms connection interval at best
-  (30 ms is typical), so a key costs 15–30 ms more than over Wi-Fi. That's
-  fine for a fallback, and UDP stays preferred.
-
-### Daemon (`omakeyd`, Rust and zbus, next to `bluetooth.rs`)
-
-- `ble.rs`: register a GATT application (`org.bluez.GattManager1`: an
-  ObjectManager with the service and its two characteristics) and an LE
-  advertisement (`org.bluez.LEAdvertisingManager1`). Register again when
-  `bluetoothd` restarts, as the RFCOMM profile does.
-- `AcquireWrite` and `AcquireNotify` hand over a socket per connection.
-  Read and write them like the RFCOMM streams, reusing the framing and the
-  `Peer::Bluetooth` handling. Report the transport as `bluetooth-le` in
-  `state.json` and the bar widget.
-- Advertise only while the adapter is powered and supports LE. `BtStatus`
-  reports LE separately.
-- Tests next to the RFCOMM ones: a datagram split across many values,
-  several datagrams in one value, and a length of 0 or over 1200 closing
-  the connection.
-- The Steam Deck has BlueZ too, so the same code runs there.
-
-### iOS
-
-- `BLELink` (CoreBluetooth central): scan for the service, match the host
-  id in the service data, connect, subscribe to notifications, then follow
-  `RfcommLink`'s rules. A writer sends the newest state whenever
-  `canSendWriteWithoutResponse` allows, so a burst of touchpad moves becomes
-  one packet. No resends; heartbeat and ping as usual.
-- Port `FallbackLink` and its 6 tests. UDP runs all along. BLE starts after
-  1.2 s without a WELCOME, or when the session in use goes quiet. The first
-  transport to be welcomed owns the session. A WELCOME over UDP moves the
-  phone back to Wi-Fi and BLE stops.
-- `NSBluetoothAlwaysUsageDescription`, asked for once per computer when it
-  first reports the feature. The status pill and the lists show the
-  Bluetooth sign, as on Android.
-- Foreground only. The keyboard only types while it's on screen anyway.
-
-### Android
-
-Nothing is required: Android keeps RFCOMM. The protocol section is written
-so Android could use BLE as well later, for example on phones where RFCOMM
-misbehaves.
-
-### Order and open points
-
-1. Daemon first: a plugin release with BLE, then iOS 1.x with `BLELink`.
-   Phones and desktops without it carry on over Wi-Fi and RFCOMM.
-2. Advertise the fixed host id (simplest, as above), or something that
-   rotates? A rotating id only helps if it can't be derived from the host
-   id, which mDNS already publishes. Start with the fixed id.
-3. Advertise all the time, or only while a paired phone has been seen
-   recently? Desktops don't mind; on a Steam Deck running on battery it may
-   matter. Measure before deciding.
+A Bluetooth Low Energy link to omakeyd (a GATT service carrying the RFCOMM
+framing, a daemon side in BlueZ, and a `BLELink` with a Wi-Fi/Bluetooth
+fallback on the phone) was designed here as M11. On 2026-10-09 it was
+dropped with all Bluetooth: the iOS app reaches omakeyd over Wi-Fi only.
+The design is in this file's history.

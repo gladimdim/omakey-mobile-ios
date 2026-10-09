@@ -5,7 +5,8 @@
 public final class ClientSession {
     public enum Result: Equatable {
         /// Handshake finished; the server is called [hostName].
-        /// [btAddress]: where to reach the computer over Bluetooth, "AA:BB:…"; nil without Bluetooth.
+        /// [btAddress]: where to reach the computer over Bluetooth, "AA:BB:…"; nil without
+        /// Bluetooth. Part of the protocol; the iOS app has no Bluetooth and ignores it.
         case connected(hostName: String, sessionId: UInt32, features: Int, btAddress: String?)
         /// [leds]: the computer's lock lights (`Ack.ledCaps`, …), or nil when it doesn't say.
         /// [theme]: the desktop's theme, in the first few ACKs and after it changes.

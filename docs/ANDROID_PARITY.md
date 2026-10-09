@@ -6,7 +6,7 @@ What the iPhone app has of the Android app's features.
 When Android moves on, diff from this commit, update the rows, then move
 the baseline.
 
-✅ done · 🚧 partly · ⏳ planned (milestone) · ✖ not possible on iOS
+✅ done · 🚧 partly · ⏳ planned (milestone) · ✖ not in the iOS app
 
 ## Protocol (`OmakeyKit/Sources/OmakeyProtocol`)
 
@@ -29,15 +29,15 @@ the baseline.
 | Paste a pairing link | ✅ M4 (`PasteButton`, no paste prompt) |
 | `omakey://pair` and `omakey://layout` links | ✅ M4, M9 |
 | Pairing confirmation: fingerprint, replace warning, link from another app | ✅ M4 |
-| Paired list with Online / Checking / Offline | ✅ M3–M4 (Android's "will try Bluetooth" line ✖) |
+| Paired list with Online / Checking / Offline | ✅ M3–M4 (no "will try Bluetooth" line: no Bluetooth) |
 | Nearby computers (mDNS) | ✅ M3–M4, plus a Local Network help card |
 | Find a computer again after its IP changes | ✅ M3 (`UDPLink.addCandidate`) |
 | Remember the address that answered | ✅ M4–M5 |
 | Unlink a computer | ✅ M4 (context menu) |
 | REJECT → "Pair again" | ✅ M3–M5 |
 | UDP link: timing rules, DSCP EF | ✅ M3 |
-| Bluetooth fallback to omakeyd | ⏳ M11 over Bluetooth LE (RFCOMM ✖) |
-| Bluetooth keyboard mode | ✖ |
+| Bluetooth fallback to omakeyd | ✖ no Bluetooth in the iOS app (dropped 2026-10-09) |
+| Bluetooth keyboard mode | ✖ no Bluetooth in the iOS app (and iOS can't be a HID keyboard) |
 
 ## Keyboard
 

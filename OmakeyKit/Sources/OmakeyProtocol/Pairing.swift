@@ -9,7 +9,8 @@ public struct HostRecord: Equatable, Codable, Sendable {
     public var port: Int
     public var deviceId: [UInt8]
     public var key: [UInt8]
-    /// The computer's Bluetooth adapter, "AA:BB:CC:DD:EE:FF", for a Bluetooth fallback.
+    /// The computer's Bluetooth adapter, "AA:BB:CC:DD:EE:FF": part of the protocol
+    /// (Android's Bluetooth fallback), parsed and kept; the iOS app has no Bluetooth.
     public var btAddress: String?
 
     public init(hostId: String, name: String, addresses: [String], port: Int, deviceId: [UInt8], key: [UInt8], btAddress: String? = nil) {

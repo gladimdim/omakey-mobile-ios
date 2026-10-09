@@ -43,7 +43,6 @@ public final class UDPLink: Link, @unchecked Sendable {
     /// A new candidate arrived: say HELLO to it now, not at the next retry.
     private var helloNow = false
     private var _features = 0
-    private var _btAddress: String?
     private var _peer: Endpoint?
 
     public init(host: HostRecord, phoneName: String, keys: KeyState, listener: LinkListener,
@@ -65,8 +64,6 @@ public final class UDPLink: Link, @unchecked Sendable {
 
     public var features: Int { locked { _features } }
     public var transport: String { "Wi-Fi" }
-    /// The computer's Bluetooth address from its WELCOME, if it has one.
-    public var btAddress: String? { locked { _btAddress } }
     /// The address that answered.
     public var peer: Endpoint? { locked { _peer } }
 
@@ -245,10 +242,9 @@ public final class UDPLink: Link, @unchecked Sendable {
                 let datagram = Array(buf[0..<n])
                 let r = locked { () -> ClientSession.Result? in
                     let r = session.receive(datagram, nowMs: UInt32(truncatingIfNeeded: t)) { claim(self) }
-                    if case .connected(_, _, let features, let bt) = r {
+                    if case .connected(_, _, let features, _) = r {
                         _peer = from
                         _features = features
-                        _btAddress = bt
                         sentVersion = -1 // push the held set right away
                     }
                     return r

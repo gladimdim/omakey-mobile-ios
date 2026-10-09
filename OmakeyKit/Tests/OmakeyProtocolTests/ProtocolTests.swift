@@ -130,22 +130,22 @@ struct ProtocolTests {
 
     private let goodKey = (0..<32).map { UInt8(truncatingIfNeeded: $0 * 7) }
     private var goodLink: String {
-        "omakey://pair?v=1&h=0011223344556677&n=gladimdim%20b9&a=192.168.50.219,100.67.193.30"
+        "omakey://pair?v=1&h=0011223344556677&n=omarchy%20desk&a=192.168.1.20,100.64.0.7"
             + "&p=47800&d=8899aabbccddeeff&k=" + Base64URL.encode(goodKey)
     }
 
     @Test func parsesPairingLink() throws {
         let h = try PairingURI.parse(goodLink)
         #expect(h.hostId == "0011223344556677")
-        #expect(h.name == "gladimdim b9")
-        #expect(h.addresses == ["192.168.50.219", "100.67.193.30"])
+        #expect(h.name == "omarchy desk")
+        #expect(h.addresses == ["192.168.1.20", "100.64.0.7"])
         #expect(h.port == 47800)
         #expect(h.deviceIdHex == "8899aabbccddeeff")
         #expect(h.key == goodKey)
     }
 
     @Test func plusInANameIsASpaceAsOnAndroid() throws {
-        #expect(try PairingURI.parse(goodLink.replacingOccurrences(of: "gladimdim%20b9", with: "my+desk")).name == "my desk")
+        #expect(try PairingURI.parse(goodLink.replacingOccurrences(of: "omarchy%20desk", with: "my+desk")).name == "my desk")
     }
 
     @Test func rejectsBadPairingLinks() {
@@ -154,7 +154,7 @@ struct ProtocolTests {
             goodLink.replacingOccurrences(of: "v=1", with: "v=2"),
             goodLink.replacingOccurrences(of: "h=0011223344556677", with: "h=0011"),
             goodLink.replacingOccurrences(of: "p=47800", with: "p=0"),
-            goodLink.replacingOccurrences(of: "a=192.168.50.219,100.67.193.30", with: "a=not-an-ip"),
+            goodLink.replacingOccurrences(of: "a=192.168.1.20,100.64.0.7", with: "a=not-an-ip"),
             String(goodLink[..<goodLink.range(of: "&k=")!.lowerBound]) + "&k=AAAA",
         ]
         for link in bad {

@@ -102,7 +102,13 @@ final class AppModel {
 
     /// Look for computers while the connect screen shows.
     func startBrowsing() {
-        if discovery == nil {
+        #if DEBUG
+        // Screenshots (scripts/screenshots.sh): no computers from the network they're taken on.
+        let screenshots = ProcessInfo.processInfo.environment["OMAKEY_SCREENSHOTS"] != nil
+        #else
+        let screenshots = false
+        #endif
+        if discovery == nil && !screenshots {
             let d = Discovery { [weak self] found in
                 self?.nearby = found
                 self?.updateReach()

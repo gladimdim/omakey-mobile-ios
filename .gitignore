@@ -19,3 +19,6 @@ xcuserdata/
 
 # Local agent settings (machine-specific paths)
 .claude/
+
+# Your own signing team and bundle id (see Config/Signing.xcconfig).
+Config/Local.xcconfig
