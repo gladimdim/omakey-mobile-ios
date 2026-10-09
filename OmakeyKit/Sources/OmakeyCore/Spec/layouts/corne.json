@@ -1,0 +1,717 @@
+{
+ "format": "omakey-layout",
+ "version": 1,
+ "id": "corne",
+ "name": "Corne (crkbd)",
+ "author": "Omakey",
+ "description": "The 42-key Corne: 3x6 column-staggered halves and three thumb keys each. Hold Lower for numbers, F-keys and vim-style arrows, Raise for symbols, media and navigation.",
+ "width": 14.5,
+ "height": 4.7,
+ "splitAt": 7.5,
+ "keys": [
+  {
+   "id": "tab",
+   "x": 0,
+   "y": 0.3,
+   "w": 1,
+   "h": 1,
+   "label": "Tab",
+   "code": "KEY_TAB",
+   "layers": {
+    "lower": {
+     "code": "KEY_GRAVE",
+     "label": "`"
+    },
+    "raise": {
+     "code": "KEY_ESC",
+     "label": "Esc"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "q",
+   "x": 1,
+   "y": 0.3,
+   "w": 1,
+   "h": 1,
+   "label": "Q",
+   "code": "KEY_Q",
+   "layers": {
+    "lower": {
+     "code": "KEY_1",
+     "label": "1"
+    },
+    "raise": {
+     "code": "KEY_MUTE",
+     "label": "Mute"
+    }
+   }
+  },
+  {
+   "id": "w",
+   "x": 2,
+   "y": 0.1,
+   "w": 1,
+   "h": 1,
+   "label": "W",
+   "code": "KEY_W",
+   "layers": {
+    "lower": {
+     "code": "KEY_2",
+     "label": "2"
+    },
+    "raise": {
+     "code": "KEY_VOLUMEDOWN",
+     "label": "Vol-"
+    }
+   }
+  },
+  {
+   "id": "e",
+   "x": 3,
+   "y": 0,
+   "w": 1,
+   "h": 1,
+   "label": "E",
+   "code": "KEY_E",
+   "layers": {
+    "lower": {
+     "code": "KEY_3",
+     "label": "3"
+    },
+    "raise": {
+     "code": "KEY_VOLUMEUP",
+     "label": "Vol+"
+    }
+   }
+  },
+  {
+   "id": "r",
+   "x": 4,
+   "y": 0.1,
+   "w": 1,
+   "h": 1,
+   "label": "R",
+   "code": "KEY_R",
+   "layers": {
+    "lower": {
+     "code": "KEY_4",
+     "label": "4"
+    },
+    "raise": {
+     "code": "KEY_PREVIOUSSONG",
+     "label": "Prev"
+    }
+   }
+  },
+  {
+   "id": "t",
+   "x": 5,
+   "y": 0.2,
+   "w": 1,
+   "h": 1,
+   "label": "T",
+   "code": "KEY_T",
+   "layers": {
+    "lower": {
+     "code": "KEY_5",
+     "label": "5"
+    },
+    "raise": {
+     "code": "KEY_PLAYPAUSE",
+     "label": "Play"
+    }
+   }
+  },
+  {
+   "id": "y",
+   "x": 8.5,
+   "y": 0.2,
+   "w": 1,
+   "h": 1,
+   "label": "Y",
+   "code": "KEY_Y",
+   "layers": {
+    "lower": {
+     "code": "KEY_6",
+     "label": "6"
+    },
+    "raise": {
+     "code": "KEY_MINUS",
+     "label": "-"
+    }
+   }
+  },
+  {
+   "id": "u",
+   "x": 9.5,
+   "y": 0.1,
+   "w": 1,
+   "h": 1,
+   "label": "U",
+   "code": "KEY_U",
+   "layers": {
+    "lower": {
+     "code": "KEY_7",
+     "label": "7"
+    },
+    "raise": {
+     "code": "KEY_EQUAL",
+     "label": "="
+    }
+   }
+  },
+  {
+   "id": "i",
+   "x": 10.5,
+   "y": 0,
+   "w": 1,
+   "h": 1,
+   "label": "I",
+   "code": "KEY_I",
+   "layers": {
+    "lower": {
+     "code": "KEY_8",
+     "label": "8"
+    },
+    "raise": {
+     "code": "KEY_LEFTBRACE",
+     "label": "["
+    }
+   }
+  },
+  {
+   "id": "o",
+   "x": 11.5,
+   "y": 0.1,
+   "w": 1,
+   "h": 1,
+   "label": "O",
+   "code": "KEY_O",
+   "layers": {
+    "lower": {
+     "code": "KEY_9",
+     "label": "9"
+    },
+    "raise": {
+     "code": "KEY_RIGHTBRACE",
+     "label": "]"
+    }
+   }
+  },
+  {
+   "id": "p",
+   "x": 12.5,
+   "y": 0.3,
+   "w": 1,
+   "h": 1,
+   "label": "P",
+   "code": "KEY_P",
+   "layers": {
+    "lower": {
+     "code": "KEY_0",
+     "label": "0"
+    },
+    "raise": {
+     "code": "KEY_BACKSLASH",
+     "label": "\\"
+    }
+   }
+  },
+  {
+   "id": "backspace",
+   "x": 13.5,
+   "y": 0.3,
+   "w": 1,
+   "h": 1,
+   "label": "⌫",
+   "code": "KEY_BACKSPACE",
+   "layers": {
+    "lower": {
+     "code": "KEY_DELETE",
+     "label": "Del"
+    },
+    "raise": {
+     "code": "KEY_DELETE",
+     "label": "Del"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "leftctrl",
+   "x": 0,
+   "y": 1.3,
+   "w": 1,
+   "h": 1,
+   "label": "Ctrl",
+   "code": "KEY_LEFTCTRL",
+   "layers": {
+    "raise": {
+     "code": "KEY_CAPSLOCK",
+     "label": "Caps"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "a",
+   "x": 1,
+   "y": 1.3,
+   "w": 1,
+   "h": 1,
+   "label": "A",
+   "code": "KEY_A",
+   "layers": {
+    "lower": {
+     "code": "KEY_F1",
+     "label": "F1"
+    },
+    "raise": {
+     "code": "KEY_BRIGHTNESSDOWN",
+     "label": "Bri-"
+    }
+   }
+  },
+  {
+   "id": "s",
+   "x": 2,
+   "y": 1.1,
+   "w": 1,
+   "h": 1,
+   "label": "S",
+   "code": "KEY_S",
+   "layers": {
+    "lower": {
+     "code": "KEY_F2",
+     "label": "F2"
+    },
+    "raise": {
+     "code": "KEY_BRIGHTNESSUP",
+     "label": "Bri+"
+    }
+   }
+  },
+  {
+   "id": "d",
+   "x": 3,
+   "y": 1,
+   "w": 1,
+   "h": 1,
+   "label": "D",
+   "code": "KEY_D",
+   "layers": {
+    "lower": {
+     "code": "KEY_F3",
+     "label": "F3"
+    }
+   }
+  },
+  {
+   "id": "f",
+   "x": 4,
+   "y": 1.1,
+   "w": 1,
+   "h": 1,
+   "label": "F",
+   "code": "KEY_F",
+   "layers": {
+    "lower": {
+     "code": "KEY_F4",
+     "label": "F4"
+    }
+   }
+  },
+  {
+   "id": "g",
+   "x": 5,
+   "y": 1.2,
+   "w": 1,
+   "h": 1,
+   "label": "G",
+   "code": "KEY_G",
+   "layers": {
+    "lower": {
+     "code": "KEY_F5",
+     "label": "F5"
+    },
+    "raise": {
+     "code": "KEY_NEXTSONG",
+     "label": "Next"
+    }
+   }
+  },
+  {
+   "id": "h",
+   "x": 8.5,
+   "y": 1.2,
+   "w": 1,
+   "h": 1,
+   "label": "H",
+   "code": "KEY_H",
+   "layers": {
+    "lower": {
+     "code": "KEY_LEFT",
+     "label": "←"
+    },
+    "raise": {
+     "code": "KEY_LEFT",
+     "label": "←"
+    }
+   }
+  },
+  {
+   "id": "j",
+   "x": 9.5,
+   "y": 1.1,
+   "w": 1,
+   "h": 1,
+   "label": "J",
+   "code": "KEY_J",
+   "layers": {
+    "lower": {
+     "code": "KEY_DOWN",
+     "label": "↓"
+    },
+    "raise": {
+     "code": "KEY_DOWN",
+     "label": "↓"
+    }
+   }
+  },
+  {
+   "id": "k",
+   "x": 10.5,
+   "y": 1,
+   "w": 1,
+   "h": 1,
+   "label": "K",
+   "code": "KEY_K",
+   "layers": {
+    "lower": {
+     "code": "KEY_UP",
+     "label": "↑"
+    },
+    "raise": {
+     "code": "KEY_UP",
+     "label": "↑"
+    }
+   }
+  },
+  {
+   "id": "l",
+   "x": 11.5,
+   "y": 1.1,
+   "w": 1,
+   "h": 1,
+   "label": "L",
+   "code": "KEY_L",
+   "layers": {
+    "lower": {
+     "code": "KEY_RIGHT",
+     "label": "→"
+    },
+    "raise": {
+     "code": "KEY_RIGHT",
+     "label": "→"
+    }
+   }
+  },
+  {
+   "id": "semicolon",
+   "x": 12.5,
+   "y": 1.3,
+   "w": 1,
+   "h": 1,
+   "label": ";",
+   "code": "KEY_SEMICOLON",
+   "sub": ":",
+   "layers": {
+    "lower": {
+     "code": "KEY_HOME",
+     "label": "Home"
+    },
+    "raise": {
+     "code": "KEY_GRAVE",
+     "label": "`"
+    }
+   }
+  },
+  {
+   "id": "apostrophe",
+   "x": 13.5,
+   "y": 1.3,
+   "w": 1,
+   "h": 1,
+   "label": "'",
+   "code": "KEY_APOSTROPHE",
+   "sub": "\"",
+   "layers": {
+    "lower": {
+     "code": "KEY_END",
+     "label": "End"
+    },
+    "raise": {
+     "code": "KEY_APOSTROPHE",
+     "label": "'"
+    }
+   }
+  },
+  {
+   "id": "leftshift",
+   "x": 0,
+   "y": 2.3,
+   "w": 1,
+   "h": 1,
+   "label": "Shift",
+   "code": "KEY_LEFTSHIFT",
+   "style": "mod"
+  },
+  {
+   "id": "z",
+   "x": 1,
+   "y": 2.3,
+   "w": 1,
+   "h": 1,
+   "label": "Z",
+   "code": "KEY_Z",
+   "layers": {
+    "lower": {
+     "code": "KEY_F6",
+     "label": "F6"
+    }
+   }
+  },
+  {
+   "id": "x",
+   "x": 2,
+   "y": 2.1,
+   "w": 1,
+   "h": 1,
+   "label": "X",
+   "code": "KEY_X",
+   "layers": {
+    "lower": {
+     "code": "KEY_F7",
+     "label": "F7"
+    }
+   }
+  },
+  {
+   "id": "c",
+   "x": 3,
+   "y": 2,
+   "w": 1,
+   "h": 1,
+   "label": "C",
+   "code": "KEY_C",
+   "layers": {
+    "lower": {
+     "code": "KEY_F8",
+     "label": "F8"
+    }
+   }
+  },
+  {
+   "id": "v",
+   "x": 4,
+   "y": 2.1,
+   "w": 1,
+   "h": 1,
+   "label": "V",
+   "code": "KEY_V",
+   "layers": {
+    "lower": {
+     "code": "KEY_F9",
+     "label": "F9"
+    }
+   }
+  },
+  {
+   "id": "b",
+   "x": 5,
+   "y": 2.2,
+   "w": 1,
+   "h": 1,
+   "label": "B",
+   "code": "KEY_B",
+   "layers": {
+    "lower": {
+     "code": "KEY_F10",
+     "label": "F10"
+    }
+   }
+  },
+  {
+   "id": "n",
+   "x": 8.5,
+   "y": 2.2,
+   "w": 1,
+   "h": 1,
+   "label": "N",
+   "code": "KEY_N",
+   "layers": {
+    "lower": {
+     "code": "KEY_PAGEUP",
+     "label": "PgUp"
+    },
+    "raise": {
+     "code": "KEY_HOME",
+     "label": "Home"
+    }
+   }
+  },
+  {
+   "id": "m",
+   "x": 9.5,
+   "y": 2.1,
+   "w": 1,
+   "h": 1,
+   "label": "M",
+   "code": "KEY_M",
+   "layers": {
+    "lower": {
+     "code": "KEY_PAGEDOWN",
+     "label": "PgDn"
+    },
+    "raise": {
+     "code": "KEY_PAGEDOWN",
+     "label": "PgDn"
+    }
+   }
+  },
+  {
+   "id": "comma",
+   "x": 10.5,
+   "y": 2,
+   "w": 1,
+   "h": 1,
+   "label": ",",
+   "code": "KEY_COMMA",
+   "sub": "<",
+   "layers": {
+    "lower": {
+     "code": "KEY_F11",
+     "label": "F11"
+    },
+    "raise": {
+     "code": "KEY_PAGEUP",
+     "label": "PgUp"
+    }
+   }
+  },
+  {
+   "id": "dot",
+   "x": 11.5,
+   "y": 2.1,
+   "w": 1,
+   "h": 1,
+   "label": ".",
+   "code": "KEY_DOT",
+   "sub": ">",
+   "layers": {
+    "lower": {
+     "code": "KEY_F12",
+     "label": "F12"
+    },
+    "raise": {
+     "code": "KEY_END",
+     "label": "End"
+    }
+   }
+  },
+  {
+   "id": "slash",
+   "x": 12.5,
+   "y": 2.3,
+   "w": 1,
+   "h": 1,
+   "label": "/",
+   "code": "KEY_SLASH",
+   "sub": "?",
+   "layers": {
+    "lower": {
+     "code": "KEY_INSERT",
+     "label": "Ins"
+    }
+   }
+  },
+  {
+   "id": "esc",
+   "x": 13.5,
+   "y": 2.3,
+   "w": 1,
+   "h": 1,
+   "label": "Esc",
+   "code": "KEY_ESC",
+   "layers": {
+    "lower": {
+     "code": "KEY_SYSRQ",
+     "label": "PrtSc"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "leftmeta",
+   "x": 4,
+   "y": 3.7,
+   "w": 1,
+   "h": 1,
+   "label": "Super",
+   "code": "KEY_LEFTMETA",
+   "style": "mod"
+  },
+  {
+   "id": "lower",
+   "x": 5,
+   "y": 3.7,
+   "w": 1,
+   "h": 1,
+   "label": "Lower",
+   "layer": "lower",
+   "style": "mod"
+  },
+  {
+   "id": "space",
+   "x": 6,
+   "y": 3.2,
+   "w": 1,
+   "h": 1.5,
+   "label": "",
+   "code": "KEY_SPACE",
+   "style": "space"
+  },
+  {
+   "id": "enter",
+   "x": 7.5,
+   "y": 3.2,
+   "w": 1,
+   "h": 1.5,
+   "label": "Enter",
+   "code": "KEY_ENTER",
+   "style": "accent"
+  },
+  {
+   "id": "raise",
+   "x": 8.5,
+   "y": 3.7,
+   "w": 1,
+   "h": 1,
+   "label": "Raise",
+   "layer": "raise",
+   "style": "mod"
+  },
+  {
+   "id": "leftalt",
+   "x": 9.5,
+   "y": 3.7,
+   "w": 1,
+   "h": 1,
+   "label": "Alt",
+   "code": "KEY_LEFTALT",
+   "style": "mod"
+  }
+ ]
+}

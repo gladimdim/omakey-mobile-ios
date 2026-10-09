@@ -44,14 +44,14 @@ the baseline.
 | Feature | iOS |
 |---|---|
 | Layout drawing (shaped keys, split stretch, legends, styles) | ⏳ M5 |
-| Touch-down keys, chords, Fn layers | ⏳ M2 (model), M5 (view) |
-| Sticky keys | ⏳ M2, M5 |
+| Touch-down keys, chords, Fn layers | 🚧 model ✅ M2; view ⏳ M5 |
+| Sticky keys | 🚧 model ✅ M2; button ⏳ M5 |
 | Caps Lock light | ⏳ M5 |
 | Status pill, switch computer, switch layout | ⏳ M5 |
 | Typed text ticker | ⏳ M5 |
 | Release on focus loss, BYE on leaving | ⏳ M5 |
 | Haptics | ⏳ M5 |
-| Theme from the computer | ⏳ M5, M9 |
+| Theme from the computer | 🚧 color math ✅ M2; ⏳ M5, M9 |
 
 ## Touchpad
 
@@ -61,15 +61,15 @@ the baseline.
 | Move, tap, hold, tap-drag, double tap | ⏳ M6 |
 | Two-finger scroll, two- and three-finger taps | ⏳ M6 |
 | Side buttons, scroll strips | ⏳ M6 |
-| Speed strip, presets, per-computer speed | ⏳ M6 |
+| Speed strip, presets, per-computer speed | 🚧 presets ✅ M2; ⏳ M6 |
 | Swipe down on a key pulls the touchpad | ⏳ M6 |
 
 ## Portrait mode
 
 | Feature | iOS |
 |---|---|
-| Phone keyboard mirrored (`LineDiff`, `Typist`) | ⏳ M2 (logic), M7 |
-| Per-character layout (`us`, `ua`) | ⏳ M2, M7 |
+| Phone keyboard mirrored (`LineDiff`, `Typist`) | 🚧 logic ✅ M2; text capture ⏳ M7 |
+| Per-character layout (`us`, `ua`) | 🚧 logic ✅ M2; keyboard language ⏳ M7 |
 | Key strips | ⏳ M7 |
 | Compact touchpad | ⏳ M7 |
 
@@ -84,9 +84,9 @@ the baseline.
 
 | Feature | iOS |
 |---|---|
-| Built-in layouts and keycodes | ⏳ M2 |
-| Layout parser and validation | ⏳ M2 |
-| Layout links (raw DEFLATE, base64url) | ⏳ M2 |
+| Built-in layouts and keycodes | ✅ M2 (`scripts/sync-spec.sh`) |
+| Layout parser and validation | ✅ M2 |
+| Layout links (raw DEFLATE, base64url) | ✅ M2 |
 | Layouts page, previews, share, import, remove | ⏳ M9 |
 | Settings: layout, theme, computers, haptics, typed text | ⏳ M9 |
 | Phone name (iOS only) | ⏳ M9 |

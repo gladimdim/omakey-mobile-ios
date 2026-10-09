@@ -1,0 +1,885 @@
+{
+ "format": "omakey-layout",
+ "version": 1,
+ "id": "ergodox",
+ "name": "ErgoDox",
+ "author": "Omakey",
+ "description": "The 76-key ErgoDox: column-staggered halves with tall inner keys and big thumb clusters (Space, Backspace, Enter, Home/End, PgUp/PgDn). Hold Fn for F1-F12.",
+ "width": 16.5,
+ "height": 8,
+ "splitAt": 8.5,
+ "keys": [
+  {
+   "id": "equal",
+   "x": 0,
+   "y": 0.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "=",
+   "code": "KEY_EQUAL",
+   "sub": "+",
+   "layers": {
+    "fn": {
+     "code": "KEY_F11",
+     "label": "F11"
+    }
+   }
+  },
+  {
+   "id": "1",
+   "x": 1.5,
+   "y": 0.375,
+   "w": 1,
+   "h": 1,
+   "label": "1",
+   "code": "KEY_1",
+   "sub": "!",
+   "layers": {
+    "fn": {
+     "code": "KEY_F1",
+     "label": "F1"
+    }
+   }
+  },
+  {
+   "id": "2",
+   "x": 2.5,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "2",
+   "code": "KEY_2",
+   "sub": "@",
+   "layers": {
+    "fn": {
+     "code": "KEY_F2",
+     "label": "F2"
+    }
+   }
+  },
+  {
+   "id": "3",
+   "x": 3.5,
+   "y": 0,
+   "w": 1,
+   "h": 1,
+   "label": "3",
+   "code": "KEY_3",
+   "sub": "#",
+   "layers": {
+    "fn": {
+     "code": "KEY_F3",
+     "label": "F3"
+    }
+   }
+  },
+  {
+   "id": "4",
+   "x": 4.5,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "4",
+   "code": "KEY_4",
+   "sub": "$",
+   "layers": {
+    "fn": {
+     "code": "KEY_F4",
+     "label": "F4"
+    }
+   }
+  },
+  {
+   "id": "5",
+   "x": 5.5,
+   "y": 0.25,
+   "w": 1,
+   "h": 1,
+   "label": "5",
+   "code": "KEY_5",
+   "sub": "%",
+   "layers": {
+    "fn": {
+     "code": "KEY_F5",
+     "label": "F5"
+    }
+   }
+  },
+  {
+   "id": "esc",
+   "x": 6.5,
+   "y": 0.25,
+   "w": 1,
+   "h": 1,
+   "label": "Esc",
+   "code": "KEY_ESC",
+   "style": "mod"
+  },
+  {
+   "id": "delete",
+   "x": 9.0,
+   "y": 0.25,
+   "w": 1,
+   "h": 1,
+   "label": "Del",
+   "code": "KEY_DELETE",
+   "style": "mod"
+  },
+  {
+   "id": "6",
+   "x": 10.0,
+   "y": 0.25,
+   "w": 1,
+   "h": 1,
+   "label": "6",
+   "code": "KEY_6",
+   "sub": "^",
+   "layers": {
+    "fn": {
+     "code": "KEY_F6",
+     "label": "F6"
+    }
+   }
+  },
+  {
+   "id": "7",
+   "x": 11.0,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "7",
+   "code": "KEY_7",
+   "sub": "&",
+   "layers": {
+    "fn": {
+     "code": "KEY_F7",
+     "label": "F7"
+    }
+   }
+  },
+  {
+   "id": "8",
+   "x": 12.0,
+   "y": 0,
+   "w": 1,
+   "h": 1,
+   "label": "8",
+   "code": "KEY_8",
+   "sub": "*",
+   "layers": {
+    "fn": {
+     "code": "KEY_F8",
+     "label": "F8"
+    }
+   }
+  },
+  {
+   "id": "9",
+   "x": 13.0,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "9",
+   "code": "KEY_9",
+   "sub": "(",
+   "layers": {
+    "fn": {
+     "code": "KEY_F9",
+     "label": "F9"
+    }
+   }
+  },
+  {
+   "id": "0",
+   "x": 14.0,
+   "y": 0.375,
+   "w": 1,
+   "h": 1,
+   "label": "0",
+   "code": "KEY_0",
+   "sub": ")",
+   "layers": {
+    "fn": {
+     "code": "KEY_F10",
+     "label": "F10"
+    }
+   }
+  },
+  {
+   "id": "minus",
+   "x": 15.0,
+   "y": 0.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "-",
+   "code": "KEY_MINUS",
+   "sub": "_",
+   "layers": {
+    "fn": {
+     "code": "KEY_F12",
+     "label": "F12"
+    }
+   }
+  },
+  {
+   "id": "tab",
+   "x": 0,
+   "y": 1.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "Tab",
+   "code": "KEY_TAB",
+   "style": "mod"
+  },
+  {
+   "id": "q",
+   "x": 1.5,
+   "y": 1.375,
+   "w": 1,
+   "h": 1,
+   "label": "Q",
+   "code": "KEY_Q"
+  },
+  {
+   "id": "w",
+   "x": 2.5,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "W",
+   "code": "KEY_W"
+  },
+  {
+   "id": "e",
+   "x": 3.5,
+   "y": 1,
+   "w": 1,
+   "h": 1,
+   "label": "E",
+   "code": "KEY_E"
+  },
+  {
+   "id": "r",
+   "x": 4.5,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "R",
+   "code": "KEY_R"
+  },
+  {
+   "id": "t",
+   "x": 5.5,
+   "y": 1.25,
+   "w": 1,
+   "h": 1,
+   "label": "T",
+   "code": "KEY_T"
+  },
+  {
+   "id": "leftbrace",
+   "x": 6.5,
+   "y": 1.25,
+   "w": 1,
+   "h": 1.5,
+   "label": "[",
+   "code": "KEY_LEFTBRACE",
+   "sub": "{"
+  },
+  {
+   "id": "rightbrace",
+   "x": 9.0,
+   "y": 1.25,
+   "w": 1,
+   "h": 1.5,
+   "label": "]",
+   "code": "KEY_RIGHTBRACE",
+   "sub": "}"
+  },
+  {
+   "id": "y",
+   "x": 10.0,
+   "y": 1.25,
+   "w": 1,
+   "h": 1,
+   "label": "Y",
+   "code": "KEY_Y"
+  },
+  {
+   "id": "u",
+   "x": 11.0,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "U",
+   "code": "KEY_U"
+  },
+  {
+   "id": "i",
+   "x": 12.0,
+   "y": 1,
+   "w": 1,
+   "h": 1,
+   "label": "I",
+   "code": "KEY_I"
+  },
+  {
+   "id": "o",
+   "x": 13.0,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "O",
+   "code": "KEY_O"
+  },
+  {
+   "id": "p",
+   "x": 14.0,
+   "y": 1.375,
+   "w": 1,
+   "h": 1,
+   "label": "P",
+   "code": "KEY_P"
+  },
+  {
+   "id": "backslash",
+   "x": 15.0,
+   "y": 1.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "\\",
+   "code": "KEY_BACKSLASH",
+   "sub": "|"
+  },
+  {
+   "id": "capslock",
+   "x": 0,
+   "y": 2.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "Caps",
+   "code": "KEY_CAPSLOCK",
+   "style": "mod"
+  },
+  {
+   "id": "a",
+   "x": 1.5,
+   "y": 2.375,
+   "w": 1,
+   "h": 1,
+   "label": "A",
+   "code": "KEY_A",
+   "layers": {
+    "fn": {
+     "code": "KEY_MUTE",
+     "label": "Mute"
+    }
+   }
+  },
+  {
+   "id": "s",
+   "x": 2.5,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "S",
+   "code": "KEY_S",
+   "layers": {
+    "fn": {
+     "code": "KEY_VOLUMEDOWN",
+     "label": "Vol-"
+    }
+   }
+  },
+  {
+   "id": "d",
+   "x": 3.5,
+   "y": 2,
+   "w": 1,
+   "h": 1,
+   "label": "D",
+   "code": "KEY_D",
+   "layers": {
+    "fn": {
+     "code": "KEY_VOLUMEUP",
+     "label": "Vol+"
+    }
+   }
+  },
+  {
+   "id": "f",
+   "x": 4.5,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "F",
+   "code": "KEY_F",
+   "layers": {
+    "fn": {
+     "code": "KEY_PREVIOUSSONG",
+     "label": "Prev"
+    }
+   }
+  },
+  {
+   "id": "g",
+   "x": 5.5,
+   "y": 2.25,
+   "w": 1,
+   "h": 1,
+   "label": "G",
+   "code": "KEY_G",
+   "layers": {
+    "fn": {
+     "code": "KEY_PLAYPAUSE",
+     "label": "Play"
+    }
+   }
+  },
+  {
+   "id": "h",
+   "x": 10.0,
+   "y": 2.25,
+   "w": 1,
+   "h": 1,
+   "label": "H",
+   "code": "KEY_H",
+   "layers": {
+    "fn": {
+     "code": "KEY_NEXTSONG",
+     "label": "Next"
+    }
+   }
+  },
+  {
+   "id": "j",
+   "x": 11.0,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "J",
+   "code": "KEY_J"
+  },
+  {
+   "id": "k",
+   "x": 12.0,
+   "y": 2,
+   "w": 1,
+   "h": 1,
+   "label": "K",
+   "code": "KEY_K"
+  },
+  {
+   "id": "l",
+   "x": 13.0,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "L",
+   "code": "KEY_L"
+  },
+  {
+   "id": "semicolon",
+   "x": 14.0,
+   "y": 2.375,
+   "w": 1,
+   "h": 1,
+   "label": ";",
+   "code": "KEY_SEMICOLON",
+   "sub": ":"
+  },
+  {
+   "id": "apostrophe",
+   "x": 15.0,
+   "y": 2.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "'",
+   "code": "KEY_APOSTROPHE",
+   "sub": "\""
+  },
+  {
+   "id": "leftshift",
+   "x": 0,
+   "y": 3.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "Shift",
+   "code": "KEY_LEFTSHIFT",
+   "style": "mod"
+  },
+  {
+   "id": "z",
+   "x": 1.5,
+   "y": 3.375,
+   "w": 1,
+   "h": 1,
+   "label": "Z",
+   "code": "KEY_Z",
+   "layers": {
+    "fn": {
+     "code": "KEY_BRIGHTNESSDOWN",
+     "label": "Bri-"
+    }
+   }
+  },
+  {
+   "id": "x",
+   "x": 2.5,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": "X",
+   "code": "KEY_X",
+   "layers": {
+    "fn": {
+     "code": "KEY_BRIGHTNESSUP",
+     "label": "Bri+"
+    }
+   }
+  },
+  {
+   "id": "c",
+   "x": 3.5,
+   "y": 3,
+   "w": 1,
+   "h": 1,
+   "label": "C",
+   "code": "KEY_C"
+  },
+  {
+   "id": "v",
+   "x": 4.5,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": "V",
+   "code": "KEY_V"
+  },
+  {
+   "id": "b",
+   "x": 5.5,
+   "y": 3.25,
+   "w": 1,
+   "h": 1,
+   "label": "B",
+   "code": "KEY_B"
+  },
+  {
+   "id": "leftmeta",
+   "x": 6.5,
+   "y": 2.75,
+   "w": 1,
+   "h": 1.5,
+   "label": "Super",
+   "code": "KEY_LEFTMETA",
+   "style": "mod"
+  },
+  {
+   "id": "compose",
+   "x": 9.0,
+   "y": 2.75,
+   "w": 1,
+   "h": 1.5,
+   "label": "Menu",
+   "code": "KEY_COMPOSE",
+   "style": "mod"
+  },
+  {
+   "id": "n",
+   "x": 10.0,
+   "y": 3.25,
+   "w": 1,
+   "h": 1,
+   "label": "N",
+   "code": "KEY_N"
+  },
+  {
+   "id": "m",
+   "x": 11.0,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": "M",
+   "code": "KEY_M"
+  },
+  {
+   "id": "comma",
+   "x": 12.0,
+   "y": 3,
+   "w": 1,
+   "h": 1,
+   "label": ",",
+   "code": "KEY_COMMA",
+   "sub": "<"
+  },
+  {
+   "id": "dot",
+   "x": 13.0,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": ".",
+   "code": "KEY_DOT",
+   "sub": ">"
+  },
+  {
+   "id": "slash",
+   "x": 14.0,
+   "y": 3.375,
+   "w": 1,
+   "h": 1,
+   "label": "/",
+   "code": "KEY_SLASH",
+   "sub": "?"
+  },
+  {
+   "id": "rightshift",
+   "x": 15.0,
+   "y": 3.375,
+   "w": 1.5,
+   "h": 1,
+   "label": "Shift",
+   "code": "KEY_RIGHTSHIFT",
+   "style": "mod"
+  },
+  {
+   "id": "leftctrl",
+   "x": 0.5,
+   "y": 4.375,
+   "w": 1,
+   "h": 1,
+   "label": "Ctrl",
+   "code": "KEY_LEFTCTRL",
+   "style": "mod"
+  },
+  {
+   "id": "grave",
+   "x": 1.5,
+   "y": 4.375,
+   "w": 1,
+   "h": 1,
+   "label": "`",
+   "code": "KEY_GRAVE",
+   "sub": "~"
+  },
+  {
+   "id": "leftalt",
+   "x": 2.5,
+   "y": 4.125,
+   "w": 1,
+   "h": 1,
+   "label": "Alt",
+   "code": "KEY_LEFTALT",
+   "style": "mod"
+  },
+  {
+   "id": "left",
+   "x": 3.5,
+   "y": 4,
+   "w": 1,
+   "h": 1,
+   "label": "←",
+   "code": "KEY_LEFT",
+   "layers": {
+    "fn": {
+     "code": "KEY_HOME",
+     "label": "Home"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "right",
+   "x": 4.5,
+   "y": 4.125,
+   "w": 1,
+   "h": 1,
+   "label": "→",
+   "code": "KEY_RIGHT",
+   "layers": {
+    "fn": {
+     "code": "KEY_END",
+     "label": "End"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "up",
+   "x": 11.0,
+   "y": 4.125,
+   "w": 1,
+   "h": 1,
+   "label": "↑",
+   "code": "KEY_UP",
+   "style": "mod"
+  },
+  {
+   "id": "down",
+   "x": 12.0,
+   "y": 4,
+   "w": 1,
+   "h": 1,
+   "label": "↓",
+   "code": "KEY_DOWN",
+   "style": "mod"
+  },
+  {
+   "id": "pageup",
+   "x": 13.0,
+   "y": 4.125,
+   "w": 1,
+   "h": 1,
+   "label": "PgUp",
+   "code": "KEY_PAGEUP",
+   "style": "mod"
+  },
+  {
+   "id": "pagedown",
+   "x": 14.0,
+   "y": 4.375,
+   "w": 1,
+   "h": 1,
+   "label": "PgDn",
+   "code": "KEY_PAGEDOWN",
+   "style": "mod"
+  },
+  {
+   "id": "rightctrl",
+   "x": 15.0,
+   "y": 4.375,
+   "w": 1,
+   "h": 1,
+   "label": "Ctrl",
+   "code": "KEY_RIGHTCTRL",
+   "style": "mod"
+  },
+  {
+   "id": "fn",
+   "x": 6,
+   "y": 5,
+   "w": 1,
+   "h": 1,
+   "label": "Fn",
+   "layer": "fn",
+   "style": "mod"
+  },
+  {
+   "id": "leftmeta-2",
+   "x": 7,
+   "y": 5,
+   "w": 1,
+   "h": 1,
+   "label": "Super",
+   "code": "KEY_LEFTMETA",
+   "style": "mod"
+  },
+  {
+   "id": "rightalt",
+   "x": 8.5,
+   "y": 5,
+   "w": 1,
+   "h": 1,
+   "label": "AltGr",
+   "code": "KEY_RIGHTALT",
+   "style": "mod"
+  },
+  {
+   "id": "rightctrl-2",
+   "x": 9.5,
+   "y": 5,
+   "w": 1,
+   "h": 1,
+   "label": "Ctrl",
+   "code": "KEY_RIGHTCTRL",
+   "style": "mod"
+  },
+  {
+   "id": "home",
+   "x": 7,
+   "y": 6,
+   "w": 1,
+   "h": 1,
+   "label": "Home",
+   "code": "KEY_HOME",
+   "style": "mod"
+  },
+  {
+   "id": "pageup-2",
+   "x": 8.5,
+   "y": 6,
+   "w": 1,
+   "h": 1,
+   "label": "PgUp",
+   "code": "KEY_PAGEUP",
+   "style": "mod"
+  },
+  {
+   "id": "space",
+   "x": 5,
+   "y": 6,
+   "w": 1,
+   "h": 2,
+   "label": "",
+   "code": "KEY_SPACE",
+   "style": "space"
+  },
+  {
+   "id": "backspace",
+   "x": 6,
+   "y": 6,
+   "w": 1,
+   "h": 2,
+   "label": "⌫",
+   "code": "KEY_BACKSPACE",
+   "layers": {
+    "fn": {
+     "code": "KEY_DELETE",
+     "label": "Del"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "end",
+   "x": 7,
+   "y": 7,
+   "w": 1,
+   "h": 1,
+   "label": "End",
+   "code": "KEY_END",
+   "style": "mod"
+  },
+  {
+   "id": "pagedown-2",
+   "x": 8.5,
+   "y": 7,
+   "w": 1,
+   "h": 1,
+   "label": "PgDn",
+   "code": "KEY_PAGEDOWN",
+   "style": "mod"
+  },
+  {
+   "id": "enter",
+   "x": 9.5,
+   "y": 6,
+   "w": 1,
+   "h": 2,
+   "label": "Enter",
+   "code": "KEY_ENTER",
+   "style": "accent"
+  },
+  {
+   "id": "space-2",
+   "x": 10.5,
+   "y": 6,
+   "w": 1,
+   "h": 2,
+   "label": "",
+   "code": "KEY_SPACE",
+   "style": "space"
+  }
+ ]
+}

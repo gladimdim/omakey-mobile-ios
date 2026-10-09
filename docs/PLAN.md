@@ -314,7 +314,7 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   CLIP put and CLIP_REPLY); the fingerprint of the vector key is `630D-CD29`;
   an iOS HELLO decodes with platform 2.
 
-### M2: `OmakeyCore`
+### M2: `OmakeyCore` (done)
 - `Keycodes`, `Layout`, `LayoutParser` (all LAYOUT.md checks: id and layer
   regexes, sizes, 256 keys, 16-character labels, 8 parts, 256 KB, depth
   32), `LayoutLink`, `KeyboardModel`, `UsKeys`, `KeyLayouts` (`us`, `ua`),

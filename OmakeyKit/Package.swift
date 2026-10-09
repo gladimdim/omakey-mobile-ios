@@ -8,13 +8,20 @@ let package = Package(
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
         .library(name: "OmakeyProtocol", targets: ["OmakeyProtocol"]),
+        .library(name: "OmakeyCore", targets: ["OmakeyCore"]),
     ],
     targets: [
         .target(name: "OmakeyProtocol"),
+        .target(
+            name: "OmakeyCore",
+            dependencies: ["OmakeyProtocol"],
+            resources: [.copy("Spec")]
+        ),
         .testTarget(
             name: "OmakeyProtocolTests",
             dependencies: ["OmakeyProtocol"],
             resources: [.copy("Fixtures")]
         ),
+        .testTarget(name: "OmakeyCoreTests", dependencies: ["OmakeyCore", "OmakeyProtocol"]),
     ]
 )

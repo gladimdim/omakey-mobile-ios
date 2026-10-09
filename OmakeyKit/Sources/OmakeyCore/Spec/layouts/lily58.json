@@ -1,0 +1,763 @@
+{
+ "format": "omakey-layout",
+ "version": 1,
+ "id": "lily58",
+ "name": "Lily58",
+ "author": "Omakey",
+ "description": "58 keys: 6x4 column-staggered halves, an inner key each side and four thumb keys. Lower gives F-keys and arrows, Raise gives = and \\ plus media.",
+ "width": 14.5,
+ "height": 5.75,
+ "splitAt": 7.5,
+ "keys": [
+  {
+   "id": "esc",
+   "x": 0,
+   "y": 0.5,
+   "w": 1,
+   "h": 1,
+   "label": "Esc",
+   "code": "KEY_ESC",
+   "layers": {
+    "lower": {
+     "code": "KEY_F1",
+     "label": "F1"
+    },
+    "raise": {
+     "code": "KEY_MUTE",
+     "label": "Mute"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "1",
+   "x": 1,
+   "y": 0.375,
+   "w": 1,
+   "h": 1,
+   "label": "1",
+   "code": "KEY_1",
+   "sub": "!",
+   "layers": {
+    "lower": {
+     "code": "KEY_F2",
+     "label": "F2"
+    },
+    "raise": {
+     "code": "KEY_VOLUMEDOWN",
+     "label": "Vol-"
+    }
+   }
+  },
+  {
+   "id": "2",
+   "x": 2,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "2",
+   "code": "KEY_2",
+   "sub": "@",
+   "layers": {
+    "lower": {
+     "code": "KEY_F3",
+     "label": "F3"
+    },
+    "raise": {
+     "code": "KEY_VOLUMEUP",
+     "label": "Vol+"
+    }
+   }
+  },
+  {
+   "id": "3",
+   "x": 3,
+   "y": 0,
+   "w": 1,
+   "h": 1,
+   "label": "3",
+   "code": "KEY_3",
+   "sub": "#",
+   "layers": {
+    "lower": {
+     "code": "KEY_F4",
+     "label": "F4"
+    },
+    "raise": {
+     "code": "KEY_PREVIOUSSONG",
+     "label": "Prev"
+    }
+   }
+  },
+  {
+   "id": "4",
+   "x": 4,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "4",
+   "code": "KEY_4",
+   "sub": "$",
+   "layers": {
+    "lower": {
+     "code": "KEY_F5",
+     "label": "F5"
+    },
+    "raise": {
+     "code": "KEY_PLAYPAUSE",
+     "label": "Play"
+    }
+   }
+  },
+  {
+   "id": "5",
+   "x": 5,
+   "y": 0.25,
+   "w": 1,
+   "h": 1,
+   "label": "5",
+   "code": "KEY_5",
+   "sub": "%",
+   "layers": {
+    "lower": {
+     "code": "KEY_F6",
+     "label": "F6"
+    },
+    "raise": {
+     "code": "KEY_NEXTSONG",
+     "label": "Next"
+    }
+   }
+  },
+  {
+   "id": "6",
+   "x": 8.5,
+   "y": 0.25,
+   "w": 1,
+   "h": 1,
+   "label": "6",
+   "code": "KEY_6",
+   "sub": "^",
+   "layers": {
+    "lower": {
+     "code": "KEY_F7",
+     "label": "F7"
+    },
+    "raise": {
+     "code": "KEY_BRIGHTNESSDOWN",
+     "label": "Bri-"
+    }
+   }
+  },
+  {
+   "id": "7",
+   "x": 9.5,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "7",
+   "code": "KEY_7",
+   "sub": "&",
+   "layers": {
+    "lower": {
+     "code": "KEY_F8",
+     "label": "F8"
+    },
+    "raise": {
+     "code": "KEY_BRIGHTNESSUP",
+     "label": "Bri+"
+    }
+   }
+  },
+  {
+   "id": "8",
+   "x": 10.5,
+   "y": 0,
+   "w": 1,
+   "h": 1,
+   "label": "8",
+   "code": "KEY_8",
+   "sub": "*",
+   "layers": {
+    "lower": {
+     "code": "KEY_F9",
+     "label": "F9"
+    }
+   }
+  },
+  {
+   "id": "9",
+   "x": 11.5,
+   "y": 0.125,
+   "w": 1,
+   "h": 1,
+   "label": "9",
+   "code": "KEY_9",
+   "sub": "(",
+   "layers": {
+    "lower": {
+     "code": "KEY_F10",
+     "label": "F10"
+    }
+   }
+  },
+  {
+   "id": "0",
+   "x": 12.5,
+   "y": 0.375,
+   "w": 1,
+   "h": 1,
+   "label": "0",
+   "code": "KEY_0",
+   "sub": ")",
+   "layers": {
+    "lower": {
+     "code": "KEY_F11",
+     "label": "F11"
+    }
+   }
+  },
+  {
+   "id": "grave",
+   "x": 13.5,
+   "y": 0.5,
+   "w": 1,
+   "h": 1,
+   "label": "`",
+   "code": "KEY_GRAVE",
+   "sub": "~",
+   "layers": {
+    "lower": {
+     "code": "KEY_F12",
+     "label": "F12"
+    }
+   }
+  },
+  {
+   "id": "tab",
+   "x": 0,
+   "y": 1.5,
+   "w": 1,
+   "h": 1,
+   "label": "Tab",
+   "code": "KEY_TAB",
+   "style": "mod"
+  },
+  {
+   "id": "q",
+   "x": 1,
+   "y": 1.375,
+   "w": 1,
+   "h": 1,
+   "label": "Q",
+   "code": "KEY_Q"
+  },
+  {
+   "id": "w",
+   "x": 2,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "W",
+   "code": "KEY_W"
+  },
+  {
+   "id": "e",
+   "x": 3,
+   "y": 1,
+   "w": 1,
+   "h": 1,
+   "label": "E",
+   "code": "KEY_E"
+  },
+  {
+   "id": "r",
+   "x": 4,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "R",
+   "code": "KEY_R"
+  },
+  {
+   "id": "t",
+   "x": 5,
+   "y": 1.25,
+   "w": 1,
+   "h": 1,
+   "label": "T",
+   "code": "KEY_T"
+  },
+  {
+   "id": "y",
+   "x": 8.5,
+   "y": 1.25,
+   "w": 1,
+   "h": 1,
+   "label": "Y",
+   "code": "KEY_Y",
+   "layers": {
+    "lower": {
+     "code": "KEY_PAGEUP",
+     "label": "PgUp"
+    }
+   }
+  },
+  {
+   "id": "u",
+   "x": 9.5,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "U",
+   "code": "KEY_U",
+   "layers": {
+    "lower": {
+     "code": "KEY_HOME",
+     "label": "Home"
+    }
+   }
+  },
+  {
+   "id": "i",
+   "x": 10.5,
+   "y": 1,
+   "w": 1,
+   "h": 1,
+   "label": "I",
+   "code": "KEY_I",
+   "layers": {
+    "lower": {
+     "code": "KEY_UP",
+     "label": "↑"
+    }
+   }
+  },
+  {
+   "id": "o",
+   "x": 11.5,
+   "y": 1.125,
+   "w": 1,
+   "h": 1,
+   "label": "O",
+   "code": "KEY_O",
+   "layers": {
+    "lower": {
+     "code": "KEY_END",
+     "label": "End"
+    }
+   }
+  },
+  {
+   "id": "p",
+   "x": 12.5,
+   "y": 1.375,
+   "w": 1,
+   "h": 1,
+   "label": "P",
+   "code": "KEY_P",
+   "layers": {
+    "lower": {
+     "code": "KEY_INSERT",
+     "label": "Ins"
+    }
+   }
+  },
+  {
+   "id": "minus",
+   "x": 13.5,
+   "y": 1.5,
+   "w": 1,
+   "h": 1,
+   "label": "-",
+   "code": "KEY_MINUS",
+   "sub": "_",
+   "layers": {
+    "lower": {
+     "code": "KEY_DELETE",
+     "label": "Del"
+    },
+    "raise": {
+     "code": "KEY_EQUAL",
+     "label": "="
+    }
+   }
+  },
+  {
+   "id": "leftctrl",
+   "x": 0,
+   "y": 2.5,
+   "w": 1,
+   "h": 1,
+   "label": "Ctrl",
+   "code": "KEY_LEFTCTRL",
+   "layers": {
+    "raise": {
+     "code": "KEY_CAPSLOCK",
+     "label": "Caps"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "a",
+   "x": 1,
+   "y": 2.375,
+   "w": 1,
+   "h": 1,
+   "label": "A",
+   "code": "KEY_A"
+  },
+  {
+   "id": "s",
+   "x": 2,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "S",
+   "code": "KEY_S"
+  },
+  {
+   "id": "d",
+   "x": 3,
+   "y": 2,
+   "w": 1,
+   "h": 1,
+   "label": "D",
+   "code": "KEY_D"
+  },
+  {
+   "id": "f",
+   "x": 4,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "F",
+   "code": "KEY_F"
+  },
+  {
+   "id": "g",
+   "x": 5,
+   "y": 2.25,
+   "w": 1,
+   "h": 1,
+   "label": "G",
+   "code": "KEY_G"
+  },
+  {
+   "id": "h",
+   "x": 8.5,
+   "y": 2.25,
+   "w": 1,
+   "h": 1,
+   "label": "H",
+   "code": "KEY_H",
+   "layers": {
+    "lower": {
+     "code": "KEY_PAGEDOWN",
+     "label": "PgDn"
+    }
+   }
+  },
+  {
+   "id": "j",
+   "x": 9.5,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "J",
+   "code": "KEY_J",
+   "layers": {
+    "lower": {
+     "code": "KEY_LEFT",
+     "label": "←"
+    }
+   }
+  },
+  {
+   "id": "k",
+   "x": 10.5,
+   "y": 2,
+   "w": 1,
+   "h": 1,
+   "label": "K",
+   "code": "KEY_K",
+   "layers": {
+    "lower": {
+     "code": "KEY_DOWN",
+     "label": "↓"
+    }
+   }
+  },
+  {
+   "id": "l",
+   "x": 11.5,
+   "y": 2.125,
+   "w": 1,
+   "h": 1,
+   "label": "L",
+   "code": "KEY_L",
+   "layers": {
+    "lower": {
+     "code": "KEY_RIGHT",
+     "label": "→"
+    }
+   }
+  },
+  {
+   "id": "semicolon",
+   "x": 12.5,
+   "y": 2.375,
+   "w": 1,
+   "h": 1,
+   "label": ";",
+   "code": "KEY_SEMICOLON",
+   "sub": ":",
+   "layers": {
+    "lower": {
+     "code": "KEY_SYSRQ",
+     "label": "PrtSc"
+    }
+   }
+  },
+  {
+   "id": "apostrophe",
+   "x": 13.5,
+   "y": 2.5,
+   "w": 1,
+   "h": 1,
+   "label": "'",
+   "code": "KEY_APOSTROPHE",
+   "sub": "\"",
+   "layers": {
+    "lower": {
+     "code": "KEY_COMPOSE",
+     "label": "Menu"
+    },
+    "raise": {
+     "code": "KEY_BACKSLASH",
+     "label": "\\"
+    }
+   }
+  },
+  {
+   "id": "leftshift",
+   "x": 0,
+   "y": 3.5,
+   "w": 1,
+   "h": 1,
+   "label": "Shift",
+   "code": "KEY_LEFTSHIFT",
+   "style": "mod"
+  },
+  {
+   "id": "z",
+   "x": 1,
+   "y": 3.375,
+   "w": 1,
+   "h": 1,
+   "label": "Z",
+   "code": "KEY_Z"
+  },
+  {
+   "id": "x",
+   "x": 2,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": "X",
+   "code": "KEY_X"
+  },
+  {
+   "id": "c",
+   "x": 3,
+   "y": 3,
+   "w": 1,
+   "h": 1,
+   "label": "C",
+   "code": "KEY_C"
+  },
+  {
+   "id": "v",
+   "x": 4,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": "V",
+   "code": "KEY_V"
+  },
+  {
+   "id": "b",
+   "x": 5,
+   "y": 3.25,
+   "w": 1,
+   "h": 1,
+   "label": "B",
+   "code": "KEY_B"
+  },
+  {
+   "id": "leftbrace",
+   "x": 6,
+   "y": 2.75,
+   "w": 1,
+   "h": 1,
+   "label": "[",
+   "code": "KEY_LEFTBRACE",
+   "sub": "{"
+  },
+  {
+   "id": "rightbrace",
+   "x": 7.5,
+   "y": 2.75,
+   "w": 1,
+   "h": 1,
+   "label": "]",
+   "code": "KEY_RIGHTBRACE",
+   "sub": "}"
+  },
+  {
+   "id": "n",
+   "x": 8.5,
+   "y": 3.25,
+   "w": 1,
+   "h": 1,
+   "label": "N",
+   "code": "KEY_N"
+  },
+  {
+   "id": "m",
+   "x": 9.5,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": "M",
+   "code": "KEY_M"
+  },
+  {
+   "id": "comma",
+   "x": 10.5,
+   "y": 3,
+   "w": 1,
+   "h": 1,
+   "label": ",",
+   "code": "KEY_COMMA",
+   "sub": "<"
+  },
+  {
+   "id": "dot",
+   "x": 11.5,
+   "y": 3.125,
+   "w": 1,
+   "h": 1,
+   "label": ".",
+   "code": "KEY_DOT",
+   "sub": ">"
+  },
+  {
+   "id": "slash",
+   "x": 12.5,
+   "y": 3.375,
+   "w": 1,
+   "h": 1,
+   "label": "/",
+   "code": "KEY_SLASH",
+   "sub": "?"
+  },
+  {
+   "id": "rightshift",
+   "x": 13.5,
+   "y": 3.5,
+   "w": 1,
+   "h": 1,
+   "label": "Shift",
+   "code": "KEY_RIGHTSHIFT",
+   "style": "mod"
+  },
+  {
+   "id": "leftalt",
+   "x": 2.5,
+   "y": 4.125,
+   "w": 1,
+   "h": 1,
+   "label": "Alt",
+   "code": "KEY_LEFTALT",
+   "style": "mod"
+  },
+  {
+   "id": "leftmeta",
+   "x": 3.5,
+   "y": 4.15,
+   "w": 1,
+   "h": 1,
+   "label": "Super",
+   "code": "KEY_LEFTMETA",
+   "style": "mod"
+  },
+  {
+   "id": "lower",
+   "x": 4.5,
+   "y": 4.25,
+   "w": 1,
+   "h": 1,
+   "label": "Lower",
+   "layer": "lower",
+   "style": "mod"
+  },
+  {
+   "id": "space",
+   "x": 6,
+   "y": 4.25,
+   "w": 1,
+   "h": 1.5,
+   "label": "",
+   "code": "KEY_SPACE",
+   "style": "space"
+  },
+  {
+   "id": "enter",
+   "x": 7.5,
+   "y": 4.25,
+   "w": 1,
+   "h": 1.5,
+   "label": "Enter",
+   "code": "KEY_ENTER",
+   "style": "accent"
+  },
+  {
+   "id": "raise",
+   "x": 9.0,
+   "y": 4.25,
+   "w": 1,
+   "h": 1,
+   "label": "Raise",
+   "layer": "raise",
+   "style": "mod"
+  },
+  {
+   "id": "backspace",
+   "x": 10.0,
+   "y": 4.15,
+   "w": 1,
+   "h": 1,
+   "label": "⌫",
+   "code": "KEY_BACKSPACE",
+   "layers": {
+    "raise": {
+     "code": "KEY_DELETE",
+     "label": "Del"
+    }
+   },
+   "style": "mod"
+  },
+  {
+   "id": "rightmeta",
+   "x": 11.0,
+   "y": 4.15,
+   "w": 1,
+   "h": 1,
+   "label": "Super",
+   "code": "KEY_RIGHTMETA",
+   "style": "mod"
+  }
+ ]
+}

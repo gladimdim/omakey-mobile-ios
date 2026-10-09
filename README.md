@@ -6,8 +6,9 @@ becomes a key press on a kernel-level virtual keyboard made by `omakeyd`,
 so Hyprland binds, `SUPER + SPACE`, F-keys, Esc and the lock screen all
 work as they do with a hardware keyboard.
 
-**Status: in development.** The protocol is done and reproduces the
-daemon's test vectors byte for byte (M1). The screens come next. See
+**Status: in development.** The protocol (M1) reproduces the daemon's
+test vectors byte for byte, and the keyboard logic and the 10 stock
+layouts are ported (M2). Networking and the screens come next. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 

@@ -1,0 +1,3090 @@
+{
+ "format": "omakey-keycodes",
+ "version": 1,
+ "keys": [
+  {
+   "name": "KEY_ESC",
+   "code": 1,
+   "label": "Esc",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_1",
+   "code": 2,
+   "label": "1",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_2",
+   "code": 3,
+   "label": "2",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_3",
+   "code": 4,
+   "label": "3",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_4",
+   "code": 5,
+   "label": "4",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_5",
+   "code": 6,
+   "label": "5",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_6",
+   "code": 7,
+   "label": "6",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_7",
+   "code": 8,
+   "label": "7",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_8",
+   "code": 9,
+   "label": "8",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_9",
+   "code": 10,
+   "label": "9",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_0",
+   "code": 11,
+   "label": "0",
+   "group": "digits"
+  },
+  {
+   "name": "KEY_MINUS",
+   "code": 12,
+   "label": "-",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_EQUAL",
+   "code": 13,
+   "label": "=",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_BACKSPACE",
+   "code": 14,
+   "label": "Backspace",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_TAB",
+   "code": 15,
+   "label": "Tab",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_Q",
+   "code": 16,
+   "label": "Q",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_W",
+   "code": 17,
+   "label": "W",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_E",
+   "code": 18,
+   "label": "E",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_R",
+   "code": 19,
+   "label": "R",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_T",
+   "code": 20,
+   "label": "T",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_Y",
+   "code": 21,
+   "label": "Y",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_U",
+   "code": 22,
+   "label": "U",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_I",
+   "code": 23,
+   "label": "I",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_O",
+   "code": 24,
+   "label": "O",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_P",
+   "code": 25,
+   "label": "P",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_LEFTBRACE",
+   "code": 26,
+   "label": "[",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_RIGHTBRACE",
+   "code": 27,
+   "label": "]",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_ENTER",
+   "code": 28,
+   "label": "Enter",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_LEFTCTRL",
+   "code": 29,
+   "label": "Ctrl",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_A",
+   "code": 30,
+   "label": "A",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_S",
+   "code": 31,
+   "label": "S",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_D",
+   "code": 32,
+   "label": "D",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_F",
+   "code": 33,
+   "label": "F",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_G",
+   "code": 34,
+   "label": "G",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_H",
+   "code": 35,
+   "label": "H",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_J",
+   "code": 36,
+   "label": "J",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_K",
+   "code": 37,
+   "label": "K",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_L",
+   "code": 38,
+   "label": "L",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_SEMICOLON",
+   "code": 39,
+   "label": ";",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_APOSTROPHE",
+   "code": 40,
+   "label": "'",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_GRAVE",
+   "code": 41,
+   "label": "`",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_LEFTSHIFT",
+   "code": 42,
+   "label": "Shift",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_BACKSLASH",
+   "code": 43,
+   "label": "\\",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_Z",
+   "code": 44,
+   "label": "Z",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_X",
+   "code": 45,
+   "label": "X",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_C",
+   "code": 46,
+   "label": "C",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_V",
+   "code": 47,
+   "label": "V",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_B",
+   "code": 48,
+   "label": "B",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_N",
+   "code": 49,
+   "label": "N",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_M",
+   "code": 50,
+   "label": "M",
+   "group": "letters"
+  },
+  {
+   "name": "KEY_COMMA",
+   "code": 51,
+   "label": ",",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_DOT",
+   "code": 52,
+   "label": ".",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_SLASH",
+   "code": 53,
+   "label": "/",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_RIGHTSHIFT",
+   "code": 54,
+   "label": "Shift",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_KPASTERISK",
+   "code": 55,
+   "label": "KP *",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_LEFTALT",
+   "code": 56,
+   "label": "Alt",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_SPACE",
+   "code": 57,
+   "label": "Space",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_CAPSLOCK",
+   "code": 58,
+   "label": "Caps",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_F1",
+   "code": 59,
+   "label": "F1",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F2",
+   "code": 60,
+   "label": "F2",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F3",
+   "code": 61,
+   "label": "F3",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F4",
+   "code": 62,
+   "label": "F4",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F5",
+   "code": 63,
+   "label": "F5",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F6",
+   "code": 64,
+   "label": "F6",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F7",
+   "code": 65,
+   "label": "F7",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F8",
+   "code": 66,
+   "label": "F8",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F9",
+   "code": 67,
+   "label": "F9",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F10",
+   "code": 68,
+   "label": "F10",
+   "group": "function"
+  },
+  {
+   "name": "KEY_NUMLOCK",
+   "code": 69,
+   "label": "Num",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SCROLLLOCK",
+   "code": 70,
+   "label": "ScrLk",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_KP7",
+   "code": 71,
+   "label": "KP 7",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP8",
+   "code": 72,
+   "label": "KP 8",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP9",
+   "code": 73,
+   "label": "KP 9",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KPMINUS",
+   "code": 74,
+   "label": "KP -",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP4",
+   "code": 75,
+   "label": "KP 4",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP5",
+   "code": 76,
+   "label": "KP 5",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP6",
+   "code": 77,
+   "label": "KP 6",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KPPLUS",
+   "code": 78,
+   "label": "KP +",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP1",
+   "code": 79,
+   "label": "KP 1",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP2",
+   "code": 80,
+   "label": "KP 2",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP3",
+   "code": 81,
+   "label": "KP 3",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KP0",
+   "code": 82,
+   "label": "KP 0",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KPDOT",
+   "code": 83,
+   "label": "KP .",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_ZENKAKUHANKAKU",
+   "code": 85,
+   "label": "Zenkakuhankaku",
+   "group": "international"
+  },
+  {
+   "name": "KEY_102ND",
+   "code": 86,
+   "label": "<>",
+   "group": "punctuation"
+  },
+  {
+   "name": "KEY_F11",
+   "code": 87,
+   "label": "F11",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F12",
+   "code": 88,
+   "label": "F12",
+   "group": "function"
+  },
+  {
+   "name": "KEY_RO",
+   "code": 89,
+   "label": "RO",
+   "group": "international"
+  },
+  {
+   "name": "KEY_KATAKANA",
+   "code": 90,
+   "label": "Katakana",
+   "group": "international"
+  },
+  {
+   "name": "KEY_HIRAGANA",
+   "code": 91,
+   "label": "Hiragana",
+   "group": "international"
+  },
+  {
+   "name": "KEY_HENKAN",
+   "code": 92,
+   "label": "Henkan",
+   "group": "international"
+  },
+  {
+   "name": "KEY_KATAKANAHIRAGANA",
+   "code": 93,
+   "label": "Katakanahiragana",
+   "group": "international"
+  },
+  {
+   "name": "KEY_MUHENKAN",
+   "code": 94,
+   "label": "Muhenkan",
+   "group": "international"
+  },
+  {
+   "name": "KEY_KPJPCOMMA",
+   "code": 95,
+   "label": "Kpjpcomma",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KPENTER",
+   "code": 96,
+   "label": "KP Enter",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_RIGHTCTRL",
+   "code": 97,
+   "label": "Ctrl",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_KPSLASH",
+   "code": 98,
+   "label": "KP /",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_SYSRQ",
+   "code": 99,
+   "label": "PrtSc",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_RIGHTALT",
+   "code": 100,
+   "label": "AltGr",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_LINEFEED",
+   "code": 101,
+   "label": "Linefeed",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_HOME",
+   "code": 102,
+   "label": "Home",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_UP",
+   "code": 103,
+   "label": "↑",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_PAGEUP",
+   "code": 104,
+   "label": "PgUp",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_LEFT",
+   "code": 105,
+   "label": "←",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_RIGHT",
+   "code": 106,
+   "label": "→",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_END",
+   "code": 107,
+   "label": "End",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_DOWN",
+   "code": 108,
+   "label": "↓",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_PAGEDOWN",
+   "code": 109,
+   "label": "PgDn",
+   "group": "navigation"
+  },
+  {
+   "name": "KEY_INSERT",
+   "code": 110,
+   "label": "Ins",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_DELETE",
+   "code": 111,
+   "label": "Del",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_MACRO",
+   "code": 112,
+   "label": "Macro",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MUTE",
+   "code": 113,
+   "label": "Mute",
+   "group": "media"
+  },
+  {
+   "name": "KEY_VOLUMEDOWN",
+   "code": 114,
+   "label": "Vol-",
+   "group": "media"
+  },
+  {
+   "name": "KEY_VOLUMEUP",
+   "code": 115,
+   "label": "Vol+",
+   "group": "media"
+  },
+  {
+   "name": "KEY_POWER",
+   "code": 116,
+   "label": "Power",
+   "group": "system"
+  },
+  {
+   "name": "KEY_KPEQUAL",
+   "code": 117,
+   "label": "KP =",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KPPLUSMINUS",
+   "code": 118,
+   "label": "Kpplusminus",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_PAUSE",
+   "code": 119,
+   "label": "Pause",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_SCALE",
+   "code": 120,
+   "label": "Scale",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KPCOMMA",
+   "code": 121,
+   "label": "Kpcomma",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_HANGEUL",
+   "code": 122,
+   "label": "Hangeul",
+   "group": "international"
+  },
+  {
+   "name": "KEY_HANJA",
+   "code": 123,
+   "label": "Hanja",
+   "group": "international"
+  },
+  {
+   "name": "KEY_YEN",
+   "code": 124,
+   "label": "YEN",
+   "group": "international"
+  },
+  {
+   "name": "KEY_LEFTMETA",
+   "code": 125,
+   "label": "Super",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_RIGHTMETA",
+   "code": 126,
+   "label": "Super",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_COMPOSE",
+   "code": 127,
+   "label": "Menu",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_STOP",
+   "code": 128,
+   "label": "Stop",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_AGAIN",
+   "code": 129,
+   "label": "Again",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PROPS",
+   "code": 130,
+   "label": "Props",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_UNDO",
+   "code": 131,
+   "label": "Undo",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FRONT",
+   "code": 132,
+   "label": "Front",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_COPY",
+   "code": 133,
+   "label": "Copy",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_OPEN",
+   "code": 134,
+   "label": "Open",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PASTE",
+   "code": 135,
+   "label": "Paste",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FIND",
+   "code": 136,
+   "label": "Find",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CUT",
+   "code": 137,
+   "label": "CUT",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_HELP",
+   "code": 138,
+   "label": "Help",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MENU",
+   "code": 139,
+   "label": "Menu",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CALC",
+   "code": 140,
+   "label": "Calc",
+   "group": "system"
+  },
+  {
+   "name": "KEY_SETUP",
+   "code": 141,
+   "label": "Setup",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SLEEP",
+   "code": 142,
+   "label": "Sleep",
+   "group": "system"
+  },
+  {
+   "name": "KEY_WAKEUP",
+   "code": 143,
+   "label": "Wakeup",
+   "group": "system"
+  },
+  {
+   "name": "KEY_FILE",
+   "code": 144,
+   "label": "File",
+   "group": "system"
+  },
+  {
+   "name": "KEY_SENDFILE",
+   "code": 145,
+   "label": "Sendfile",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DELETEFILE",
+   "code": 146,
+   "label": "Deletefile",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_XFER",
+   "code": 147,
+   "label": "Xfer",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PROG1",
+   "code": 148,
+   "label": "Prog1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PROG2",
+   "code": 149,
+   "label": "Prog2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_WWW",
+   "code": 150,
+   "label": "WWW",
+   "group": "system"
+  },
+  {
+   "name": "KEY_MSDOS",
+   "code": 151,
+   "label": "Msdos",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_COFFEE",
+   "code": 152,
+   "label": "Coffee",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ROTATE_DISPLAY",
+   "code": 153,
+   "label": "Rotate Display",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CYCLEWINDOWS",
+   "code": 154,
+   "label": "Cyclewindows",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MAIL",
+   "code": 155,
+   "label": "Mail",
+   "group": "system"
+  },
+  {
+   "name": "KEY_BOOKMARKS",
+   "code": 156,
+   "label": "Bookmarks",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_COMPUTER",
+   "code": 157,
+   "label": "Computer",
+   "group": "system"
+  },
+  {
+   "name": "KEY_BACK",
+   "code": 158,
+   "label": "Back",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FORWARD",
+   "code": 159,
+   "label": "Forward",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CLOSECD",
+   "code": 160,
+   "label": "Closecd",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EJECTCD",
+   "code": 161,
+   "label": "Ejectcd",
+   "group": "media"
+  },
+  {
+   "name": "KEY_EJECTCLOSECD",
+   "code": 162,
+   "label": "Ejectclosecd",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NEXTSONG",
+   "code": 163,
+   "label": "Next",
+   "group": "media"
+  },
+  {
+   "name": "KEY_PLAYPAUSE",
+   "code": 164,
+   "label": "Play",
+   "group": "media"
+  },
+  {
+   "name": "KEY_PREVIOUSSONG",
+   "code": 165,
+   "label": "Prev",
+   "group": "media"
+  },
+  {
+   "name": "KEY_STOPCD",
+   "code": 166,
+   "label": "Stop",
+   "group": "media"
+  },
+  {
+   "name": "KEY_RECORD",
+   "code": 167,
+   "label": "Record",
+   "group": "media"
+  },
+  {
+   "name": "KEY_REWIND",
+   "code": 168,
+   "label": "Rewind",
+   "group": "media"
+  },
+  {
+   "name": "KEY_PHONE",
+   "code": 169,
+   "label": "Phone",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ISO",
+   "code": 170,
+   "label": "ISO",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CONFIG",
+   "code": 171,
+   "label": "Config",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_HOMEPAGE",
+   "code": 172,
+   "label": "Homepage",
+   "group": "system"
+  },
+  {
+   "name": "KEY_REFRESH",
+   "code": 173,
+   "label": "Refresh",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EXIT",
+   "code": 174,
+   "label": "Exit",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MOVE",
+   "code": 175,
+   "label": "Move",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EDIT",
+   "code": 176,
+   "label": "Edit",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SCROLLUP",
+   "code": 177,
+   "label": "Scrollup",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SCROLLDOWN",
+   "code": 178,
+   "label": "Scrolldown",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KPLEFTPAREN",
+   "code": 179,
+   "label": "Kpleftparen",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_KPRIGHTPAREN",
+   "code": 180,
+   "label": "Kprightparen",
+   "group": "numpad"
+  },
+  {
+   "name": "KEY_NEW",
+   "code": 181,
+   "label": "NEW",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_REDO",
+   "code": 182,
+   "label": "Redo",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_F13",
+   "code": 183,
+   "label": "F13",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F14",
+   "code": 184,
+   "label": "F14",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F15",
+   "code": 185,
+   "label": "F15",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F16",
+   "code": 186,
+   "label": "F16",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F17",
+   "code": 187,
+   "label": "F17",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F18",
+   "code": 188,
+   "label": "F18",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F19",
+   "code": 189,
+   "label": "F19",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F20",
+   "code": 190,
+   "label": "F20",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F21",
+   "code": 191,
+   "label": "F21",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F22",
+   "code": 192,
+   "label": "F22",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F23",
+   "code": 193,
+   "label": "F23",
+   "group": "function"
+  },
+  {
+   "name": "KEY_F24",
+   "code": 194,
+   "label": "F24",
+   "group": "function"
+  },
+  {
+   "name": "KEY_PLAYCD",
+   "code": 200,
+   "label": "Playcd",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PAUSECD",
+   "code": 201,
+   "label": "Pausecd",
+   "group": "media"
+  },
+  {
+   "name": "KEY_PROG3",
+   "code": 202,
+   "label": "Prog3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PROG4",
+   "code": 203,
+   "label": "Prog4",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ALL_APPLICATIONS",
+   "code": 204,
+   "label": "All Applications",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SUSPEND",
+   "code": 205,
+   "label": "Suspend",
+   "group": "system"
+  },
+  {
+   "name": "KEY_CLOSE",
+   "code": 206,
+   "label": "Close",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PLAY",
+   "code": 207,
+   "label": "Play",
+   "group": "media"
+  },
+  {
+   "name": "KEY_FASTFORWARD",
+   "code": 208,
+   "label": "Fastforward",
+   "group": "media"
+  },
+  {
+   "name": "KEY_BASSBOOST",
+   "code": 209,
+   "label": "Bassboost",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PRINT",
+   "code": 210,
+   "label": "Print",
+   "group": "editing"
+  },
+  {
+   "name": "KEY_HP",
+   "code": 211,
+   "label": "HP",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA",
+   "code": 212,
+   "label": "Camera",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SOUND",
+   "code": 213,
+   "label": "Sound",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_QUESTION",
+   "code": 214,
+   "label": "Question",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EMAIL",
+   "code": 215,
+   "label": "Email",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CHAT",
+   "code": 216,
+   "label": "Chat",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SEARCH",
+   "code": 217,
+   "label": "Search",
+   "group": "system"
+  },
+  {
+   "name": "KEY_CONNECT",
+   "code": 218,
+   "label": "Connect",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FINANCE",
+   "code": 219,
+   "label": "Finance",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SPORT",
+   "code": 220,
+   "label": "Sport",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SHOP",
+   "code": 221,
+   "label": "Shop",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ALTERASE",
+   "code": 222,
+   "label": "Alterase",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CANCEL",
+   "code": 223,
+   "label": "Cancel",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRIGHTNESSDOWN",
+   "code": 224,
+   "label": "Bri-",
+   "group": "system"
+  },
+  {
+   "name": "KEY_BRIGHTNESSUP",
+   "code": 225,
+   "label": "Bri+",
+   "group": "system"
+  },
+  {
+   "name": "KEY_MEDIA",
+   "code": 226,
+   "label": "Media",
+   "group": "media"
+  },
+  {
+   "name": "KEY_SWITCHVIDEOMODE",
+   "code": 227,
+   "label": "Switchvideomode",
+   "group": "system"
+  },
+  {
+   "name": "KEY_KBDILLUMTOGGLE",
+   "code": 228,
+   "label": "Kbdillumtoggle",
+   "group": "system"
+  },
+  {
+   "name": "KEY_KBDILLUMDOWN",
+   "code": 229,
+   "label": "Kbdillumdown",
+   "group": "system"
+  },
+  {
+   "name": "KEY_KBDILLUMUP",
+   "code": 230,
+   "label": "Kbdillumup",
+   "group": "system"
+  },
+  {
+   "name": "KEY_SEND",
+   "code": 231,
+   "label": "Send",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_REPLY",
+   "code": 232,
+   "label": "Reply",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FORWARDMAIL",
+   "code": 233,
+   "label": "Forwardmail",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SAVE",
+   "code": 234,
+   "label": "Save",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DOCUMENTS",
+   "code": 235,
+   "label": "Documents",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BATTERY",
+   "code": 236,
+   "label": "Battery",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BLUETOOTH",
+   "code": 237,
+   "label": "Bluetooth",
+   "group": "system"
+  },
+  {
+   "name": "KEY_WLAN",
+   "code": 238,
+   "label": "Wlan",
+   "group": "system"
+  },
+  {
+   "name": "KEY_UWB",
+   "code": 239,
+   "label": "UWB",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_UNKNOWN",
+   "code": 240,
+   "label": "Unknown",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VIDEO_NEXT",
+   "code": 241,
+   "label": "Video Next",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VIDEO_PREV",
+   "code": 242,
+   "label": "Video Prev",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRIGHTNESS_CYCLE",
+   "code": 243,
+   "label": "Brightness Cycle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRIGHTNESS_AUTO",
+   "code": 244,
+   "label": "Brightness Auto",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DISPLAY_OFF",
+   "code": 245,
+   "label": "Display Off",
+   "group": "system"
+  },
+  {
+   "name": "KEY_WWAN",
+   "code": 246,
+   "label": "Wwan",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RFKILL",
+   "code": 247,
+   "label": "Rfkill",
+   "group": "system"
+  },
+  {
+   "name": "KEY_MICMUTE",
+   "code": 248,
+   "label": "Mic",
+   "group": "media"
+  },
+  {
+   "name": "KEY_OK",
+   "code": 352,
+   "label": "OK",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SELECT",
+   "code": 353,
+   "label": "Select",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_GOTO",
+   "code": 354,
+   "label": "Goto",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CLEAR",
+   "code": 355,
+   "label": "Clear",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_POWER2",
+   "code": 356,
+   "label": "Power2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_OPTION",
+   "code": 357,
+   "label": "Option",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_INFO",
+   "code": 358,
+   "label": "Info",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TIME",
+   "code": 359,
+   "label": "Time",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VENDOR",
+   "code": 360,
+   "label": "Vendor",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ARCHIVE",
+   "code": 361,
+   "label": "Archive",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PROGRAM",
+   "code": 362,
+   "label": "Program",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CHANNEL",
+   "code": 363,
+   "label": "Channel",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FAVORITES",
+   "code": 364,
+   "label": "Favorites",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EPG",
+   "code": 365,
+   "label": "EPG",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PVR",
+   "code": 366,
+   "label": "PVR",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MHP",
+   "code": 367,
+   "label": "MHP",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LANGUAGE",
+   "code": 368,
+   "label": "Language",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TITLE",
+   "code": 369,
+   "label": "Title",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SUBTITLE",
+   "code": 370,
+   "label": "Subtitle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ANGLE",
+   "code": 371,
+   "label": "Angle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FULL_SCREEN",
+   "code": 372,
+   "label": "Full Screen",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MODE",
+   "code": 373,
+   "label": "Mode",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KEYBOARD",
+   "code": 374,
+   "label": "Keyboard",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ASPECT_RATIO",
+   "code": 375,
+   "label": "Aspect Ratio",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PC",
+   "code": 376,
+   "label": "PC",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TV",
+   "code": 377,
+   "label": "TV",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TV2",
+   "code": 378,
+   "label": "TV2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VCR",
+   "code": 379,
+   "label": "VCR",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VCR2",
+   "code": 380,
+   "label": "Vcr2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SAT",
+   "code": 381,
+   "label": "SAT",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SAT2",
+   "code": 382,
+   "label": "Sat2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CD",
+   "code": 383,
+   "label": "CD",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TAPE",
+   "code": 384,
+   "label": "Tape",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RADIO",
+   "code": 385,
+   "label": "Radio",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TUNER",
+   "code": 386,
+   "label": "Tuner",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PLAYER",
+   "code": 387,
+   "label": "Player",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TEXT",
+   "code": 388,
+   "label": "Text",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DVD",
+   "code": 389,
+   "label": "DVD",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_AUX",
+   "code": 390,
+   "label": "AUX",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MP3",
+   "code": 391,
+   "label": "MP3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_AUDIO",
+   "code": 392,
+   "label": "Audio",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VIDEO",
+   "code": 393,
+   "label": "Video",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DIRECTORY",
+   "code": 394,
+   "label": "Directory",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LIST",
+   "code": 395,
+   "label": "List",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MEMO",
+   "code": 396,
+   "label": "Memo",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CALENDAR",
+   "code": 397,
+   "label": "Calendar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RED",
+   "code": 398,
+   "label": "RED",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_GREEN",
+   "code": 399,
+   "label": "Green",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_YELLOW",
+   "code": 400,
+   "label": "Yellow",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BLUE",
+   "code": 401,
+   "label": "Blue",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CHANNELUP",
+   "code": 402,
+   "label": "Channelup",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CHANNELDOWN",
+   "code": 403,
+   "label": "Channeldown",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FIRST",
+   "code": 404,
+   "label": "First",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LAST",
+   "code": 405,
+   "label": "Last",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_AB",
+   "code": 406,
+   "label": "AB",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NEXT",
+   "code": 407,
+   "label": "Next",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RESTART",
+   "code": 408,
+   "label": "Restart",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SLOW",
+   "code": 409,
+   "label": "Slow",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SHUFFLE",
+   "code": 410,
+   "label": "Shuffle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BREAK",
+   "code": 411,
+   "label": "Break",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PREVIOUS",
+   "code": 412,
+   "label": "Previous",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DIGITS",
+   "code": 413,
+   "label": "Digits",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TEEN",
+   "code": 414,
+   "label": "Teen",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TWEN",
+   "code": 415,
+   "label": "Twen",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VIDEOPHONE",
+   "code": 416,
+   "label": "Videophone",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_GAMES",
+   "code": 417,
+   "label": "Games",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ZOOMIN",
+   "code": 418,
+   "label": "Zoomin",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ZOOMOUT",
+   "code": 419,
+   "label": "Zoomout",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ZOOMRESET",
+   "code": 420,
+   "label": "Zoomreset",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_WORDPROCESSOR",
+   "code": 421,
+   "label": "Wordprocessor",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EDITOR",
+   "code": 422,
+   "label": "Editor",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SPREADSHEET",
+   "code": 423,
+   "label": "Spreadsheet",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_GRAPHICSEDITOR",
+   "code": 424,
+   "label": "Graphicseditor",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PRESENTATION",
+   "code": 425,
+   "label": "Presentation",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DATABASE",
+   "code": 426,
+   "label": "Database",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NEWS",
+   "code": 427,
+   "label": "News",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VOICEMAIL",
+   "code": 428,
+   "label": "Voicemail",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ADDRESSBOOK",
+   "code": 429,
+   "label": "Addressbook",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MESSENGER",
+   "code": 430,
+   "label": "Messenger",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DISPLAYTOGGLE",
+   "code": 431,
+   "label": "Displaytoggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SPELLCHECK",
+   "code": 432,
+   "label": "Spellcheck",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LOGOFF",
+   "code": 433,
+   "label": "Logoff",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DOLLAR",
+   "code": 434,
+   "label": "Dollar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EURO",
+   "code": 435,
+   "label": "Euro",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FRAMEBACK",
+   "code": 436,
+   "label": "Frameback",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FRAMEFORWARD",
+   "code": 437,
+   "label": "Frameforward",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CONTEXT_MENU",
+   "code": 438,
+   "label": "Context Menu",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MEDIA_REPEAT",
+   "code": 439,
+   "label": "Media Repeat",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_10CHANNELSUP",
+   "code": 440,
+   "label": "10Channelsup",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_10CHANNELSDOWN",
+   "code": 441,
+   "label": "10Channelsdown",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_IMAGES",
+   "code": 442,
+   "label": "Images",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NOTIFICATION_CENTER",
+   "code": 444,
+   "label": "Notification Center",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PICKUP_PHONE",
+   "code": 445,
+   "label": "Pickup Phone",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_HANGUP_PHONE",
+   "code": 446,
+   "label": "Hangup Phone",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LINK_PHONE",
+   "code": 447,
+   "label": "Link Phone",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DEL_EOL",
+   "code": 448,
+   "label": "Del Eol",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DEL_EOS",
+   "code": 449,
+   "label": "Del Eos",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_INS_LINE",
+   "code": 450,
+   "label": "Ins Line",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DEL_LINE",
+   "code": 451,
+   "label": "Del Line",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN",
+   "code": 464,
+   "label": "Fn",
+   "group": "modifiers"
+  },
+  {
+   "name": "KEY_FN_ESC",
+   "code": 465,
+   "label": "Fn Esc",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F1",
+   "code": 466,
+   "label": "Fn F1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F2",
+   "code": 467,
+   "label": "Fn F2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F3",
+   "code": 468,
+   "label": "Fn F3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F4",
+   "code": 469,
+   "label": "Fn F4",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F5",
+   "code": 470,
+   "label": "Fn F5",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F6",
+   "code": 471,
+   "label": "Fn F6",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F7",
+   "code": 472,
+   "label": "Fn F7",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F8",
+   "code": 473,
+   "label": "Fn F8",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F9",
+   "code": 474,
+   "label": "Fn F9",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F10",
+   "code": 475,
+   "label": "Fn F10",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F11",
+   "code": 476,
+   "label": "Fn F11",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F12",
+   "code": 477,
+   "label": "Fn F12",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_1",
+   "code": 478,
+   "label": "Fn 1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_2",
+   "code": 479,
+   "label": "Fn 2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_D",
+   "code": 480,
+   "label": "Fn D",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_E",
+   "code": 481,
+   "label": "Fn E",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_F",
+   "code": 482,
+   "label": "Fn F",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_S",
+   "code": 483,
+   "label": "Fn S",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_B",
+   "code": 484,
+   "label": "Fn B",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FN_RIGHT_SHIFT",
+   "code": 485,
+   "label": "Fn Right Shift",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT1",
+   "code": 497,
+   "label": "Brl Dot1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT2",
+   "code": 498,
+   "label": "Brl Dot2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT3",
+   "code": 499,
+   "label": "Brl Dot3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT4",
+   "code": 500,
+   "label": "Brl Dot4",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT5",
+   "code": 501,
+   "label": "Brl Dot5",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT6",
+   "code": 502,
+   "label": "Brl Dot6",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT7",
+   "code": 503,
+   "label": "Brl Dot7",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT8",
+   "code": 504,
+   "label": "Brl Dot8",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT9",
+   "code": 505,
+   "label": "Brl Dot9",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRL_DOT10",
+   "code": 506,
+   "label": "Brl Dot10",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_0",
+   "code": 512,
+   "label": "Numeric 0",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_1",
+   "code": 513,
+   "label": "Numeric 1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_2",
+   "code": 514,
+   "label": "Numeric 2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_3",
+   "code": 515,
+   "label": "Numeric 3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_4",
+   "code": 516,
+   "label": "Numeric 4",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_5",
+   "code": 517,
+   "label": "Numeric 5",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_6",
+   "code": 518,
+   "label": "Numeric 6",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_7",
+   "code": 519,
+   "label": "Numeric 7",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_8",
+   "code": 520,
+   "label": "Numeric 8",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_9",
+   "code": 521,
+   "label": "Numeric 9",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_STAR",
+   "code": 522,
+   "label": "Numeric Star",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_POUND",
+   "code": 523,
+   "label": "Numeric Pound",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_A",
+   "code": 524,
+   "label": "Numeric A",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_B",
+   "code": 525,
+   "label": "Numeric B",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_C",
+   "code": 526,
+   "label": "Numeric C",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_D",
+   "code": 527,
+   "label": "Numeric D",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_FOCUS",
+   "code": 528,
+   "label": "Camera Focus",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_WPS_BUTTON",
+   "code": 529,
+   "label": "Wps Button",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TOUCHPAD_TOGGLE",
+   "code": 530,
+   "label": "Touchpad Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TOUCHPAD_ON",
+   "code": 531,
+   "label": "Touchpad On",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TOUCHPAD_OFF",
+   "code": 532,
+   "label": "Touchpad Off",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_ZOOMIN",
+   "code": 533,
+   "label": "Camera Zoomin",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_ZOOMOUT",
+   "code": 534,
+   "label": "Camera Zoomout",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_UP",
+   "code": 535,
+   "label": "Camera Up",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_DOWN",
+   "code": 536,
+   "label": "Camera Down",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_LEFT",
+   "code": 537,
+   "label": "Camera Left",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_RIGHT",
+   "code": 538,
+   "label": "Camera Right",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ATTENDANT_ON",
+   "code": 539,
+   "label": "Attendant On",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ATTENDANT_OFF",
+   "code": 540,
+   "label": "Attendant Off",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ATTENDANT_TOGGLE",
+   "code": 541,
+   "label": "Attendant Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LIGHTS_TOGGLE",
+   "code": 542,
+   "label": "Lights Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ALS_TOGGLE",
+   "code": 560,
+   "label": "Als Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ROTATE_LOCK_TOGGLE",
+   "code": 561,
+   "label": "Rotate Lock Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_REFRESH_RATE_TOGGLE",
+   "code": 562,
+   "label": "Refresh Rate Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BUTTONCONFIG",
+   "code": 576,
+   "label": "Buttonconfig",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TASKMANAGER",
+   "code": 577,
+   "label": "Taskmanager",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_JOURNAL",
+   "code": 578,
+   "label": "Journal",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CONTROLPANEL",
+   "code": 579,
+   "label": "Controlpanel",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_APPSELECT",
+   "code": 580,
+   "label": "Appselect",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SCREENSAVER",
+   "code": 581,
+   "label": "Screensaver",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VOICECOMMAND",
+   "code": 582,
+   "label": "Voicecommand",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ASSISTANT",
+   "code": 583,
+   "label": "Assistant",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBD_LAYOUT_NEXT",
+   "code": 584,
+   "label": "Kbd Layout Next",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EMOJI_PICKER",
+   "code": 585,
+   "label": "Emoji Picker",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DICTATE",
+   "code": 586,
+   "label": "Dictate",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_ACCESS_ENABLE",
+   "code": 587,
+   "label": "Camera Access Enable",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_ACCESS_DISABLE",
+   "code": 588,
+   "label": "Camera Access Disable",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CAMERA_ACCESS_TOGGLE",
+   "code": 589,
+   "label": "Camera Access Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ACCESSIBILITY",
+   "code": 590,
+   "label": "Accessibility",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DO_NOT_DISTURB",
+   "code": 591,
+   "label": "Do Not Disturb",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRIGHTNESS_MIN",
+   "code": 592,
+   "label": "Brightness Min",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRIGHTNESS_MAX",
+   "code": 593,
+   "label": "Brightness Max",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EPRIVACY_SCREEN_ON",
+   "code": 594,
+   "label": "Eprivacy Screen On",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_EPRIVACY_SCREEN_OFF",
+   "code": 595,
+   "label": "Eprivacy Screen Off",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ACTION_ON_SELECTION",
+   "code": 596,
+   "label": "Action On Selection",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CONTEXTUAL_INSERT",
+   "code": 597,
+   "label": "Contextual Insert",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CONTEXTUAL_QUERY",
+   "code": 598,
+   "label": "Contextual Query",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBDINPUTASSIST_PREV",
+   "code": 608,
+   "label": "Kbdinputassist Prev",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBDINPUTASSIST_NEXT",
+   "code": 609,
+   "label": "Kbdinputassist Next",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBDINPUTASSIST_PREVGROUP",
+   "code": 610,
+   "label": "Kbdinputassist Prevgroup",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBDINPUTASSIST_NEXTGROUP",
+   "code": 611,
+   "label": "Kbdinputassist Nextgroup",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBDINPUTASSIST_ACCEPT",
+   "code": 612,
+   "label": "Kbdinputassist Accept",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBDINPUTASSIST_CANCEL",
+   "code": 613,
+   "label": "Kbdinputassist Cancel",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RIGHT_UP",
+   "code": 614,
+   "label": "Right Up",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RIGHT_DOWN",
+   "code": 615,
+   "label": "Right Down",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LEFT_UP",
+   "code": 616,
+   "label": "Left Up",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_LEFT_DOWN",
+   "code": 617,
+   "label": "Left Down",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ROOT_MENU",
+   "code": 618,
+   "label": "Root Menu",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MEDIA_TOP_MENU",
+   "code": 619,
+   "label": "Media Top Menu",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_11",
+   "code": 620,
+   "label": "Numeric 11",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NUMERIC_12",
+   "code": 621,
+   "label": "Numeric 12",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_AUDIO_DESC",
+   "code": 622,
+   "label": "Audio Desc",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_3D_MODE",
+   "code": 623,
+   "label": "3D Mode",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NEXT_FAVORITE",
+   "code": 624,
+   "label": "Next Favorite",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_STOP_RECORD",
+   "code": 625,
+   "label": "Stop Record",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PAUSE_RECORD",
+   "code": 626,
+   "label": "Pause Record",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_VOD",
+   "code": 627,
+   "label": "VOD",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_UNMUTE",
+   "code": 628,
+   "label": "Unmute",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FASTREVERSE",
+   "code": 629,
+   "label": "Fastreverse",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SLOWREVERSE",
+   "code": 630,
+   "label": "Slowreverse",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DATA",
+   "code": 631,
+   "label": "Data",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_ONSCREEN_KEYBOARD",
+   "code": 632,
+   "label": "Onscreen Keyboard",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PRIVACY_SCREEN_TOGGLE",
+   "code": 633,
+   "label": "Privacy Screen Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SELECTIVE_SCREENSHOT",
+   "code": 634,
+   "label": "Selective Screenshot",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NEXT_ELEMENT",
+   "code": 635,
+   "label": "Next Element",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PREVIOUS_ELEMENT",
+   "code": 636,
+   "label": "Previous Element",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_AUTOPILOT_ENGAGE_TOGGLE",
+   "code": 637,
+   "label": "Autopilot Engage Toggle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MARK_WAYPOINT",
+   "code": 638,
+   "label": "Mark Waypoint",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SOS",
+   "code": 639,
+   "label": "SOS",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NAV_CHART",
+   "code": 640,
+   "label": "Nav Chart",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_FISHING_CHART",
+   "code": 641,
+   "label": "Fishing Chart",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SINGLE_RANGE_RADAR",
+   "code": 642,
+   "label": "Single Range Radar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_DUAL_RANGE_RADAR",
+   "code": 643,
+   "label": "Dual Range Radar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_RADAR_OVERLAY",
+   "code": 644,
+   "label": "Radar Overlay",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_TRADITIONAL_SONAR",
+   "code": 645,
+   "label": "Traditional Sonar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_CLEARVU_SONAR",
+   "code": 646,
+   "label": "Clearvu Sonar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_SIDEVU_SONAR",
+   "code": 647,
+   "label": "Sidevu Sonar",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_NAV_INFO",
+   "code": 648,
+   "label": "Nav Info",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_BRIGHTNESS_MENU",
+   "code": 649,
+   "label": "Brightness Menu",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO1",
+   "code": 656,
+   "label": "Macro1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO2",
+   "code": 657,
+   "label": "Macro2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO3",
+   "code": 658,
+   "label": "Macro3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO4",
+   "code": 659,
+   "label": "Macro4",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO5",
+   "code": 660,
+   "label": "Macro5",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO6",
+   "code": 661,
+   "label": "Macro6",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO7",
+   "code": 662,
+   "label": "Macro7",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO8",
+   "code": 663,
+   "label": "Macro8",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO9",
+   "code": 664,
+   "label": "Macro9",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO10",
+   "code": 665,
+   "label": "Macro10",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO11",
+   "code": 666,
+   "label": "Macro11",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO12",
+   "code": 667,
+   "label": "Macro12",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO13",
+   "code": 668,
+   "label": "Macro13",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO14",
+   "code": 669,
+   "label": "Macro14",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO15",
+   "code": 670,
+   "label": "Macro15",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO16",
+   "code": 671,
+   "label": "Macro16",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO17",
+   "code": 672,
+   "label": "Macro17",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO18",
+   "code": 673,
+   "label": "Macro18",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO19",
+   "code": 674,
+   "label": "Macro19",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO20",
+   "code": 675,
+   "label": "Macro20",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO21",
+   "code": 676,
+   "label": "Macro21",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO22",
+   "code": 677,
+   "label": "Macro22",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO23",
+   "code": 678,
+   "label": "Macro23",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO24",
+   "code": 679,
+   "label": "Macro24",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO25",
+   "code": 680,
+   "label": "Macro25",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO26",
+   "code": 681,
+   "label": "Macro26",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO27",
+   "code": 682,
+   "label": "Macro27",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO28",
+   "code": 683,
+   "label": "Macro28",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO29",
+   "code": 684,
+   "label": "Macro29",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO30",
+   "code": 685,
+   "label": "Macro30",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO_RECORD_START",
+   "code": 688,
+   "label": "Macro Record Start",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO_RECORD_STOP",
+   "code": 689,
+   "label": "Macro Record Stop",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO_PRESET_CYCLE",
+   "code": 690,
+   "label": "Macro Preset Cycle",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO_PRESET1",
+   "code": 691,
+   "label": "Macro Preset1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO_PRESET2",
+   "code": 692,
+   "label": "Macro Preset2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_MACRO_PRESET3",
+   "code": 693,
+   "label": "Macro Preset3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBD_LCD_MENU1",
+   "code": 696,
+   "label": "Kbd Lcd Menu1",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBD_LCD_MENU2",
+   "code": 697,
+   "label": "Kbd Lcd Menu2",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBD_LCD_MENU3",
+   "code": 698,
+   "label": "Kbd Lcd Menu3",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBD_LCD_MENU4",
+   "code": 699,
+   "label": "Kbd Lcd Menu4",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_KBD_LCD_MENU5",
+   "code": 700,
+   "label": "Kbd Lcd Menu5",
+   "group": "misc"
+  },
+  {
+   "name": "KEY_PERFORMANCE",
+   "code": 701,
+   "label": "Performance",
+   "group": "misc"
+  }
+ ]
+}

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A0D00000000000000000015 /* OmakeyProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000013 /* OmakeyProtocol */; };
-		0A0D00000000000000000016 /* OmakeyProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000014 /* OmakeyProtocol */; };
+		0A0D00000000000000000023 /* OmakeyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000022 /* OmakeyCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0D00000000000000000015 /* OmakeyProtocol in Frameworks */,
+				0A0D00000000000000000023 /* OmakeyCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +67,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A0D00000000000000000016 /* OmakeyProtocol in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +113,7 @@
 			name = Omakey;
 			packageProductDependencies = (
 				0A0D00000000000000000013 /* OmakeyProtocol */,
+				0A0D00000000000000000022 /* OmakeyCore */,
 			);
 			productName = Omakey;
 			productReference = 0A0D00000000000000000007 /* Omakey.app */;
@@ -136,7 +137,6 @@
 			);
 			name = OmakeyTests;
 			packageProductDependencies = (
-				0A0D00000000000000000014 /* OmakeyProtocol */,
 			);
 			productName = OmakeyTests;
 			productReference = 0A0D00000000000000000008 /* OmakeyTests.xctest */;
@@ -498,9 +498,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OmakeyProtocol;
 		};
-		0A0D00000000000000000014 /* OmakeyProtocol */ = {
+		0A0D00000000000000000022 /* OmakeyCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OmakeyProtocol;
+			productName = OmakeyCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
