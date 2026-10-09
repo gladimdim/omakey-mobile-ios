@@ -32,9 +32,9 @@ the baseline.
 | Paired list with Online / Checking / Offline | ✅ M3–M4 (Android's "will try Bluetooth" line ✖) |
 | Nearby computers (mDNS) | ✅ M3–M4, plus a Local Network help card |
 | Find a computer again after its IP changes | ✅ M3 (`UDPLink.addCandidate`) |
-| Remember the address that answered | 🚧 `HostStore.rememberAddress` ✅ M4; called from the keyboard ⏳ M5 |
+| Remember the address that answered | ✅ M4–M5 |
 | Unlink a computer | ✅ M4 (context menu) |
-| REJECT → "Pair again" | 🚧 state ✅ M3; message ⏳ M5 |
+| REJECT → "Pair again" | ✅ M3–M5 |
 | UDP link: timing rules, DSCP EF | ✅ M3 |
 | Bluetooth fallback to omakeyd | ⏳ M11 over Bluetooth LE (RFCOMM ✖) |
 | Bluetooth keyboard mode | ✖ |
@@ -43,15 +43,15 @@ the baseline.
 
 | Feature | iOS |
 |---|---|
-| Layout drawing (shaped keys, split stretch, legends, styles) | ⏳ M5 |
-| Touch-down keys, chords, Fn layers | 🚧 model ✅ M2; view ⏳ M5 |
-| Sticky keys | 🚧 model ✅ M2; button ⏳ M5 |
-| Caps Lock light | ⏳ M5 |
-| Status pill, switch computer, switch layout | ⏳ M5 |
-| Typed text ticker | ⏳ M5 |
-| Release on focus loss, BYE on leaving | ⏳ M5 |
-| Haptics | ⏳ M5 |
-| Theme from the computer | 🚧 color math ✅ M2; ⏳ M5, M9 |
+| Layout drawing (shaped keys, split stretch, legends, styles) | ✅ M5 (a layer per key) |
+| Touch-down keys, chords, Fn layers | ✅ M2, M5 |
+| Sticky keys | ✅ M2, M5 |
+| Caps Lock light | ✅ M5 |
+| Status pill, switch computer, switch layout | ✅ M5 |
+| Typed text ticker | ✅ M5 |
+| Release on focus loss, BYE on leaving | ✅ M5 (resign active, background) |
+| Haptics | ✅ M5 (UIImpactFeedbackGenerator) |
+| Theme from the computer | 🚧 followed on the keyboard ✅ M5; theme picker ⏳ M9 |
 
 ## Touchpad
 
@@ -78,7 +78,7 @@ the baseline.
 | Feature | iOS |
 |---|---|
 | Copy, Paste, sensitive text, fallbacks | ⏳ M8 |
-| `KEY_COPY` / `KEY_PASTE` layout keys | ⏳ M8 |
+| `KEY_COPY` / `KEY_PASTE` layout keys | 🚧 Ctrl+Insert / Shift+Insert ✅ M5; with the phone's clipboard ⏳ M8 |
 
 ## Layouts and settings
 

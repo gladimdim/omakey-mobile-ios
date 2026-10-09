@@ -17,13 +17,14 @@
 ## Project
 
 - Open the checked-in `Omakey.xcodeproj`; no generator. Its folders are
-  synchronized groups: a file added under `Omakey/` or `OmakeyTests/` is
-  built automatically. `Omakey/App/Info.plist` is excluded from the copy
+  synchronized groups: a file added under `Omakey/`, `OmakeyTests/` or
+  `OmakeyUITests/` is built automatically. `Omakey/App/Info.plist` is excluded from the copy
   phase by an exception set; keep it that way.
 - `OmakeyKit/` is a local Swift package with no UIKit: `OmakeyProtocol`
-  (wire format, crypto, session state machine) and, from M2, `OmakeyCore`
-  (layouts, keyboard logic). Its tests run on the Mac:
-  `swift test --package-path OmakeyKit`.
+  (wire format, crypto, session state machine), `OmakeyCore` (layouts,
+  keyboard logic), `OmakeyNet` (the UDP link, reachability, mDNS) and
+  `OmakeydStandIn` (a server that types nothing, for tests, the dev server
+  and demo mode). Its tests run on the Mac: `swift test --package-path OmakeyKit`.
 - Run `scripts/check.sh` before committing: package tests plus an unsigned
   device build. App and UI tests: `xcodebuild -project Omakey.xcodeproj
   -scheme Omakey -destination 'id=<iPhone simulator>' test`. The UI tests
@@ -53,3 +54,9 @@
   material into tracked files, commits or logs.
 - Preview every write with `--dry-run`, and ask before creating the app
   record, submitting for review or changing prices.
+
+## UI tests
+
+- XCUITest screenshots of the landscape keyboard come out cropped while the
+  simulated phone is upright: turn it (`XCUIDevice.shared.orientation`) and
+  attach `XCUIScreen.main.screenshot()`.

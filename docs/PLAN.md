@@ -358,7 +358,7 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   fingerprint, the replace warning, online, unlink); the QR scanner needs
   a device and a real desktop.
 
-### M5: Landscape keyboard
+### M5: Landscape keyboard (done, but for the device checks)
 - `KeyboardViewController`: top bar (⌄ touchpad handle, status pill,
   ⇧ sticky, ⇄ computer, ⌨ layout, ✕), the pull grip, typed ticker,
   `KeyboardView`.
@@ -371,7 +371,12 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 - **Done when:** on a device, `SUPER + SPACE`, `CTRL + SHIFT + T`, Fn
   layers on Omakey Pro and sticky keys all work on Omarchy, nothing sticks
   after a Control Center pull or an app switch, and ping is within a couple
-  of ms of Android on the same Wi-Fi.
+  of ms of Android on the same Wi-Fi. In the simulator, `KeyboardTour`
+  checks keys, sticky Super + Space, Caps Lock, landscape and BYE against
+  the stand-in; chords and the latency need a device.
+- On iOS a presented screen doesn't turn the phone by itself: the app
+  narrows its orientation mask and asks the window scene to turn
+  (`AppModel.lockOrientation`).
 
 ### M6: Touchpad
 - `TouchpadView` port with every gesture and constant above, plus

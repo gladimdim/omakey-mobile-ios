@@ -21,7 +21,7 @@ final class PairingTour: XCTestCase {
 
     func testPairingByLinkShowsTheFingerprintAndTheComputerComesOnline() throws {
         XCTAssertTrue(app.staticTexts["No computers yet."].waitForExistence(timeout: 5))
-        openLink(server.pairingLink(addresses: ["127.0.0.1"]))
+        open(server.pairingLink(addresses: ["127.0.0.1"]), in: app)
 
         let alert = app.alerts["Pair with ui desk?"]
         XCTAssertTrue(alert.waitForExistence(timeout: 5))
@@ -29,12 +29,16 @@ final class PairingTour: XCTestCase {
         XCTAssertTrue(message.label.contains(server.host.fingerprint), message.label)
         XCTAssertTrue(message.label.contains("came from another app"), message.label)
         alert.buttons["Pair"].tap()
+        // Pairing opens the keyboard; back to the list.
+        let close = app.buttons["keyboard.close"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5))
+        close.tap()
 
         let card = app.buttons["omakey.host.\(server.host.hostId)"]
         XCTAssertTrue(card.waitForExistence(timeout: 5))
         let online = card.staticTexts.element(matching: NSPredicate(format: "label BEGINSWITH '● Online'"))
         XCTAssertTrue(online.waitForExistence(timeout: 8), "the reachability probe should find the stand-in")
-        attach("paired")
+        attach("paired", app)
 
         // Unlinking takes it off the list.
         card.press(forDuration: 1)
@@ -44,10 +48,13 @@ final class PairingTour: XCTestCase {
     }
 
     func testAPairingWithAnotherKeyWarnsLoudly() throws {
-        openLink(server.pairingLink(addresses: ["127.0.0.1"]))
+        open(server.pairingLink(addresses: ["127.0.0.1"]), in: app)
         let first = app.alerts["Pair with ui desk?"]
         XCTAssertTrue(first.waitForExistence(timeout: 5))
         first.buttons["Pair"].tap()
+        let close = app.buttons["keyboard.close"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5))
+        close.tap()
         XCTAssertTrue(app.buttons["omakey.host.\(server.host.hostId)"].waitForExistence(timeout: 5))
 
         // The same computer id, a different key: as a link from someone else would be.
@@ -55,26 +62,12 @@ final class PairingTour: XCTestCase {
             hostId: server.host.hostId, name: "ui desk", addresses: [], port: 0, deviceId: server.host.deviceId,
             key: [UInt8](repeating: 7, count: 32)))
         defer { impostor.stop() }
-        openLink(impostor.pairingLink(addresses: ["127.0.0.1"]))
+        open(impostor.pairingLink(addresses: ["127.0.0.1"]), in: app)
         let alert = app.alerts["Replace pairing?"]
         XCTAssertTrue(alert.waitForExistence(timeout: 5))
         let message = alert.staticTexts.element(matching: NSPredicate(format: "label CONTAINS 'replaces your existing pairing'"))
         XCTAssertTrue(message.exists)
-        attach("replace warning")
+        attach("replace warning", app)
         alert.buttons["Cancel"].tap()
-    }
-
-    /// As a link from another app arrives: iOS asks "Open in Omakey?" first.
-    private func openLink(_ link: String) {
-        app.open(URL(string: link)!)
-        let open = XCUIApplication(bundleIdentifier: "com.apple.springboard").buttons["Open"]
-        if open.waitForExistence(timeout: 3) { open.tap() }
-    }
-
-    private func attach(_ name: String) {
-        let a = XCTAttachment(screenshot: app.screenshot())
-        a.name = name
-        a.lifetime = .keepAlways
-        add(a)
     }
 }

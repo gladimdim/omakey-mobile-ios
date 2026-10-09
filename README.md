@@ -9,8 +9,8 @@ work as they do with a hardware keyboard.
 **Status: in development.** The protocol (M1) reproduces the daemon's
 test vectors byte for byte, the keyboard logic and the 10 stock layouts
 are ported (M2), and so is the UDP link with its timing rules and mDNS
-discovery (M3). The connect screen pairs by QR code or link (M4). The
-keyboard comes next. See
+discovery (M3). The connect screen pairs by QR code or link (M4), and
+the landscape keyboard types (M5). The touchpad comes next. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 

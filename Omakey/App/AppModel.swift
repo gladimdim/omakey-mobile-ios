@@ -229,7 +229,36 @@ final class AppModel {
     // MARK: - The keyboard
 
     func openKeyboard(_ hostId: String) {
-        show("Opening the keyboard for \(hosts.get(hostId)?.name ?? "the computer")…")
+        guard let host = hosts.get(hostId), let top = Self.topViewController() else { return }
+        if layouts.portrait { show("Portrait mode comes in the next update; here is the default layout.") }
+        // The keyboard looks for its own computer; the connect screen rests.
+        stopBrowsing()
+        let keyboard = KeyboardViewController(model: self, host: host)
+        keyboard.onClose = { [weak self] in
+            Self.lockOrientation(.allButUpsideDown, turnTo: .portrait)
+            self?.refresh()
+            self?.startBrowsing()
+        }
+        Self.lockOrientation(.landscape, turnTo: .landscape)
+        top.present(keyboard, animated: true)
+    }
+
+    /// Which way the screen may turn, and turn it now (iOS doesn't for a presented screen by itself).
+    static func lockOrientation(_ mask: UIInterfaceOrientationMask, turnTo: UIInterfaceOrientationMask) {
+        AppDelegate.orientations = mask
+        for scene in UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }) {
+            for w in scene.windows { w.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations() }
+            scene.requestGeometryUpdate(.iOS(interfaceOrientations: turnTo)) { _ in }
+        }
+    }
+
+    /// Where to present from: the key window's frontmost view controller.
+    private static func topViewController() -> UIViewController? {
+        let scene = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first { $0.activationState == .foregroundActive }
+            ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+        var top = scene?.windows.first { $0.isKeyWindow }?.rootViewController ?? scene?.windows.first?.rootViewController
+        while let next = top?.presentedViewController { top = next }
+        return top
     }
 
     // MARK: - Toasts
