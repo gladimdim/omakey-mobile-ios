@@ -247,8 +247,21 @@ final class AppModel {
 
     // MARK: - The keyboard
 
+    /// The keyboard on the demo computer inside the phone.
+    func openDemo() {
+        do {
+            open(try DemoComputer.shared.start())
+        } catch {
+            show("The demo computer couldn't start: \(error.localizedDescription)")
+        }
+    }
+
     func openKeyboard(_ hostId: String) {
-        guard let host = hosts.get(hostId), let top = Self.topViewController() else { return }
+        if let host = hosts.get(hostId) { open(host) }
+    }
+
+    private func open(_ host: HostRecord) {
+        guard let top = Self.topViewController() else { return }
         // The keyboard looks for its own computer; the connect screen rests.
         stopBrowsing()
         let portrait = layouts.portrait
@@ -262,10 +275,10 @@ final class AppModel {
         top.present(keyboard, animated: true)
     }
 
-    /// The keyboard for [hostId] again, in the other orientation: portrait mode was picked or left.
-    func reopenKeyboard(_ hostId: String, replacing keyboard: KeyboardViewController) {
+    /// The keyboard for [host] again, in the other orientation: portrait mode was picked or left.
+    func reopenKeyboard(_ host: HostRecord, replacing keyboard: KeyboardViewController) {
         keyboard.onClose = nil
-        keyboard.dismiss(animated: false) { [weak self] in self?.openKeyboard(hostId) }
+        keyboard.dismiss(animated: false) { [weak self] in self?.open(host) }
     }
 
     /// Which way the screen may turn, and turn it now (iOS doesn't for a presented screen by itself).

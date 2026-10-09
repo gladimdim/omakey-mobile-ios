@@ -1,0 +1,56 @@
+# Validation
+
+What has been checked, where, and what still needs a device or a real
+desktop. Newest first.
+
+## 2026-10-09: M1–M10 in the simulator (Xcode 27.0, iOS 27 simulator, iPhone 17 Pro)
+
+**On the Mac (`swift test --package-path OmakeyKit`), 89 tests and one opt-in live test:**
+
+- Protocol: every vector in the daemon's `test-vectors.json` byte for byte
+  (HELLO, WELCOME, INPUT ×3 with the pointer trailer, ACK, BYE, CLIP put
+  and its reply), fingerprint `630D-CD29`, and Android's ProtocolTest and
+  ClipTransferTest.
+- Keyboard logic: Android's LayoutAndKeyboardTest, KeyLayoutsTest and
+  LineDiffTest; Typist pacing and layout switching; theme math; every
+  bundled layout parses; an Android (zlib) layout link decodes.
+- Networking against the omakeyd stand-in on loopback: handshake, resend
+  until ACK, 100 ms heartbeat, REJECT and recovery, lost → HELLO again, BYE
+  twice, LEDs and theme, a WELCOME not claimed, clipboard put and get,
+  events applied once despite resends, the 500 ms stuck-key release,
+  reachability probes.
+- `OMAKEY_LIVE=1`: Discovery found a real omakeyd (a Steam Deck) on the LAN
+  with its host id and address.
+
+**In the simulator (`scripts/ui-test.sh`), one app test and ten tours, all
+passing, against the stand-in hosted by the test runner:**
+
+- Pairing by link: fingerprint, "came from another app", online, unlink;
+  the loud warning for a pairing with another key.
+- Landscape keyboard: a key, sticky Super + Space, Caps Lock from the
+  computer's LED, landscape, BYE on closing.
+- Touchpad: tap, drag, two-finger tap, long press, putting it away.
+- Portrait mode: typing through the iPhone keyboard with the `us` layout,
+  Return, Backspace on an empty line, a key strip key.
+- Clipboard: Copy to the phone, Paste with nothing new (Shift+Insert, no
+  read), Paste of the phone's new text through the "Allow Paste" prompt.
+- Layouts: picking, importing by link through the preview, removing; themes.
+- Demo: the demo computer receives a key and shows it, and stays out of the
+  computers list.
+
+## Still to check on a device with a real desktop
+
+- Latency and jitter against Android on the same Wi-Fi (the Wi-Fi radio's
+  power save can't be controlled on iOS).
+- Chords of several fingers (the simulator gives two), touches at the
+  screen edges (the system-gesture gate), and the 5-touch limit.
+- The QR scanner with a real code; the Local Network prompt on a clean
+  install, and the help card after declining it.
+- Portrait mode with autocorrection, the space-bar cursor, Gboard or
+  SwiftKey, and a Ukrainian keyboard switching to `ua`.
+- Touchpad feel: speed per preset, scrolling, side buttons with the thumb,
+  haptics.
+- Leaving and coming back: Control Center, a call, the app switcher, the
+  screen locking; nothing stuck on the computer.
+- Pairing over a real omakeyd (Omarchy and the Steam Deck), and the bar
+  widget listing the phone by its name as an iOS device.

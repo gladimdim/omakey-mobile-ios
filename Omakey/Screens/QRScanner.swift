@@ -31,12 +31,12 @@ struct QRScannerSheet: View {
             }
             VStack {
                 Text("Scan the Omakey pairing code")
-                    .font(.mono(16, bold: true))
+                    .monoFont(16, bold: true)
                     .foregroundStyle(.white)
                     .padding(.top, 24)
                 Spacer()
                 Button("Cancel", action: onCancel)
-                    .font(.mono(16, bold: true))
+                    .monoFont(16, bold: true)
                     .foregroundStyle(.white)
                     .padding(.horizontal, 32)
                     .padding(.vertical, 12)
@@ -50,7 +50,7 @@ struct QRScannerSheet: View {
 
     private func message(_ text: String, settings: Bool) -> some View {
         VStack(spacing: 16) {
-            Text(text).font(.mono(14)).foregroundStyle(.white).multilineTextAlignment(.center)
+            Text(text).monoFont(14).foregroundStyle(.white).multilineTextAlignment(.center)
             if settings {
                 Button("Open Settings") {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }

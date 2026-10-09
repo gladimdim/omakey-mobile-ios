@@ -38,6 +38,9 @@
   network thread take a lock and say so in their doc comment.
 - iPhone only (`TARGETED_DEVICE_FAMILY = 1`) until the iPad milestone.
 
+- The demo computer (`DemoComputer`, "Try the demo") is App Review's way in:
+  keep it working without a desktop, a network or a pairing.
+
 ## Safety
 
 - Pairing keys live only in the Keychain
@@ -48,8 +51,10 @@
 
 ## App Store Connect
 
-- Store material goes in `store/` (from M10). Talk to App Store Connect with
-  the `asc` CLI. Credentials stay outside this public repository, as in
+- Store material is in `store/`: `store/README.md` is the submission
+  checklist and the App Review notes, `store/metadata` the listing in `asc`'s
+  canonical format (`asc metadata validate --dir ./store/metadata`). Talk to
+  App Store Connect with the `asc` CLI. Credentials stay outside this public repository, as in
   `super-desktop-ios`: never write key IDs, issuer IDs, key paths or key
   material into tracked files, commits or logs.
 - Preview every write with `--dry-run`, and ask before creating the app

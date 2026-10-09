@@ -22,7 +22,7 @@ struct LayoutsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Tap a layout to type on it.")
-                        .font(.mono(13))
+                        .monoFont(13)
                         .foregroundStyle(p.fgDim)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 320), spacing: 12, alignment: .top)], spacing: 12) {
                         portraitCard
@@ -78,7 +78,7 @@ struct LayoutsView: View {
 
     private func badge(_ label: String, _ color: Color) -> some View {
         Text(label)
-            .font(.mono(10, bold: true))
+            .monoFont(10, bold: true)
             .kerning(0.8)
             .foregroundStyle(color)
             .padding(.horizontal, 8)
@@ -97,14 +97,14 @@ struct LayoutsView: View {
         let selected = model.layouts.portrait
         return VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 6) {
-                Text(LayoutStore.portraitName).font(.mono(16, bold: true)).foregroundStyle(p.fg).lineLimit(1)
+                Text(LayoutStore.portraitName).monoFont(16, bold: true).foregroundStyle(p.fg).lineLimit(1)
                 Spacer(minLength: 4)
                 badge("MODE", p.layer)
                 if selected { badge("● IN USE", p.ok) }
             }
             PortraitSketch(theme: theme)
             Text("Hold the phone upright. Your own keyboard types straight into the computer, autocorrect and all, with the touchpad and its buttons above it. Types what a US or Ukrainian layout can.")
-                .font(.mono(13)).foregroundStyle(p.fg)
+                .monoFont(13).foregroundStyle(p.fg)
         }
         .padding(14)
         .background(cardBackground(selected: selected))
@@ -121,10 +121,10 @@ struct LayoutsView: View {
         let selected = !model.layouts.portrait && model.layouts.selected().id == layout.id
         return VStack(alignment: .leading, spacing: 10) {
             if entry.builtIn && layout.id == LayoutStore.defaultId {
-                Text("★ Recommended by gladimdim").font(.mono(12, bold: true)).foregroundStyle(p.warn)
+                Text("★ Recommended by gladimdim").monoFont(12, bold: true).foregroundStyle(p.warn)
             }
             HStack(spacing: 6) {
-                Text(layout.name).font(.mono(16, bold: true)).foregroundStyle(p.fg).lineLimit(1)
+                Text(layout.name).monoFont(16, bold: true).foregroundStyle(p.fg).lineLimit(1)
                 Spacer(minLength: 4)
                 if !entry.builtIn { badge("IMPORTED", p.fgDim) }
                 if selected { badge("● IN USE", p.ok) }
@@ -132,19 +132,19 @@ struct LayoutsView: View {
             LayoutPreview(layout: layout, theme: theme)
             if let d = layout.description {
                 // In full: it says how the layout works (layers, thumb keys).
-                Text(d).font(.mono(13)).foregroundStyle(p.fg)
+                Text(d).monoFont(13).foregroundStyle(p.fg)
             }
             HStack {
                 Text("\(layout.keys.count) keys" + (layout.author.map { " · by \($0)" } ?? ""))
-                    .font(.mono(12)).foregroundStyle(p.fgDim).lineLimit(1)
+                    .monoFont(12).foregroundStyle(p.fgDim).lineLimit(1)
                 Spacer()
                 ShareLink(item: Self.shareText(layout), subject: Text("\(layout.name) — Omakey layout")) {
-                    Text("Share").font(.mono(13, bold: true))
+                    Text("Share").monoFont(13, bold: true)
                 }
                 .accessibilityIdentifier("layout.\(layout.id).share")
                 if !entry.builtIn {
                     Button("Remove") { removing = layout }
-                        .font(.mono(13, bold: true))
+                        .monoFont(13, bold: true)
                         .foregroundStyle(p.error)
                         .padding(.leading, 8)
                 }

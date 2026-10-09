@@ -39,9 +39,32 @@ struct Palette {
 }
 
 extension Font {
-    /// Every screen is set in the monospaced face, as on Android.
+    /// Every screen is set in the monospaced face, as on Android. Fixed size:
+    /// SwiftUI screens use `monoFont`, which follows Dynamic Type.
     static func mono(_ size: CGFloat, bold: Bool = false) -> Font {
         .system(size: size, weight: bold ? .bold : .regular, design: .monospaced)
+    }
+}
+
+/// The monospaced face at [size] points for the default text size, scaled
+/// with Dynamic Type as Android's sp sizes scale with its font size setting.
+private struct MonoFont: ViewModifier {
+    @ScaledMetric private var size: CGFloat
+    private let bold: Bool
+
+    init(size: CGFloat, bold: Bool) {
+        _size = ScaledMetric(wrappedValue: size, relativeTo: .body)
+        self.bold = bold
+    }
+
+    func body(content: Content) -> some View {
+        content.font(.system(size: size, weight: bold ? .bold : .regular, design: .monospaced))
+    }
+}
+
+extension View {
+    func monoFont(_ size: CGFloat, bold: Bool = false) -> some View {
+        modifier(MonoFont(size: size, bold: bold))
     }
 }
 

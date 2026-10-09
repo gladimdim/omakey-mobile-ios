@@ -107,7 +107,7 @@ struct ImportPreviewSheet: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     LayoutPreview(layout: pending.layout, theme: palette.theme)
-                    Text(message).font(.mono(13)).foregroundStyle(palette.fg)
+                    Text(message).monoFont(13).foregroundStyle(palette.fg)
                 }
                 .padding(20)
             }

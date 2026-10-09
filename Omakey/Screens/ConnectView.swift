@@ -25,6 +25,14 @@ struct ConnectView: View {
                 }
                 .buttonStyle(OmakeyButtonStyle(palette: p))
                 .accessibilityIdentifier("omakey.layout")
+                SectionHeader(title: "NO COMPUTER AT HAND?", palette: p)
+                Text("Try the keyboard and touchpad on a demo computer inside the phone. It shows what it receives.")
+                    .monoFont(13)
+                    .foregroundStyle(p.fgDim)
+                    .padding(.bottom, 12)
+                Button("Try the demo") { model.openDemo() }
+                    .buttonStyle(OmakeyButtonStyle(palette: p))
+                    .accessibilityIdentifier("omakey.demo")
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 32)
@@ -71,7 +79,7 @@ struct ConnectView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text("Omakey")
-                    .font(.mono(34, bold: true))
+                    .monoFont(34, bold: true)
                     .foregroundStyle(p.fg)
                 Spacer()
                 Button { model.sheet = .settings } label: {
@@ -81,7 +89,7 @@ struct ConnectView: View {
                 .accessibilityIdentifier("omakey.settings")
             }
             Text("Your phone is the keyboard.")
-                .font(.mono(15))
+                .monoFont(15)
                 .foregroundStyle(p.fgDim)
         }
     }
@@ -89,7 +97,7 @@ struct ConnectView: View {
     @ViewBuilder
     private var pairedList: some View {
         if model.paired.isEmpty {
-            Text("No computers yet.").font(.mono(14)).foregroundStyle(p.fgDim)
+            Text("No computers yet.").monoFont(14).foregroundStyle(p.fgDim)
         }
         VStack(spacing: 8) {
             ForEach(model.paired, id: \.hostId) { h in
@@ -119,9 +127,9 @@ struct ConnectView: View {
         if model.localNetworkDenied {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Omakey can't reach your Wi-Fi")
-                    .font(.mono(16, bold: true)).foregroundStyle(p.warn)
+                    .monoFont(16, bold: true).foregroundStyle(p.warn)
                 Text("Local Network access is off for Omakey, so it can't find or type on your computer. Turn it on in Settings → Omakey → Local Network.")
-                    .font(.mono(13)).foregroundStyle(p.fg)
+                    .monoFont(13).foregroundStyle(p.fg)
                 Button("Open Settings") {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                 }
@@ -135,7 +143,7 @@ struct ConnectView: View {
         let pairedIds = Set(model.paired.map(\.hostId))
         let strangers = model.nearby.filter { !pairedIds.contains($0.hostId ?? "") }.sorted { $0.name < $1.name }
         if strangers.isEmpty {
-            Text("Looking for computers running omakeyd…").font(.mono(14)).foregroundStyle(p.fgDim)
+            Text("Looking for computers running omakeyd…").monoFont(14).foregroundStyle(p.fgDim)
         }
         VStack(spacing: 8) {
             ForEach(strangers, id: \.serviceName) { f in
@@ -150,7 +158,7 @@ struct ConnectView: View {
     private var pairSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("On Omarchy, click the keyboard icon in the bar and choose Pair a phone, or run `omakeyd pair` in a terminal. Then scan the code.")
-                .font(.mono(13))
+                .monoFont(13)
                 .foregroundStyle(p.fgDim)
             HStack(spacing: 8) {
                 Button("Scan QR code") { model.scanning = true }

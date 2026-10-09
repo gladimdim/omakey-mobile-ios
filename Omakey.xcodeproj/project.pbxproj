@@ -11,6 +11,7 @@
 		0A0D00000000000000000023 /* OmakeyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000022 /* OmakeyCore */; };
 		0A0D00000000000000000025 /* OmakeyNet in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000024 /* OmakeyNet */; };
 		0A0D00000000000000000032 /* OmakeydStandIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000031 /* OmakeydStandIn */; };
+		0A0D00000000000000000034 /* OmakeydStandIn in Frameworks */ = {isa = PBXBuildFile; productRef = 0A0D00000000000000000033 /* OmakeydStandIn */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 				0A0D00000000000000000015 /* OmakeyProtocol in Frameworks */,
 				0A0D00000000000000000023 /* OmakeyCore in Frameworks */,
 				0A0D00000000000000000025 /* OmakeyNet in Frameworks */,
+				0A0D00000000000000000034 /* OmakeydStandIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +143,7 @@
 				0A0D00000000000000000013 /* OmakeyProtocol */,
 				0A0D00000000000000000022 /* OmakeyCore */,
 				0A0D00000000000000000024 /* OmakeyNet */,
+				0A0D00000000000000000033 /* OmakeydStandIn */,
 			);
 			productName = Omakey;
 			productReference = 0A0D00000000000000000007 /* Omakey.app */;
@@ -440,7 +443,6 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -473,7 +475,6 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -627,6 +628,10 @@
 			productName = OmakeyNet;
 		};
 		0A0D00000000000000000031 /* OmakeydStandIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OmakeydStandIn;
+		};
+		0A0D00000000000000000033 /* OmakeydStandIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OmakeydStandIn;
 		};

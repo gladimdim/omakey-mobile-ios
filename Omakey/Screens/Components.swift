@@ -7,7 +7,7 @@ struct SectionHeader: View {
 
     var body: some View {
         Text(title)
-            .font(.mono(12, bold: true))
+            .monoFont(12, bold: true)
             .kerning(1.4)
             .foregroundStyle(palette.fgDim)
             .padding(.top, 28)
@@ -27,10 +27,10 @@ struct Card: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.mono(16, bold: true))
+                .monoFont(16, bold: true)
                 .foregroundStyle(palette.fg)
             Text(detail)
-                .font(.mono(13))
+                .monoFont(13)
                 .foregroundStyle(detailColor ?? palette.fgDim)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -51,7 +51,7 @@ struct OmakeyButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.mono(15, bold: true))
+            .monoFont(15, bold: true)
             .foregroundStyle(primary ? palette.bg : palette.accent)
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 16)
@@ -76,7 +76,7 @@ struct ToastView: View {
 
     var body: some View {
         Text(text)
-            .font(.mono(13))
+            .monoFont(13)
             .foregroundStyle(palette.fg)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 16)

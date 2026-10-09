@@ -435,7 +435,16 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 - The import preview is a sheet (an iOS alert can't hold the drawing).
   JSON files open in Omakey from the Files app (`CFBundleDocumentTypes`).
 
-### M10: Polish and release
+### M10: Polish and release (in the repository: done; in App Store Connect: waiting for the owner)
+
+Done: demo mode ("Try the demo", a stand-in omakeyd inside the app on
+loopback, showing what it receives), the privacy manifest, a dark launch
+screen, Dynamic Type on the SwiftUI screens, the privacy policy
+(`docs/PRIVACY.md`), the listing in `store/metadata` (valid for `asc`),
+the submission checklist and App Review notes (`store/README.md`), and
+`docs/VALIDATION.md`. Waiting: the App Store Connect record, the export
+compliance answer, screenshots and the device checks.
+
 - App icon from `artwork/omakey.svg`, launch screen, VoiceOver labels on the
   bars and connect screen, Dynamic Type on SwiftUI screens.
 - **Demo mode for App Review.** Reviewers have no omakeyd. A "Demo computer"

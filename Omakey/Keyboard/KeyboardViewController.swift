@@ -1,4 +1,5 @@
 import OmakeyCore
+import OmakeydStandIn
 import OmakeyNet
 import OmakeyProtocol
 import SwiftUI
@@ -48,6 +49,9 @@ final class KeyboardViewController: UIViewController {
     private let panel = UIView()
 
     private let toastLabel = PaddedLabel()
+    /// On the demo computer: what it received, as a computer screen would show it.
+    private let demoLabel = PaddedLabel()
+    private var demoWords: [String] = []
     private var toastTask: Task<Void, Never>?
     private lazy var sink = SinkProxy(self)
     /// Copy and Paste, with the phone's clipboard when omakeyd has the computer's.
@@ -156,6 +160,18 @@ final class KeyboardViewController: UIViewController {
         toastLabel.layer.masksToBounds = true
         toastLabel.alpha = 0
         view.addSubview(toastLabel)
+        if DemoComputer.shared.isDemo(host) {
+            demoLabel.font = .mono(12, bold: true)
+            demoLabel.textAlignment = .center
+            demoLabel.layer.cornerRadius = 14
+            demoLabel.layer.masksToBounds = true
+            demoLabel.layer.borderWidth = 1
+            demoLabel.isUserInteractionEnabled = false
+            demoLabel.accessibilityIdentifier = "keyboard.demo"
+            demoLabel.text = "The demo computer shows what it gets here"
+            view.addSubview(demoLabel)
+            DemoComputer.shared.onEvent = { [weak self] e in self?.demoReceived(e) }
+        }
 
         applyTheme()
         renderHandle()
@@ -311,6 +327,22 @@ final class KeyboardViewController: UIViewController {
         let toast = toastLabel.sizeThatFits(CGSize(width: safe.width * 0.7, height: 200))
         let bottom = portrait ? min(safe.maxY, view.bounds.maxY - keyboardHeight) - 52 * 2 : safe.maxY
         toastLabel.frame = CGRect(x: safe.midX - toast.width / 2, y: bottom - toast.height - 24, width: toast.width, height: toast.height)
+        if demoLabel.superview != nil {
+            let fit = demoLabel.sizeThatFits(CGSize(width: safe.width * 0.8, height: 60))
+            let w = min(fit.width, safe.width * 0.8)
+            // Over the touchpad's hint in portrait; over the keyboard's top row in landscape.
+            demoLabel.frame = CGRect(x: safe.midX - w / 2, y: stage.frame.minY + (portrait ? stage.bounds.height * 0.62 : 6), width: w, height: fit.height)
+        }
+    }
+
+    /// The demo computer got something: show it, newest last.
+    private func demoReceived(_ e: OmakeydStandIn.StandInServer.Event) {
+        guard let word = DemoComputer.describe(e) else { return }
+        if word == "pointer", demoWords.last == "pointer" { return }
+        demoWords.append(word)
+        if demoWords.count > 6 { demoWords.removeFirst(demoWords.count - 6) }
+        demoLabel.text = "demo computer got: " + demoWords.joined(separator: " · ")
+        view.setNeedsLayout()
     }
 
     private func layoutLandscape() {
@@ -427,6 +459,9 @@ final class KeyboardViewController: UIViewController {
         handle.backgroundColor = UIColor(rgb: theme.surface)
         handle.layer.borderColor = UIColor(rgb: theme.accent).cgColor
         toastLabel.backgroundColor = UIColor(rgb: theme.surface)
+        demoLabel.backgroundColor = UIColor(rgb: theme.surface).withAlphaComponent(0.92)
+        demoLabel.textColor = UIColor(rgb: theme.ok)
+        demoLabel.layer.borderColor = UIColor(rgb: theme.ok).cgColor
         toastLabel.textColor = UIColor(rgb: theme.fg)
         overrideUserInterfaceStyle = theme.light ? .light : .dark
         renderSticky()
@@ -688,7 +723,7 @@ final class KeyboardViewController: UIViewController {
     private func layoutPicked() {
         if model.layouts.portrait != portrait {
             // Into or out of portrait mode: the other screen, same computer.
-            model.reopenKeyboard(host.hostId, replacing: self)
+            model.reopenKeyboard(host, replacing: self)
         } else if portrait {
             showPhoneKeyboardSoon()
         } else {

@@ -22,9 +22,9 @@ struct SettingsView: View {
                     SectionHeader(title: "DEFAULT LAYOUT", palette: p)
                     Button { showingLayouts = true } label: {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("⌨  \(model.layoutName)").font(.mono(16, bold: true)).foregroundStyle(p.fg)
+                            Text("⌨  \(model.layoutName)").monoFont(16, bold: true).foregroundStyle(p.fg)
                             Text("Every keyboard opens with it. Switch any time with ⌨ on the keyboard.")
-                                .font(.mono(13)).foregroundStyle(p.fgDim)
+                                .monoFont(13).foregroundStyle(p.fgDim)
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(14)
@@ -42,7 +42,7 @@ struct SettingsView: View {
 
                     SectionHeader(title: "PHONE NAME", palette: p)
                     TextField("iPhone", text: $phoneName)
-                        .font(.mono(16))
+                        .monoFont(16)
                         .foregroundStyle(p.fg)
                         .textInputAutocapitalization(.words)
                         .autocorrectionDisabled()
@@ -50,14 +50,14 @@ struct SettingsView: View {
                         .background(p.surface, in: RoundedRectangle(cornerRadius: 10))
                         .accessibilityIdentifier("settings.name")
                     Text("How your computer lists this phone. iOS doesn't tell apps the name you gave it, so set it here.")
-                        .font(.mono(12)).foregroundStyle(p.fgDim).padding(.top, 6)
+                        .monoFont(12).foregroundStyle(p.fgDim).padding(.top, 6)
 
                     SectionHeader(title: "KEYBOARD", palette: p)
                     toggle("Haptic feedback", "Touchpad clicks, scrolling and keys feel like a MacBook trackpad.", $haptics)
                     toggle("Show typed text", "What you type runs along above the keyboard. Turn it off for passwords on a shared screen.", $typedText)
 
                     Text("Omakey \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "")")
-                        .font(.mono(12)).foregroundStyle(p.fgDim)
+                        .monoFont(12).foregroundStyle(p.fgDim)
                         .frame(maxWidth: .infinity)
                         .padding(.top, 32)
                 }
@@ -114,8 +114,8 @@ struct SettingsView: View {
             model.refresh()
         } label: {
             VStack(alignment: .leading, spacing: 3) {
-                Text(selected ? "● \(title)" : title).font(.mono(14, bold: true)).foregroundStyle(Color(rgb: t.fg)).lineLimit(1)
-                if let sub { Text(sub).font(.mono(11)).foregroundStyle(Color(rgb: t.fgDim)).lineLimit(2) }
+                Text(selected ? "● \(title)" : title).monoFont(14, bold: true).foregroundStyle(Color(rgb: t.fg)).lineLimit(1)
+                if let sub { Text(sub).monoFont(11).foregroundStyle(Color(rgb: t.fgDim)).lineLimit(2) }
                 HStack(spacing: 5) {
                     ForEach([t.key, t.keyAccent, t.accent, t.layer, t.ok, t.error], id: \.self) { c in
                         Circle().fill(Color(rgb: c)).frame(width: 14, height: 14)
@@ -138,19 +138,19 @@ struct SettingsView: View {
     @ViewBuilder
     private var computers: some View {
         if model.paired.isEmpty {
-            Text("No computers yet. Pair one from the main screen.").font(.mono(14)).foregroundStyle(p.fgDim)
+            Text("No computers yet. Pair one from the main screen.").monoFont(14).foregroundStyle(p.fgDim)
         }
         VStack(spacing: 8) {
             ForEach(model.paired, id: \.hostId) { h in
                 HStack(alignment: .center) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(h.name).font(.mono(16, bold: true)).foregroundStyle(p.fg).lineLimit(1)
-                        Text("Omakey · Wi-Fi").font(.mono(13)).foregroundStyle(p.accent)
-                        Text(h.addresses.first ?? "").font(.mono(12)).foregroundStyle(p.fgDim)
+                        Text(h.name).monoFont(16, bold: true).foregroundStyle(p.fg).lineLimit(1)
+                        Text("Omakey · Wi-Fi").monoFont(13).foregroundStyle(p.accent)
+                        Text(h.addresses.first ?? "").monoFont(12).foregroundStyle(p.fgDim)
                     }
                     Spacer()
                     Button("Unlink") { unlinking = h }
-                        .font(.mono(14, bold: true))
+                        .monoFont(14, bold: true)
                         .foregroundStyle(p.error)
                         .accessibilityIdentifier("settings.unlink.\(h.hostId)")
                 }
@@ -163,8 +163,8 @@ struct SettingsView: View {
     private func toggle(_ title: String, _ about: String, _ value: Binding<Bool>) -> some View {
         Toggle(isOn: value) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(title).font(.mono(16, bold: true)).foregroundStyle(p.fg)
-                Text(about).font(.mono(13)).foregroundStyle(p.fgDim)
+                Text(title).monoFont(16, bold: true).foregroundStyle(p.fg)
+                Text(about).monoFont(13).foregroundStyle(p.fgDim)
             }
         }
         .padding(14)

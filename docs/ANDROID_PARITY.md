@@ -93,3 +93,12 @@ the baseline.
 | Layouts page, previews, share, import, remove | ✅ M9 (import from Files and links; another app's share sheet ⏳ later) |
 | Settings: layout, theme, computers, haptics, typed text | ✅ M9 |
 | Phone name (iOS only) | ✅ M4 (Settings) |
+
+## iOS only
+
+| Feature | iOS |
+|---|---|
+| Demo computer inside the app ("Try the demo"), for App Review and trying it without a desktop | ✅ M10 |
+| Phone name setting (iOS doesn't give apps the device's name) | ✅ M4, M9 |
+| Local Network help card when access is off | ✅ M4 |
+| Dynamic Type on the connect, layouts and settings screens | ✅ M10 |

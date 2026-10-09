@@ -19,8 +19,8 @@ struct PresetPicker: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("\(p.name)  ·  \(String(format: "%g", p.sensitivity))×")
-                                .font(.mono(15, bold: true)).foregroundStyle(palette.fg)
-                            Text(p.detail).font(.mono(12)).foregroundStyle(palette.fgDim)
+                                .monoFont(15, bold: true).foregroundStyle(palette.fg)
+                            Text(p.detail).monoFont(12).foregroundStyle(palette.fgDim)
                         }
                         Spacer()
                         if p.name == current { Image(systemName: "checkmark").foregroundStyle(palette.ok) }

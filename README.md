@@ -13,8 +13,13 @@ discovery (M3). The connect screen pairs by QR code or link (M4), and
 the landscape keyboard types (M5), the touchpad slides down over it (M6),
 portrait mode mirrors the phone's own keyboard (M7), Copy and Paste share
 the clipboard with the computer (M8), and the layouts page and settings
-are in (M9). What's left before the App Store (M10): device checks, demo
-mode for App Review, and the store listing. See
+are in (M9). Demo mode, the privacy manifest and the store listing are
+ready (M10); what's left before the App Store is checking it on a device
+with a real desktop and the App Store Connect side. See
+[docs/VALIDATION.md](docs/VALIDATION.md) and [store/README.md](store/README.md).
+
+No Linux desktop at hand? **Try the demo** on the first screen: a demo
+computer inside the app shows what it receives. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 
