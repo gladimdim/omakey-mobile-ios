@@ -6,8 +6,20 @@ becomes a key press on a kernel-level virtual keyboard made by `omakeyd`,
 so Hyprland binds, `SUPER + SPACE`, F-keys, Esc and the lock screen all
 work as they do with a hardware keyboard.
 
-**Status: planning.** See [docs/PLAN.md](docs/PLAN.md) for the
-implementation plan and its milestones.
+**Status: in development.** The protocol is done and reproduces the
+daemon's test vectors byte for byte (M1). The screens come next. See
+[docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
+[docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
+
+## Build
+
+Open `Omakey.xcodeproj` in Xcode 27 and run the **Omakey** scheme on an
+iPhone or a simulator (iOS 17+). From a terminal:
+
+```bash
+scripts/check.sh                          # package tests on the Mac + unsigned device build
+swift test --package-path OmakeyKit       # protocol and keyboard logic only
+```
 
 It is the iOS counterpart of the Android app:
 

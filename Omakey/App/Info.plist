@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Omakey sends your key presses to your computer over the local network and finds it there.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_omakey._udp</string>
+	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Omakey scans the pairing code your computer shows.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.gladimdim.omakey</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>omakey</string>
+			</array>
+		</dict>
+	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
+</plist>

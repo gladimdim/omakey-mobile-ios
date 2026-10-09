@@ -1,0 +1,127 @@
+{
+  "ack": {
+    "client_time_ms": 1016,
+    "counter": 1,
+    "last_eseq": 2,
+    "packet": "4f4b010401020304050607080badcafe00000000000000011a399d2b1734170ae355964dbead3609722cf0d2bd79"
+  },
+  "bye": {
+    "counter": 5,
+    "packet": "4f4b010501020304050607080badcafe00000000000000059b01069d7d5d150987c77b62b3e3942c"
+  },
+  "client_random": "101112131415161718191a1b1c1d1e1f",
+  "clip_put": {
+    "body": "0101020304000000000100000006486920e29c93",
+    "clip_id": 16909060,
+    "counter": 1,
+    "flags": 1,
+    "note": "a session of its own, after the same WELCOME: counters start again",
+    "offset": 0,
+    "op": 1,
+    "packet": "4f4b010701020304050607080badcafe00000000000000017661ff7e4aeda094147d397205c159e6cef7434c1e558202a836c14a87bbbe60df15b3e1",
+    "text": "Hi ✓",
+    "total": 6
+  },
+  "clip_reply": {
+    "body": "010102030400000000060000000006",
+    "clip_id": 16909060,
+    "counter": 1,
+    "flags": 0,
+    "offset": 6,
+    "op": 1,
+    "packet": "4f4b010801020304050607080badcafe00000000000000011b389cd01336225161b18d226a9fdc83d784194cd5e6a5a184a44fa6dcc735",
+    "status": 0,
+    "total": 6
+  },
+  "description": "Protocol v1 vectors. Hex unless noted. All packets are full datagrams.",
+  "device_id": "0102030405060708",
+  "device_key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "hello": {
+    "name": "Pixel 9",
+    "nonce": "303132333435363738393a3b",
+    "packet": "4f4b01010102030405060708303132333435363738393a3ba32423d3fd7a5c14322a94f70e8420779b77262fa652643c2614b13db5382c5f2c68b672108e39d8cc",
+    "platform": 1
+  },
+  "host_id": "a0a1a2a3a4a5a6a7",
+  "input1": {
+    "client_time_ms": 1000,
+    "counter": 1,
+    "events": [
+      [
+        1,
+        125,
+        1
+      ]
+    ],
+    "held": [
+      125
+    ],
+    "packet": "4f4b010301020304050607080badcafe00000000000000017760fe954eeca0e9157c387278c67014c0f99006827fb066c773b00ef4f6"
+  },
+  "input2": {
+    "client_time_ms": 1016,
+    "counter": 2,
+    "events": [
+      [
+        1,
+        125,
+        1
+      ],
+      [
+        2,
+        57,
+        1
+      ]
+    ],
+    "held": [
+      57,
+      125
+    ],
+    "packet": "4f4b010301020304050607080badcafe00000000000000027aba8c0556ad78610827c7d4e57542528231b433d456751059b560aa3d92fc010ef7b61e4a"
+  },
+  "input4": {
+    "client_time_ms": 1033,
+    "counter": 4,
+    "events": [
+      [
+        1,
+        125,
+        1
+      ],
+      [
+        2,
+        57,
+        1
+      ],
+      [
+        3,
+        272,
+        1
+      ]
+    ],
+    "held": [
+      57,
+      125,
+      272
+    ],
+    "note": "counter 3 was the INPUT sent by the button press itself; this is the next one",
+    "packet": "4f4b010301020304050607080badcafe0000000000000004ee51644f27db00ad009e6fe68dfffd27f7ec7d7e526fc0cc7faf3853844c2e8bbe06100ee9ba54996ce534acf3e1ab00cd25a7ae37",
+    "pointer": {
+      "dx": -12,
+      "dy": 34,
+      "hwheel": -60,
+      "wheel": 120
+    }
+  },
+  "kcs": "3f0ca59f34ce11b84c87473cb9032aaf86714c4698dff613e2018e5aa1ac3a79",
+  "ksc": "c50902bbe11d132e8610d87f016cb45abbfaeb7e7e81f705785f0d5295adb281",
+  "pair_uri": "omakey://pair?v=1&h=a0a1a2a3a4a5a6a7&n=omarchy%20desk&a=192.168.50.219,100.67.193.30&p=47800&d=0102030405060708&k=AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "server_random": "202122232425262728292a2b2c2d2e2f",
+  "session_id": 195939070,
+  "welcome": {
+    "features": 1,
+    "host_name": "omarchy desk",
+    "nonce": "404142434445464748494a4b",
+    "packet": "4f4b01020102030405060708404142434445464748494a4bf2a8bc3032299114d5dd0d2d87790d4459e7707f931029045f6e64cebb3ec3f493a53952d2d6b23553976316b169baa9a0706652da377d5ae7d56c27f91455c2cb2c"
+  }
+}

@@ -171,7 +171,8 @@ on a log scale snapped to 0.05.
 
 ```
 omakey-mobile-ios/
-  Omakey.xcodeproj           checked in; no project generator
+  Omakey.xcodeproj           checked in; no project generator; synchronized folders,
+                             so files under Omakey/ and OmakeyTests/ need no project edit
   Omakey/                    the app target
     App/                     OmakeyApp, AppDelegate (orientation lock), Info.plist, PrivacyInfo.xcprivacy
     Net/                     Link, UDPLink, Discovery, Reachability, LocalNetworkStatus
@@ -295,7 +296,7 @@ unsigned generic iOS build.
 Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 `gladimdim/omakey-mobile-ios`.
 
-### M1: Project skeleton and `OmakeyProtocol`
+### M1: Project skeleton and `OmakeyProtocol` (done, except reserving the name)
 - `Omakey.xcodeproj` (app + unit test targets), `OmakeyKit` package linked
   as a local package, `AGENTS.md`, `docs/ANDROID_PARITY.md` (one row per
   feature in §2, with Android baseline `a1ad3f9`), `scripts/check.sh`,
