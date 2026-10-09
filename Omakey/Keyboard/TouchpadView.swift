@@ -313,7 +313,12 @@ final class TouchpadView: UIView {
     }
 
     private func width(of s: String, _ font: UIFont) -> CGFloat {
-        (s as NSString).size(withAttributes: [.font: font]).width
+        let key = "\(font.fontName) \(font.pointSize) \(s)"
+        if let w = widths[key] { return w }
+        if widths.count > 128 { widths.removeAll() }
+        let w = (s as NSString).size(withAttributes: [.font: font]).width
+        widths[key] = w
+        return w
     }
 
     // MARK: - State from outside
@@ -736,20 +741,23 @@ final class TouchpadView: UIView {
         let radius: CGFloat = 14
         color(theme.surface).setFill()
         UIBezierPath(roundedRect: surface, cornerRadius: radius).fill()
-        // A faint dot grid, so the surface reads as a touchpad.
-        color(theme.key).setFill()
+        // A faint dot grid, so the surface reads as a touchpad: one path, filled once.
         let step: CGFloat = 22, dot: CGFloat = 1.4
+        let dots = CGMutablePath()
         var y = pad.minY + step
         while y < pad.maxY - step / 2 {
             if y + dot >= rect.minY && y - dot <= rect.maxY {
                 var x = pad.minX + step
                 while x < pad.maxX - step / 2 {
-                    ctx.fillEllipse(in: CGRect(x: x - dot, y: y - dot, width: dot * 2, height: dot * 2))
+                    dots.addEllipse(in: CGRect(x: x - dot, y: y - dot, width: dot * 2, height: dot * 2))
                     x += step
                 }
             }
             y += step
         }
+        ctx.addPath(dots)
+        ctx.setFillColor(color(theme.key).cgColor)
+        ctx.fillPath()
 
         let hintY = pad.minY + pad.height * 0.36
         if supported {
@@ -778,12 +786,32 @@ final class TouchpadView: UIView {
     }
 
     private func drawText(_ s: String, centerX: CGFloat, baseline: CGFloat, font: UIFont, color c: UInt32) {
-        let w = width(of: s, font)
-        (s as NSString).draw(at: CGPoint(x: centerX - w / 2, y: baseline - font.ascender), withAttributes: [.font: font, .foregroundColor: color(c)])
+        drawText(s, left: centerX - width(of: s, font) / 2, baseline: baseline, font: font, color: c)
     }
 
     private func drawText(_ s: String, left: CGFloat, baseline: CGFloat, font: UIFont, color c: UInt32) {
-        (s as NSString).draw(at: CGPoint(x: left, y: baseline - font.ascender), withAttributes: [.font: font, .foregroundColor: color(c)])
+        stamp(s, font, c).draw(at: CGPoint(x: left - 1, y: baseline - font.ascender - 1))
+    }
+
+    /// Text drawn once into a picture, then only pasted: the touchpad draws
+    /// again whenever a button is pressed or the speed moves, and laying out
+    /// its dozen texts was most of that.
+    private var stamps: [String: UIImage] = [:]
+    private var widths: [String: CGFloat] = [:]
+
+    private func stamp(_ s: String, _ font: UIFont, _ c: UInt32) -> UIImage {
+        let key = "\(font.fontName) \(font.pointSize) \(c) \(traitCollection.displayScale) \(s)"
+        if let image = stamps[key] { return image }
+        // The speed chip's text changes as the slider moves: keep the cache small.
+        if stamps.count > 96 { stamps.removeAll() }
+        let size = CGSize(width: ceil(width(of: s, font)) + 2, height: ceil(font.lineHeight) + 2)
+        let format = UIGraphicsImageRendererFormat(for: traitCollection)
+        format.opaque = false
+        let image = UIGraphicsImageRenderer(size: size, format: format).image { _ in
+            (s as NSString).draw(at: CGPoint(x: 1, y: 1), withAttributes: [.font: font, .foregroundColor: color(c)])
+        }
+        stamps[key] = image
+        return image
     }
 
     /// A scroll strip: arrows at the ends, grip lines between them that follow the finger.

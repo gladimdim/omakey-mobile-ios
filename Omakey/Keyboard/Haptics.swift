@@ -22,7 +22,8 @@ final class Haptics {
     private var lastGlide: CFTimeInterval = 0
 
     init() {
-        prepare()
+        // Woken a moment later, not while the keyboard is being built: each prepare is a call into the system.
+        DispatchQueue.main.async { [weak self] in self?.prepare() }
     }
 
     /// A touchpad button went down / came back up.

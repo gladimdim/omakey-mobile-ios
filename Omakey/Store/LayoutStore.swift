@@ -7,7 +7,7 @@ import os
 @MainActor
 final class LayoutStore {
     /// The layout a new install starts on, first in the list and recommended there.
-    static let defaultId = "omakey-pro"
+    nonisolated static let defaultId = "omakey-pro"
     /// Not a layout: the phone's own keyboard under the touchpad, in portrait.
     static let portraitId = "portrait"
     static let portraitName = "Portrait: your keyboard + touchpad"
@@ -27,8 +27,21 @@ final class LayoutStore {
     }
 
     private var parsedKeycodes: Keycodes?
-    /// The built-in layouts' ids, the default first, the rest by file name.
-    private let builtInIds: [String]
+    /// The built-in layouts' ids, the default first, the rest by file name:
+    /// listed in the background at start-up (`prewarm`), finding the bundle
+    /// takes a few milliseconds, or here if needed sooner.
+    private var builtInIds: [String] {
+        if let ids = listedIds { return ids }
+        let ids = Self.ordered(BundledSpec.layoutIds())
+        listedIds = ids
+        return ids
+    }
+
+    private var listedIds: [String]?
+
+    private nonisolated static func ordered(_ ids: [String]) -> [String] {
+        ids.filter { $0 == defaultId } + ids.filter { $0 != defaultId }
+    }
     /// Built-in layouts parsed so far: start-up parses none (the connect
     /// screen shows the chosen one's remembered name); they come in the
     /// background (`prewarm`), or one by one when asked for sooner.
@@ -40,10 +53,8 @@ final class LayoutStore {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        let ids = BundledSpec.layoutIds()
-        builtInIds = ids.filter { $0 == Self.defaultId } + ids.filter { $0 != Self.defaultId }
+        // Made with the first import; until then there are none to list.
         dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("layouts")
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     }
 
     private func builtIn(_ id: String) -> Layout? {
@@ -68,16 +79,21 @@ final class LayoutStore {
 
     /// Parse keycodes.json and the built-in layouts not read yet, off the main thread.
     func prewarm() {
-        let missing = builtInIds.filter { parsed[$0] == nil }
+        let knownIds = listedIds
+        let done = Set(parsed.keys)
         let known = parsedKeycodes
         Task.detached(priority: .userInitiated) {
+            let ids = knownIds ?? Self.ordered(BundledSpec.layoutIds())
             guard let codes = known ?? (try? Keycodes.parse(BundledSpec.keycodesJSON())) else { return }
-            let done = missing.compactMap { id in BundledSpec.layoutJSON(id).flatMap { try? LayoutParser.parse($0, keycodes: codes) } }
-            await self.keep(codes, done)
+            let layouts = ids.filter { !done.contains($0) }.compactMap { id in
+                BundledSpec.layoutJSON(id).flatMap { try? LayoutParser.parse($0, keycodes: codes) }
+            }
+            await self.keep(ids, codes, layouts)
         }
     }
 
-    private func keep(_ codes: Keycodes, _ layouts: [Layout]) {
+    private func keep(_ ids: [String], _ codes: Keycodes, _ layouts: [Layout]) {
+        if listedIds == nil { listedIds = ids }
         if parsedKeycodes == nil { parsedKeycodes = codes }
         for l in layouts where parsed[l.id] == nil { parsed[l.id] = l }
         var n = names
@@ -149,6 +165,7 @@ final class LayoutStore {
         if builtInIds.contains(layout.id) {
             throw LayoutError("\"\(layout.id)\" is a built-in layout id; give your layout another id")
         }
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         try Data(json.utf8).write(to: dir.appendingPathComponent("\(layout.id).json"), options: .atomic)
         selectedId = layout.id
         rememberName(layout)

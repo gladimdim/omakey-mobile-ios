@@ -269,6 +269,7 @@ final class KeyStripView: UIView {
         }
         if !swiping && holding == nil && pressed?.down != true && abs(dx) > KeyStripView.slop {
             swiping = true
+            Perf.begin(.strip)
             hold?.cancel()
             modifierDown?.cancel()
             pickUp?.cancel()
@@ -513,10 +514,10 @@ final class KeyStripView: UIView {
         let from = offset, to = CGFloat(target) * w
         let distance = abs(to - from) / w
         settle?.stop()
-        settle = CurveAnimation(duration: min(180 + 160 * Double(distance), 340) / 1000, curve: CurveAnimation.settle) { [weak self] t in
+        settle = CurveAnimation(duration: min(180 + 160 * Double(distance), 340) / 1000, curve: CurveAnimation.settle, step: { [weak self] t in
             self?.offset = from + (to - from) * t
             self?.setNeedsDisplay()
-        }
+        }, done: { Perf.end(.strip) })
         if target != current {
             current = target
             onPageChanged?(target)

@@ -27,6 +27,8 @@ enum Perf {
         case typing
         /// Fingers on the touchpad (an animation interval).
         case touchpad
+        /// Portrait mode's key pages swiped, until they settle (an animation interval).
+        case strip
     }
 
     private static var running: [Span: OSSignpostIntervalState] = [:]
@@ -41,6 +43,7 @@ enum Perf {
         case .sheetSlide: signposter.beginAnimationInterval("Sheet slide")
         case .typing: signposter.beginAnimationInterval("Typing")
         case .touchpad: signposter.beginAnimationInterval("Touchpad")
+        case .strip: signposter.beginAnimationInterval("Strip")
         }
     }
 
@@ -54,6 +57,7 @@ enum Perf {
         case .sheetSlide: signposter.endInterval("Sheet slide", state)
         case .typing: signposter.endInterval("Typing", state)
         case .touchpad: signposter.endInterval("Touchpad", state)
+        case .strip: signposter.endInterval("Strip", state)
         }
     }
 }

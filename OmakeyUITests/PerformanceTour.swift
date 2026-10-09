@@ -9,6 +9,8 @@ import XCTest
 /// is picked or changed. The app keeps the phone awake meanwhile.
 final class PerformanceTour: XCTestCase {
     private var app: XCUIApplication!
+    /// The phone's own layout choice, to put back after a test changed it.
+    private var restoreLayout: String?
 
     override func setUpWithError() throws {
         try XCTSkipUnless(ProcessInfo.processInfo.environment["OMAKEY_PERF"] == "1", "phone performance runs only: scripts/perf-test.sh")
@@ -16,6 +18,13 @@ final class PerformanceTour: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app = XCUIApplication()
         app.launchEnvironment["OMAKEY_STAY_AWAKE"] = "1"
+    }
+
+    override func tearDownWithError() throws {
+        if let name = restoreLayout {
+            restoreLayout = nil
+            choose(name)
+        }
     }
 
     private func signpost(_ name: String) -> XCTOSSignpostMetric {
@@ -110,6 +119,69 @@ final class PerformanceTour: XCTestCase {
             keys[i % keys.count].tap()
             keys[(i + 3) % keys.count].tap()
             i += 1
+        }
+    }
+
+    /// Portrait mode chosen for the test, the phone's own layout choice put back after it.
+    private func inPortraitMode() {
+        launchToConnect()
+        let choice = app.buttons["omakey.layout"]
+        XCTAssertTrue(choice.waitForExistence(timeout: 5))
+        let original = String(choice.label.drop { $0 == "⌨" || $0 == " " })
+        print("layout choice at the start: \(original)")
+        guard !original.hasPrefix("Portrait") else { return }
+        // Back to the layout it was on in tearDown, whatever happens.
+        restoreLayout = original
+        let row = app.descendants(matching: .any)["layout.portrait"].firstMatch
+        tap(choice, until: row)
+        row.tap()
+        XCTAssertTrue(eventually { choice.label.contains("Portrait") }, choice.label)
+    }
+
+    /// Picks the layout named [name] on the Layouts page, and checks it took.
+    private func choose(_ name: String) {
+        app.terminate()
+        app.launch()
+        let choice = app.buttons["omakey.layout"]
+        XCTAssertTrue(choice.waitForExistence(timeout: 8))
+        let done = app.buttons["Done"]
+        tap(choice, until: done)
+        let card = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+        for _ in 0..<14 where !(card.exists && card.isHittable) { app.swipeUp() }
+        card.tap()
+        XCTAssertTrue(eventually(8) { choice.exists && choice.label.hasSuffix(name) }, "layout choice now: \(choice.label)")
+        print("layout choice put back: \(choice.label)")
+    }
+
+    /// Not a measurement: picks the layout named in OMAKEY_LAYOUT, to put a phone back as it was.
+    func testChooseLayout() throws {
+        guard let name = ProcessInfo.processInfo.environment["OMAKEY_LAYOUT"] else {
+            throw XCTSkip("TEST_RUNNER_OMAKEY_LAYOUT=<layout name> scripts/perf-test.sh -only-testing:OmakeyUITests/PerformanceTour/testChooseLayout")
+        }
+        choose(name)
+    }
+
+    /// Portrait mode coming up: the touchpad, the key strip and the phone's keyboard.
+    func testPortraitOpening() {
+        inPortraitMode()
+        measure(metrics: [signpost("Keyboard build"), signpost("Keyboard open")], options: options(3)) {
+            startMeasuring()
+            openDemo()
+            stopMeasuring()
+            closeKeyboard()
+        }
+    }
+
+    /// Portrait mode's key pages swiped.
+    func testPortraitKeyStrip() {
+        inPortraitMode()
+        openDemo()
+        // Whichever page the strip was left on: a key of it, to swipe from.
+        let key = app.keys.matching(NSPredicate(format: "identifier BEGINSWITH 'strip.' AND identifier != 'strip.edit'")).element(boundBy: 2)
+        XCTAssertTrue(key.waitForExistence(timeout: 5))
+        measure(metrics: [signpost("Strip")], options: options(5, manual: false)) {
+            key.swipeLeft(velocity: .fast)
+            key.swipeRight(velocity: .fast)
         }
     }
 

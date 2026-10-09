@@ -223,7 +223,8 @@ final class KeyboardViewController: UIViewController {
         panel.layer.shadowOpacity = 0.45
         panel.layer.shadowRadius = 20
         panel.layer.shadowOffset = CGSize(width: 0, height: 8)
-        panel.addSubview(touchpad)
+        // The touchpad joins its panel once the keyboard is up (`addTouchpad`): even
+        // hidden, it would be drawn now, a large picture holding up the keyboard's first frame.
         stage.addSubview(panel)
 
         handle.titleLabel?.font = .mono(12, bold: true)
@@ -295,9 +296,17 @@ final class KeyboardViewController: UIViewController {
         lastKeyboardHeight = (view.window?.bounds.height ?? UIScreen.main.bounds.height) * 0.38
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Portrait mode: the phone's keyboard asked for before the screen fades in, so
+        // iOS sets it up first and it rises with the screen, not halfway through its fade.
+        capture?.show()
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         Perf.end(.keyboardOpen)
+        if !portrait { DispatchQueue.main.async { [weak self] in self?.addTouchpad() } }
         UIApplication.shared.isIdleTimerDisabled = true
         connect()
         showPhoneKeyboardSoon()
@@ -678,12 +687,19 @@ final class KeyboardViewController: UIViewController {
         }
     }
 
+    /// What the status pill shows, as last set.
+    private var shownStatus = ""
+
     private func renderStatus() {
         let (color, text): (UInt32, String) = switch linkState {
         case .connected: (theme.ok, hostName + (pingMs >= 0 ? " · \(pingMs) ms" : ""))
         case .connecting: (theme.warn, "Connecting to \(hostName)…")
         case .rejected: (theme.error, "\(hostName) doesn't know this phone. Pair again.")
         }
+        // The ping comes every second, mostly the same: a button's configuration is costly to set again.
+        let shown = "\(color) \(theme.surface) \(text)"
+        guard shown != shownStatus else { return }
+        shownStatus = shown
         var c = UIButton.Configuration.plain()
         c.attributedTitle = AttributedString("●  " + text, attributes: AttributeContainer([
             .font: UIFont.mono(12, bold: true), .foregroundColor: UIColor(rgb: color),
@@ -798,9 +814,17 @@ final class KeyboardViewController: UIViewController {
         }
     }
 
+    /// Landscape: the touchpad into its panel, drawn while it's still out of sight.
+    private func addTouchpad() {
+        guard !portrait, touchpad.superview == nil else { return }
+        touchpad.frame = panel.bounds
+        panel.addSubview(touchpad)
+    }
+
     private func dragBegin(y: CGFloat) {
         let h = stage.bounds.height
         guard h > 0 else { return }
+        addTouchpad()
         animation?.stop()
         panelMoving = true
         panel.isHidden = false
@@ -842,6 +866,7 @@ final class KeyboardViewController: UIViewController {
     /// the finger's speed when let go, points per second, so the motion carries on from it.
     private func setPad(_ open: Bool, velocity: CGFloat = 0) {
         let h = stage.bounds.height
+        addTouchpad()
         if open && !padOpen { keyboard.releaseAll() }
         if !open && padOpen { touchpad.releaseAll() }
         padOpen = open
