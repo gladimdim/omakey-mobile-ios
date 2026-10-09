@@ -3,6 +3,26 @@
 What has been checked, where, and what still needs a device or a real
 desktop. Newest first.
 
+## 2026-10-09: orientation, and Paste on iOS 27
+
+- **Orientation.** Closing a keyboard forced the screen upright instead of
+  following the phone, and a turn requested while the screen already faced
+  that way could land after the phone's own next turn, leaving the screen
+  stuck until the phone turned again. Now a closed keyboard hands back to
+  the way the phone is held, a turn is only asked for when needed, and
+  switching between the landscape keyboard and portrait mode turns first.
+  `OrientationTour` keeps the phone upright throughout (the other tours
+  turn it, which hid this).
+- **Paste.** Reading the phone's clipboard moved back to the main thread,
+  loaded asynchronously (`NSItemProvider`), so iOS can show "Allow Paste?".
+  On a fresh iOS 26.4 simulator the prompt shows and the phone's text
+  reaches the computer. On the iOS 27.0 simulator iOS never shows the
+  prompt, for any read, and the read comes back empty, so Paste falls back
+  to the computer's own Shift+Insert; `ClipboardTour` marks that step as an
+  expected failure there. **To check on an iOS 27 phone.**
+- UI tests run on a simulator of their own ("Omakey UI Tests", iOS 27.0),
+  apart from the ones used by hand.
+
 ## 2026-10-09: portrait mode from the keyboard
 
 Reported: portrait mode showed no controls. Reproduced by picking portrait

@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import os
 import OmakeyCore
 import OmakeyNet
 import OmakeyProtocol
@@ -267,7 +268,8 @@ final class AppModel {
         let portrait = layouts.portrait
         let keyboard = KeyboardViewController(model: self, host: host, portrait: portrait)
         keyboard.onClose = { [weak self] in
-            Self.lockOrientation(.allButUpsideDown, turnTo: .portrait)
+            // Back to turning with the phone, facing the way it's held now.
+            Self.lockOrientation(.allButUpsideDown, turnTo: Self.heldOrientation())
             self?.refresh()
             self?.startBrowsing()
         }
@@ -276,12 +278,24 @@ final class AppModel {
     }
 
     /// The keyboard for [host] again, in the other orientation: portrait mode was picked or left.
-    /// The connect screen turns back upright first, and only then does the other keyboard come
-    /// up: presented while the phone is still turning, it would land sideways and half off screen.
+    /// The screen turns the new keyboard's way first, and only then does it come up: presented
+    /// while the phone is still turning, it would land sideways and half off screen.
     func reopenKeyboard(_ host: HostRecord, replacing keyboard: KeyboardViewController) {
         keyboard.onClose = nil
+        let next: UIInterfaceOrientationMask = layouts.portrait ? .portrait : .landscape
         keyboard.dismiss(animated: false) { [weak self] in
-            Self.lockOrientation(.allButUpsideDown, turnTo: .portrait) { self?.open(host) }
+            Self.lockOrientation(next, turnTo: next) { self?.open(host) }
+        }
+    }
+
+    /// The way the phone is held, as the interface would face it; upright when
+    /// it lies flat or iOS can't tell. (The device's landscape left is the
+    /// interface's landscape right.)
+    static func heldOrientation() -> UIInterfaceOrientationMask {
+        switch UIDevice.current.orientation {
+        case .landscapeLeft: .landscapeRight
+        case .landscapeRight: .landscapeLeft
+        default: .portrait
         }
     }
 
@@ -293,7 +307,13 @@ final class AppModel {
         let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
         for scene in scenes {
             for w in scene.windows { w.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations() }
-            scene.requestGeometryUpdate(.iOS(interfaceOrientations: turnTo)) { _ in }
+            // Facing a wanted way already: asking anyway could land after the phone's own next
+            // turn and undo it, leaving the screen stuck until the phone turns again.
+            if OrientationWait.faces(scene, turnTo) { continue }
+            scene.requestGeometryUpdate(.iOS(interfaceOrientations: turnTo)) { error in
+                Logger(subsystem: "com.gladimdim.omakey", category: "orientation")
+                    .error("turning to \(turnTo.rawValue) was refused: \(error.localizedDescription, privacy: .public)")
+            }
         }
         guard let done else { return }
         guard let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first else { return done() }
@@ -324,7 +344,7 @@ final class AppModel {
 /// Waits for a window scene to face one of [target], then for its turn to
 /// settle, then runs [done] once; after a second it runs it anyway.
 @MainActor
-private final class OrientationWait {
+final class OrientationWait {
     private static var waiting: [OrientationWait] = []
     private var observation: NSKeyValueObservation?
     private var done: (@MainActor () -> Void)?
@@ -345,7 +365,7 @@ private final class OrientationWait {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in MainActor.assumeIsolated { self?.finish(after: 0) } }
     }
 
-    private static func faces(_ scene: UIWindowScene, _ target: UIInterfaceOrientationMask) -> Bool {
+    static func faces(_ scene: UIWindowScene, _ target: UIInterfaceOrientationMask) -> Bool {
         let mask: UIInterfaceOrientationMask = switch scene.effectiveGeometry.interfaceOrientation {
         case .portrait: .portrait
         case .portraitUpsideDown: .portraitUpsideDown

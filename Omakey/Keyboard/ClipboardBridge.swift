@@ -1,4 +1,5 @@
 import CryptoKit
+import os
 import OmakeyCore
 import OmakeyNet
 import OmakeyProtocol
@@ -29,6 +30,7 @@ final class ClipboardBridge {
     private let toast: (String) -> Void
     private let settings: AppSettings
     private let pasteboard: UIPasteboard
+    private let log = Logger(subsystem: "com.gladimdim.omakey", category: "clipboard")
 
     /// The text a put is sending, until it's in: its hash and the clipboard's change count.
     private var sending: (hash: String, change: Int)?
@@ -54,13 +56,16 @@ final class ClipboardBridge {
         guard let l = link(), l.features & Wire.featureClipboard != 0 else { return computerPaste() }
         // Nothing new on the phone since the two last swapped: no need to read (and ask).
         let change = pasteboard.changeCount
+        log.debug("paste: change \(change), last swapped \(self.settings.lastSwappedChange ?? -1), strings \(self.pasteboard.hasStrings)")
         if change == settings.lastSwappedChange || !pasteboard.hasStrings { return computerPaste() }
         let sensitive = pasteboard.contains(pasteboardTypes: [Self.concealedType])
-        // Reading may ask "Allow Paste?", which holds the reading thread until
-        // answered: not the main one, so touches and the link carry on meanwhile.
-        let board = pasteboard
-        DispatchQueue.global(qos: .userInitiated).async {
-            let text = board.string
+        // Reading may ask "Allow Paste?". Asked from the main thread, as iOS
+        // needs to show it (a read from another thread fails without asking),
+        // but loaded asynchronously, so touches and the link carry on meanwhile.
+        guard let provider = pasteboard.itemProviders.first(where: { $0.canLoadObject(ofClass: String.self) }) else {
+            return computerPaste()
+        }
+        _ = provider.loadObject(ofClass: String.self) { text, _ in
             DispatchQueue.main.async {
                 MainActor.assumeIsolated { self.send(text, change: change, sensitive: sensitive, link: l) }
             }
@@ -70,6 +75,7 @@ final class ClipboardBridge {
     private func send(_ text: String?, change: Int, sensitive: Bool, link l: Link) {
         let computerPaste = { [shortcut] in shortcut(UsKeys.keyLeftShift, UsKeys.keyInsert) }
         // Declined in the "Allow Paste" prompt, or no text after all.
+        log.debug("paste: read \(text == nil ? "nothing" : "\(text!.utf8.count) bytes")")
         guard let text, !text.isEmpty else { return computerPaste() }
         let hash = Self.sha256(text)
         if hash == settings.lastSwapped {

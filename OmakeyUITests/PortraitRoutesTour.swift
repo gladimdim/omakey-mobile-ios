@@ -42,9 +42,9 @@ final class PortraitRoutesTour: XCTestCase {
 
     func testFromTheKeyboardsLayoutButton() throws {
         // The landscape keyboard is up; pick portrait mode from its ⌨.
-        app.buttons["Switch layout"].tap()
+        // (A tap while the keyboard is still sliding in presents nothing: tap until the page shows.)
         let row = app.descendants(matching: .any)["layout.portrait"].firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        tap(app.buttons["Switch layout"], until: row)
         row.tap()
         checkPortraitControls("from the keyboard")
     }

@@ -37,6 +37,12 @@ struct OmakeyApp: App {
 final class AppDelegate: NSObject, UIApplicationDelegate {
     @MainActor static var orientations: UIInterfaceOrientationMask = .allButUpsideDown
 
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions options: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        // Which way the phone is held, for facing that way when a keyboard lets go of the lock.
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        return true
+    }
+
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         AppDelegate.orientations
     }
