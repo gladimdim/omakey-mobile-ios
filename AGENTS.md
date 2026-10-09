@@ -62,6 +62,8 @@
 - `hasFocus` is the focus engine's; a text view's keyboard focus shows as
   "Keyboard Focused" in its `debugDescription`. The portrait mode's hidden
   line is in the accessibility tree only for UI test launches.
+- The layouts page is a lazy grid: a card off screen doesn't exist until
+  scrolled to; use `scroll(to:in:)`.
 - `XCUIElement.twoFingerTap()` puts its fingers at the element's left and
   right edges: tap the touchpad's surface element (`touchpad.surface`), not
   the whole view.

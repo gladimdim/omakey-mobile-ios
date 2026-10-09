@@ -43,12 +43,6 @@ struct ConnectView: View {
         } message: { pending in
             Text(model.pairingMessage(pending))
         }
-        .alert(model.pendingLayout?.layout.name ?? "", isPresented: present($model.pendingLayout), presenting: model.pendingLayout) { pending in
-            Button(pending.replaces != nil ? "Replace" : "Import") { model.confirmImport(pending) }
-            Button("Cancel", role: .cancel) {}
-        } message: { pending in
-            Text(model.layoutMessage(pending))
-        }
         .alert("Unlink \(model.unlinking?.name ?? "")?", isPresented: present($model.unlinking), presenting: model.unlinking) { host in
             Button("Unlink", role: .destructive) { model.unlink(host) }
             Button("Cancel", role: .cancel) {}
@@ -66,7 +60,9 @@ struct ConnectView: View {
         .sheet(item: $model.sheet, onDismiss: model.refresh) { sheet in
             switch sheet {
             case .settings: SettingsView(model: model)
-            case .layouts: LayoutsView(model: model)
+            case .layouts: LayoutsView(model: model, canImport: true)
+            case .importLayout(let pending):
+                ImportPreviewSheet(pending: pending, message: model.layoutMessage(pending), palette: p) { model.confirmImport(pending) }
             }
         }
     }

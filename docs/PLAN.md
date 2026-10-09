@@ -422,14 +422,18 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   prompt holds the reading thread until answered, and touches and haptics
   must carry on meanwhile. `UIPasteboard` is `Sendable`.
 
-### M9: Layouts and settings
+### M9: Layouts and settings (done)
 - `LayoutsView` with previews and badges, share (link, or JSON file when
   the link is too long), import (file, link, text) with preview and replace
   warning, remove.
 - `SettingsView`: default layout, theme swatches including From computer,
   computers with Unlink, haptics, typed text, phone name, version.
 - **Done when:** a layout made in the studio imports by link and by file,
-  shares back, and every built-in previews correctly.
+  shares back, and every built-in previews correctly. `LayoutsTour` picks a
+  layout, imports one by link through its preview, removes it, and
+  switches themes.
+- The import preview is a sheet (an iOS alert can't hold the drawing).
+  JSON files open in Omakey from the Files app (`CFBundleDocumentTypes`).
 
 ### M10: Polish and release
 - App icon from `artwork/omakey.svg`, launch screen, VoiceOver labels on the

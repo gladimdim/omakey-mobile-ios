@@ -49,15 +49,23 @@ final class AppModel {
     private(set) var toast: Toast?
 
     var pendingPairing: PendingPairing?
-    var pendingLayout: PendingLayout?
     var unlinking: HostRecord?
     var scanning = false
     /// The page shown over the connect screen.
     var sheet: Sheet?
 
-    enum Sheet: String, Identifiable {
+    enum Sheet: Identifiable {
         case settings, layouts
-        var id: String { rawValue }
+        /// A layout to look at before it's imported.
+        case importLayout(PendingLayout)
+
+        var id: String {
+            switch self {
+            case .settings: "settings"
+            case .layouts: "layouts"
+            case .importLayout(let p): "import-\(p.id)"
+            }
+        }
     }
 
     @ObservationIgnored private var discovery: Discovery?
@@ -197,15 +205,21 @@ final class AppModel {
 
     /// Validate, show the layout, and only then save it.
     func importLayout(_ read: () throws -> String) {
+        if let p = prepareImport(read) { sheet = .importLayout(p) }
+    }
+
+    /// A layout ready to preview, or nil after saying what's wrong with it.
+    func prepareImport(_ read: () throws -> String) -> PendingLayout? {
         do {
             let json = try read()
             let layout = try layouts.preview(json)
-            pendingLayout = PendingLayout(json: json, layout: layout, replaces: layouts.importedWithId(layout.id))
+            return PendingLayout(json: json, layout: layout, replaces: layouts.importedWithId(layout.id))
         } catch let e as LayoutError {
             show(e.message)
         } catch {
             show("Can't read that file")
         }
+        return nil
     }
 
     func layoutMessage(_ p: PendingLayout) -> String {

@@ -27,7 +27,7 @@ the baseline.
 |---|---|
 | QR code scanner | ✅ M4 (AVFoundation) |
 | Paste a pairing link | ✅ M4 (`PasteButton`, no paste prompt) |
-| `omakey://pair` and `omakey://layout` links | ✅ M4 (layout preview without the drawing until M9) |
+| `omakey://pair` and `omakey://layout` links | ✅ M4, M9 |
 | Pairing confirmation: fingerprint, replace warning, link from another app | ✅ M4 |
 | Paired list with Online / Checking / Offline | ✅ M3–M4 (Android's "will try Bluetooth" line ✖) |
 | Nearby computers (mDNS) | ✅ M3–M4, plus a Local Network help card |
@@ -51,7 +51,7 @@ the baseline.
 | Typed text ticker | ✅ M5 |
 | Release on focus loss, BYE on leaving | ✅ M5 (resign active, background) |
 | Haptics | ✅ M5 (UIImpactFeedbackGenerator) |
-| Theme from the computer | 🚧 followed on the keyboard ✅ M5; theme picker ⏳ M9 |
+| Theme from the computer | ✅ M5, M9 |
 
 ## Touchpad
 
@@ -90,6 +90,6 @@ the baseline.
 | Built-in layouts and keycodes | ✅ M2 (`scripts/sync-spec.sh`) |
 | Layout parser and validation | ✅ M2 |
 | Layout links (raw DEFLATE, base64url) | ✅ M2 |
-| Layouts page, previews, share, import, remove | ⏳ M9 |
-| Settings: layout, theme, computers, haptics, typed text | 🚧 haptics, typed text ✅ M4; the rest ⏳ M9 |
+| Layouts page, previews, share, import, remove | ✅ M9 (import from Files and links; another app's share sheet ⏳ later) |
+| Settings: layout, theme, computers, haptics, typed text | ✅ M9 |
 | Phone name (iOS only) | ✅ M4 (Settings) |

@@ -44,6 +44,15 @@ extension XCTestCase {
         XCTFail("tapping \(element) never showed \(appears)")
     }
 
+    /// Swipes up until [element] can be tapped: lazy lists make it only as it scrolls in.
+    func scroll(to element: XCUIElement, in app: XCUIApplication, swipes: Int = 12) {
+        for _ in 0..<swipes {
+            if element.exists && element.isHittable { return }
+            app.swipeUp()
+        }
+        XCTAssertTrue(element.exists && element.isHittable, "never scrolled to \(element)")
+    }
+
     /// Polls [condition] until it holds or [seconds] pass.
     func eventually(_ seconds: TimeInterval = 5, _ condition: () -> Bool) -> Bool {
         let end = Date(timeIntervalSinceNow: seconds)
