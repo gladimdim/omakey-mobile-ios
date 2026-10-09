@@ -409,13 +409,18 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   and a strip key on the stand-in; autocorrection, the space-bar cursor and
   a Ukrainian keyboard need a device.
 
-### M8: Clipboard
+### M8: Clipboard (done, but for the device checks)
 - `ClipboardBridge` port, top bar icons in portrait, and the `KEY_COPY` /
   `KEY_PASTE` keys.
 - **Done when:** copy desktop → phone, phone → paste on desktop, the
   "nothing new" path (Shift+Insert without reading the phone's clipboard),
   a password marked sensitive, 64 KB limits, and the Steam Deck Game Mode
-  "failed" path all behave as on Android 1.2.0.
+  "failed" path all behave as on Android 1.2.0. `ClipboardTour` checks copy,
+  the "nothing new" Shift+Insert and a paste of the phone's new text on the
+  stand-in.
+- The phone's clipboard is read off the main thread: the "Allow Paste"
+  prompt holds the reading thread until answered, and touches and haptics
+  must carry on meanwhile. `UIPasteboard` is `Sendable`.
 
 ### M9: Layouts and settings
 - `LayoutsView` with previews and badges, share (link, or JSON file when

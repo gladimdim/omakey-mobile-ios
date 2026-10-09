@@ -73,15 +73,15 @@ the baseline.
 | Key strips | ✅ M7 |
 | Compact touchpad | ✅ M6–M7 |
 
-| Copy and Paste icons in the portrait top bar | 🚧 icons ✅ M7 (Ctrl+Insert / Shift+Insert); with the phone's clipboard ⏳ M8 |
+| Copy and Paste icons in the portrait top bar | ✅ M7–M8 |
 | Portrait mode as a pseudo-layout | ✅ M7 |
 
 ## Clipboard
 
 | Feature | iOS |
 |---|---|
-| Copy, Paste, sensitive text, fallbacks | ⏳ M8 |
-| `KEY_COPY` / `KEY_PASTE` layout keys | 🚧 Ctrl+Insert / Shift+Insert ✅ M5; with the phone's clipboard ⏳ M8 |
+| Copy, Paste, sensitive text, fallbacks | ✅ M8 (`changeCount` saves the paste prompt; sensitive text local-only for 2 minutes) |
+| `KEY_COPY` / `KEY_PASTE` layout keys | ✅ M5, M8 |
 
 ## Layouts and settings
 

@@ -50,6 +50,13 @@ final class KeyboardViewController: UIViewController {
     private let toastLabel = PaddedLabel()
     private var toastTask: Task<Void, Never>?
     private lazy var sink = SinkProxy(self)
+    /// Copy and Paste, with the phone's clipboard when omakeyd has the computer's.
+    private lazy var clipboard = ClipboardBridge(
+        settings: model.settings, link: { [weak self] in self?.link },
+        shortcut: { [weak self] modifier, key in self?.shortcut(modifier, key) },
+        hostName: { [weak self] in self?.hostName ?? "" },
+        toast: { [weak self] in self?.toast($0) }
+    )
     private lazy var padSink = PadSinkProxy(self)
     private var observers: [NSObjectProtocol] = []
 
@@ -395,9 +402,9 @@ final class KeyboardViewController: UIViewController {
 
     @objc private func showPhoneKeyboard() { capture?.show() }
 
-    @objc private func copyOnComputer() { keyDown(ClipboardKeys.copy) }
+    @objc private func copyOnComputer() { clipboard.copy() }
 
-    @objc private func pasteOnComputer() { keyDown(ClipboardKeys.paste) }
+    @objc private func pasteOnComputer() { clipboard.paste() }
 
     private func applyTheme() {
         view.backgroundColor = UIColor(rgb: theme.bg)
@@ -431,8 +438,8 @@ final class KeyboardViewController: UIViewController {
     fileprivate func keyDown(_ code: Int) {
         // A layout's Copy and Paste keys are the app's to do, not the computer's.
         switch code {
-        case ClipboardKeys.copy: return shortcut(UsKeys.keyLeftCtrl, UsKeys.keyInsert)
-        case ClipboardKeys.paste: return shortcut(UsKeys.keyLeftShift, UsKeys.keyInsert)
+        case ClipboardKeys.copy: return clipboard.copy()
+        case ClipboardKeys.paste: return clipboard.paste()
         default: break
         }
         if keys.press(code) { link?.send() }
@@ -581,8 +588,8 @@ final class KeyboardViewController: UIViewController {
                 theme = Themes.fromComputer(t)
                 applyTheme()
             }
-        case .clip:
-            break // M8
+        case .clip(let outcome):
+            clipboard.onOutcome(outcome)
         }
     }
 

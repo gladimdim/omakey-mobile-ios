@@ -11,8 +11,9 @@ test vectors byte for byte, the keyboard logic and the 10 stock layouts
 are ported (M2), and so is the UDP link with its timing rules and mDNS
 discovery (M3). The connect screen pairs by QR code or link (M4), and
 the landscape keyboard types (M5), the touchpad slides down over it (M6),
-and portrait mode mirrors the phone's own keyboard (M7). The shared
-clipboard comes next. See
+portrait mode mirrors the phone's own keyboard (M7), and Copy and Paste
+share the clipboard with the computer (M8). The layouts page and settings
+come next. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 
