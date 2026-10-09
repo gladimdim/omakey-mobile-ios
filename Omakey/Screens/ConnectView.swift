@@ -20,7 +20,7 @@ struct ConnectView: View {
                 SectionHeader(title: "PAIR A COMPUTER", palette: p)
                 pairSection
                 SectionHeader(title: "LAYOUT", palette: p)
-                Button { model.showingLayouts = true } label: {
+                Button { model.sheet = .layouts } label: {
                     Text("⌨  \(model.layoutName)").frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(OmakeyButtonStyle(palette: p))
@@ -63,11 +63,11 @@ struct ConnectView: View {
                 model.scanning = false
             }
         }
-        .sheet(isPresented: $model.showingSettings, onDismiss: model.refresh) {
-            SettingsView(model: model)
-        }
-        .sheet(isPresented: $model.showingLayouts, onDismiss: model.refresh) {
-            LayoutsView(model: model)
+        .sheet(item: $model.sheet, onDismiss: model.refresh) { sheet in
+            switch sheet {
+            case .settings: SettingsView(model: model)
+            case .layouts: LayoutsView(model: model)
+            }
         }
     }
 
@@ -78,7 +78,7 @@ struct ConnectView: View {
                     .font(.mono(34, bold: true))
                     .foregroundStyle(p.fg)
                 Spacer()
-                Button { model.showingSettings = true } label: {
+                Button { model.sheet = .settings } label: {
                     Image(systemName: "gearshape").font(.system(size: 24)).foregroundStyle(p.accent)
                 }
                 .accessibilityLabel("Settings")

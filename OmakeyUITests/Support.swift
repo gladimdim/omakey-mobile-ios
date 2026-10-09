@@ -34,6 +34,16 @@ extension XCTestCase {
         add(a)
     }
 
+    /// Taps [element] until [appears] shows up: the connect screen's list
+    /// grows as mDNS answers, and can move a button between finding and tapping it.
+    func tap(_ element: XCUIElement, until appears: XCUIElement, tries: Int = 4) {
+        for _ in 0..<tries {
+            element.tap()
+            if appears.waitForExistence(timeout: 2) { return }
+        }
+        XCTFail("tapping \(element) never showed \(appears)")
+    }
+
     /// Polls [condition] until it holds or [seconds] pass.
     func eventually(_ seconds: TimeInterval = 5, _ condition: () -> Bool) -> Bool {
         let end = Date(timeIntervalSinceNow: seconds)

@@ -68,10 +68,13 @@ the baseline.
 
 | Feature | iOS |
 |---|---|
-| Phone keyboard mirrored (`LineDiff`, `Typist`) | 🚧 logic ✅ M2; text capture ⏳ M7 |
-| Per-character layout (`us`, `ua`) | 🚧 logic ✅ M2; keyboard language ⏳ M7 |
-| Key strips | ⏳ M7 |
-| Compact touchpad | 🚧 view ✅ M6 (`compact`); in portrait ⏳ M7 |
+| Phone keyboard mirrored (`LineDiff`, `Typist`) | ✅ M2, M7 (hidden `UITextView`) |
+| Per-character layout (`us`, `ua`) | ✅ M2, M7 (`textInputMode.primaryLanguage`) |
+| Key strips | ✅ M7 |
+| Compact touchpad | ✅ M6–M7 |
+
+| Copy and Paste icons in the portrait top bar | 🚧 icons ✅ M7 (Ctrl+Insert / Shift+Insert); with the phone's clipboard ⏳ M8 |
+| Portrait mode as a pseudo-layout | ✅ M7 |
 
 ## Clipboard
 

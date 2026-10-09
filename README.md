@@ -10,8 +10,9 @@ work as they do with a hardware keyboard.
 test vectors byte for byte, the keyboard logic and the 10 stock layouts
 are ported (M2), and so is the UDP link with its timing rules and mDNS
 discovery (M3). The connect screen pairs by QR code or link (M4), and
-the landscape keyboard types (M5), and the touchpad slides down over it
-(M6). Portrait mode comes next. See
+the landscape keyboard types (M5), the touchpad slides down over it (M6),
+and portrait mode mirrors the phone's own keyboard (M7). The shared
+clipboard comes next. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 

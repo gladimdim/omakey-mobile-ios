@@ -57,6 +57,11 @@
 
 ## UI tests
 
+- The connect screen's list grows as mDNS answers, which can move a button
+  between finding and tapping it: use `tap(_:until:)` from `Support.swift`.
+- `hasFocus` is the focus engine's; a text view's keyboard focus shows as
+  "Keyboard Focused" in its `debugDescription`. The portrait mode's hidden
+  line is in the accessibility tree only for UI test launches.
 - `XCUIElement.twoFingerTap()` puts its fingers at the element's left and
   right edges: tap the touchpad's surface element (`touchpad.surface`), not
   the whole view.

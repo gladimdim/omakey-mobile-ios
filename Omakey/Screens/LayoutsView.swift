@@ -49,5 +49,6 @@ struct LayoutsView: View {
             }
         }
         .listRowBackground(p.surface)
+        .accessibilityIdentifier("layout.\(id)")
     }
 }

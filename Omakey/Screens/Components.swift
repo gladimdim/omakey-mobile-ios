@@ -63,6 +63,8 @@ struct OmakeyButtonStyle: ButtonStyle {
                     RoundedRectangle(cornerRadius: 10).stroke(palette.accent, lineWidth: 1.5)
                 }
             }
+            // The whole button takes the tap, not just its text and outline.
+            .contentShape(RoundedRectangle(cornerRadius: 10))
             .opacity(configuration.isPressed ? 0.7 : 1)
     }
 }

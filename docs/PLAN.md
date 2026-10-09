@@ -391,7 +391,7 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 - Motion and scroll are counted in pixels (points × the display scale),
   as Android counts them, so Android's speeds carry over unchanged.
 
-### M7: Portrait mode
+### M7: Portrait mode (done, but for the device checks)
 - `TextCapture` (hidden `UITextView`): traits keep the system keyboard
   useful but harmless for a computer. Autocorrect stays on (it's the point),
   while smart quotes, smart dashes and inline predictions are off, because
@@ -404,7 +404,10 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   computer.
 - **Done when:** typing, autocorrection, cursor moves with the space bar,
   deleting past the line, Enter, a Ukrainian keyboard switching to `ua` and
-  shortcuts with the strip's Ctrl all arrive correctly.
+  shortcuts with the strip's Ctrl all arrive correctly. `PortraitTour`
+  checks typing (with the `us` layout), Return, Backspace on an empty line
+  and a strip key on the stand-in; autocorrection, the space-bar cursor and
+  a Ukrainian keyboard need a device.
 
 ### M8: Clipboard
 - `ClipboardBridge` port, top bar icons in portrait, and the `KEY_COPY` /

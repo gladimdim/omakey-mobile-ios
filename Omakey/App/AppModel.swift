@@ -52,8 +52,13 @@ final class AppModel {
     var pendingLayout: PendingLayout?
     var unlinking: HostRecord?
     var scanning = false
-    var showingSettings = false
-    var showingLayouts = false
+    /// The page shown over the connect screen.
+    var sheet: Sheet?
+
+    enum Sheet: String, Identifiable {
+        case settings, layouts
+        var id: String { rawValue }
+    }
 
     @ObservationIgnored private var discovery: Discovery?
     @ObservationIgnored private var reach: Reachability?
@@ -230,17 +235,23 @@ final class AppModel {
 
     func openKeyboard(_ hostId: String) {
         guard let host = hosts.get(hostId), let top = Self.topViewController() else { return }
-        if layouts.portrait { show("Portrait mode comes in the next update; here is the default layout.") }
         // The keyboard looks for its own computer; the connect screen rests.
         stopBrowsing()
-        let keyboard = KeyboardViewController(model: self, host: host)
+        let portrait = layouts.portrait
+        let keyboard = KeyboardViewController(model: self, host: host, portrait: portrait)
         keyboard.onClose = { [weak self] in
             Self.lockOrientation(.allButUpsideDown, turnTo: .portrait)
             self?.refresh()
             self?.startBrowsing()
         }
-        Self.lockOrientation(.landscape, turnTo: .landscape)
+        Self.lockOrientation(portrait ? .portrait : .landscape, turnTo: portrait ? .portrait : .landscape)
         top.present(keyboard, animated: true)
+    }
+
+    /// The keyboard for [hostId] again, in the other orientation: portrait mode was picked or left.
+    func reopenKeyboard(_ hostId: String, replacing keyboard: KeyboardViewController) {
+        keyboard.onClose = nil
+        keyboard.dismiss(animated: false) { [weak self] in self?.openKeyboard(hostId) }
     }
 
     /// Which way the screen may turn, and turn it now (iOS doesn't for a presented screen by itself).

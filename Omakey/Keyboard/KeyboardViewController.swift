@@ -8,11 +8,16 @@ import UIKit
 /// it keeps a live connection to the computer (omakeyd over Wi-Fi). The
 /// touchpad slides down over the keys; the computer can be switched from
 /// here without leaving the keyboard.
+///
+/// Portrait mode is the same screen upright: the phone's own keyboard at
+/// the bottom (mirrored onto the computer through `TextCapture`), two key
+/// strips above it, and the touchpad filling the rest. No layout, no panel.
 @MainActor
 final class KeyboardViewController: UIViewController {
     private let model: AppModel
     private var host: HostRecord
     private var theme: Theme
+    private let portrait: Bool
 
     private let keys = KeyState()
     private var link: UDPLink?
@@ -48,6 +53,20 @@ final class KeyboardViewController: UIViewController {
     private lazy var padSink = PadSinkProxy(self)
     private var observers: [NSObjectProtocol] = []
 
+    // Portrait mode.
+    private var typist: Typist?
+    private var capture: TextCapture?
+    /// Two rows of digits, F-keys, navigation and system keys above the phone's keyboard, each paged on its own.
+    private var keyStrips: [KeyStripView] = []
+    private let showKeyboardButton = UIButton(type: .system)
+    private let copyButton = UIButton(type: .system)
+    private let pasteButton = UIButton(type: .system)
+    /// The phone's keyboard hidden: a button in its place, so the touchpad keeps its size.
+    private let reopen = UIButton(type: .system)
+    /// How much of the screen the phone's keyboard covers now; 0 when it's hidden.
+    private var keyboardHeight: CGFloat = 0
+    private var lastKeyboardHeight: CGFloat = 0
+
     // The panel.
     private var padOpen = false
     /// Being dragged or animated: layout passes leave it alone.
@@ -56,14 +75,15 @@ final class KeyboardViewController: UIViewController {
     private var dragStartY: CGFloat = 0
     /// How much of the panel showed when the drag began.
     private var dragStartShown: CGFloat = 0
-    private var animation: PanelAnimation?
+    private var animation: CurveAnimation?
 
     /// Called once the keyboard is gone, for the connect screen.
     var onClose: (() -> Void)?
 
-    init(model: AppModel, host: HostRecord) {
+    init(model: AppModel, host: HostRecord, portrait: Bool) {
         self.model = model
         self.host = host
+        self.portrait = portrait
         hostName = host.name
         theme = model.currentTheme()
         keyboard = KeyboardView(theme: theme)
@@ -77,8 +97,8 @@ final class KeyboardViewController: UIViewController {
 
     // MARK: - The screen
 
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .landscape }
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation { .landscapeRight }
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask { portrait ? .portrait : .landscape }
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation { portrait ? .portrait : .landscapeRight }
     override var prefersStatusBarHidden: Bool { true }
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     /// A swipe from any edge goes to the keyboard first; a second one to the system.
@@ -87,13 +107,8 @@ final class KeyboardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         haptics.enabled = model.settings.haptics
-        keyboard.haptics = haptics
-        keyboard.sticky = model.settings.sticky
-        keyboard.pull = self
-        keyboard.setLayout(model.layouts.selected(), sink: sink)
         touchpad.haptics = haptics
         touchpad.sink = padSink
-        touchpad.panelDrag = self
         touchpad.onSensitivityChanged = { [weak self] v in
             guard let self else { return }
             self.model.settings.setPointerSpeed(v, preset: PointerPresets.custom, for: self.host.hostId)
@@ -101,29 +116,11 @@ final class KeyboardViewController: UIViewController {
         }
         touchpad.onPresetsRequested = { [weak self] in self?.pickPreset() }
         applyPadSettings()
-
         stage.clipsToBounds = true
-        stage.addSubview(keyboard)
-        panel.isHidden = true
-        panel.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        // A sheet over the keyboard: a shadow, and rounded bottom corners while it moves.
-        panel.layer.shadowColor = UIColor.black.cgColor
-        panel.layer.shadowOpacity = 0.45
-        panel.layer.shadowRadius = 20
-        panel.layer.shadowOffset = CGSize(width: 0, height: 8)
-        panel.addSubview(touchpad)
-        stage.addSubview(panel)
         view.addSubview(stage)
+        if portrait { buildPortrait() } else { buildLandscape() }
 
-        handle.titleLabel?.font = .mono(12, bold: true)
-        handle.layer.cornerRadius = 12
-        handle.layer.borderWidth = 1
-        handle.accessibilityIdentifier = "keyboard.touchpad"
-        handle.accessibilityHint = "Or swipe the top bar down"
-        handle.addTarget(self, action: #selector(toggleTouchpad), for: .touchUpInside)
-        header.addSubview(handle)
         for (b, title, label, action) in [
-            (stickyButton, "⇧", "Sticky keys", #selector(toggleSticky)),
             (switchButton, "⇄", "Switch computer", #selector(pickHost)),
             (layoutButton, "⌨", "Switch layout", #selector(pickLayout)),
             (closeButton, "✕", "Close", #selector(close)),
@@ -138,15 +135,11 @@ final class KeyboardViewController: UIViewController {
         status.addTarget(self, action: #selector(pickHost), for: .touchUpInside)
         status.accessibilityIdentifier = "keyboard.status"
         header.addSubview(status)
-        header.addSubview(grip)
         if model.settings.typedText {
             let t = TypedTickerView(theme: theme)
             ticker = t
             header.addSubview(t)
         }
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(headerDragged(_:)))
-        pan.delegate = self
-        header.addGestureRecognizer(pan)
         view.addSubview(header)
 
         toastLabel.font = .mono(13)
@@ -171,13 +164,121 @@ final class KeyboardViewController: UIViewController {
             nc.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [weak self] _ in
                 MainActor.assumeIsolated { self?.connect() }
             },
+            nc.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    guard let self, self.viewIfLoaded?.window != nil, self.presentedViewController == nil else { return }
+                    self.showPhoneKeyboardSoon()
+                }
+            },
+            nc.addObserver(forName: UIResponder.keyboardWillChangeFrameNotification, object: nil, queue: .main) { [weak self] n in
+                let end = (n.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+                let duration = n.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.25
+                MainActor.assumeIsolated { self?.phoneKeyboardMoved(to: end, duration: duration) }
+            },
         ]
+    }
+
+    private func buildLandscape() {
+        keyboard.haptics = haptics
+        keyboard.sticky = model.settings.sticky
+        keyboard.pull = self
+        keyboard.setLayout(model.layouts.selected(), sink: sink)
+        touchpad.panelDrag = self
+        stage.addSubview(keyboard)
+        panel.isHidden = true
+        panel.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        // A sheet over the keyboard: a shadow, and rounded bottom corners while it moves.
+        panel.layer.shadowColor = UIColor.black.cgColor
+        panel.layer.shadowOpacity = 0.45
+        panel.layer.shadowRadius = 20
+        panel.layer.shadowOffset = CGSize(width: 0, height: 8)
+        panel.addSubview(touchpad)
+        stage.addSubview(panel)
+
+        handle.titleLabel?.font = .mono(12, bold: true)
+        handle.layer.cornerRadius = 12
+        handle.layer.borderWidth = 1
+        handle.accessibilityIdentifier = "keyboard.touchpad"
+        handle.accessibilityHint = "Or swipe the top bar down"
+        handle.addTarget(self, action: #selector(toggleTouchpad), for: .touchUpInside)
+        header.addSubview(handle)
+        stickyButton.setTitle("⇧", for: .normal)
+        stickyButton.titleLabel?.font = .mono(15, bold: true)
+        stickyButton.accessibilityLabel = "Sticky keys"
+        stickyButton.addTarget(self, action: #selector(toggleSticky), for: .touchUpInside)
+        header.addSubview(stickyButton)
+        header.addSubview(grip)
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(headerDragged(_:)))
+        pan.delegate = self
+        header.addGestureRecognizer(pan)
+    }
+
+    private func buildPortrait() {
+        touchpad.compact = true
+        stage.addSubview(touchpad)
+        let t = Typist(sink: sink, gate: self, scheduler: MainScheduler(),
+                       preferred: { [weak self] in KeyLayouts.preferred(self?.capture?.language) },
+                       onChar: { [weak self] c in self?.ticker?.nextChar = c },
+                       // Hold back while omakeyd hasn't acknowledged most of what it can keep.
+                       busy: { [weak self] in (self?.keys.unacked ?? 0) > Wire.maxEvents - 8 })
+        typist = t
+        let c = TextCapture(typist: t)
+        c.shortcut = { [weak self] in
+            guard let self else { return false }
+            return self.keys.held().contains { KeyboardViewController.shortcutModifiers.contains(Int($0)) }
+        }
+        capture = c
+        stage.addSubview(c)
+        // Two strips, swiped separately: the upper one starts on navigation, the lower on digits.
+        keyStrips = [("stripPage2", 2), ("stripPage", 0)].map { key, first in
+            let strip = KeyStripView(theme: theme, typist: t, sink: sink)
+            strip.haptics = haptics
+            strip.page = model.settings.stripPage(key, default: first)
+            strip.onPageChanged = { [weak self] in self?.model.settings.setStripPage(key, $0) }
+            view.addSubview(strip)
+            return strip
+        }
+        for (b, symbol, label, action) in [
+            (showKeyboardButton, "keyboard", "Show the keyboard", #selector(showPhoneKeyboard)),
+            (copyButton, "doc.on.doc", "Copy on the computer, to the phone too", #selector(copyOnComputer)),
+            (pasteButton, "doc.on.clipboard", "Paste on the computer", #selector(pasteOnComputer)),
+        ] {
+            b.setImage(UIImage(systemName: symbol, withConfiguration: UIImage.SymbolConfiguration(pointSize: 15, weight: .semibold)), for: .normal)
+            b.accessibilityLabel = label
+            b.addTarget(self, action: action, for: .touchUpInside)
+            header.addSubview(b)
+        }
+        copyButton.accessibilityIdentifier = "keyboard.copy"
+        pasteButton.accessibilityIdentifier = "keyboard.paste"
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "keyboard", withConfiguration: UIImage.SymbolConfiguration(pointSize: 34))
+        config.imagePlacement = .top
+        config.imagePadding = 8
+        reopen.configuration = config
+        reopen.layer.cornerRadius = 16
+        reopen.layer.borderWidth = 1.5
+        reopen.accessibilityLabel = "Open the keyboard"
+        reopen.accessibilityIdentifier = "keyboard.reopen"
+        reopen.addTarget(self, action: #selector(showPhoneKeyboard), for: .touchUpInside)
+        view.addSubview(reopen)
+        lastKeyboardHeight = (view.window?.bounds.height ?? UIScreen.main.bounds.height) * 0.38
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         UIApplication.shared.isIdleTimerDisabled = true
         connect()
+        showPhoneKeyboardSoon()
+    }
+
+    /// Portrait mode: the phone's keyboard comes back whenever the screen does, as
+    /// Android shows it on every focus. A moment late, after whatever was closing.
+    private func showPhoneKeyboardSoon() {
+        guard let capture else { return }
+        capture.show()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [weak capture] in
+            MainActor.assumeIsolated { _ = capture?.isFirstResponder == true || capture?.becomeFirstResponder() == true }
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -198,6 +299,14 @@ final class KeyboardViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        if portrait { layoutPortrait() } else { layoutLandscape() }
+        let safe = view.bounds.inset(by: view.safeAreaInsets)
+        let toast = toastLabel.sizeThatFits(CGSize(width: safe.width * 0.7, height: 200))
+        let bottom = portrait ? min(safe.maxY, view.bounds.maxY - keyboardHeight) - 52 * 2 : safe.maxY
+        toastLabel.frame = CGRect(x: safe.midX - toast.width / 2, y: bottom - toast.height - 24, width: toast.width, height: toast.height)
+    }
+
+    private func layoutLandscape() {
         let safe = view.bounds.inset(by: view.safeAreaInsets)
         let barH: CGFloat = 32
         let headerH = barH + 10 + (ticker != nil ? 22 : 0)
@@ -229,10 +338,66 @@ final class KeyboardViewController: UIViewController {
         // Keep a closed panel parked just above the stage when its size
         // changes, but not while it is being dragged or animated.
         if !panelMoving && (!padOpen || oldHeight != stage.bounds.height) { setPanelY(padOpen ? 0 : -stage.bounds.height) }
-
-        let toast = toastLabel.sizeThatFits(CGSize(width: safe.width * 0.7, height: 200))
-        toastLabel.frame = CGRect(x: safe.midX - toast.width / 2, y: safe.maxY - toast.height - 24, width: toast.width, height: toast.height)
     }
+
+    private func layoutPortrait() {
+        let safe = view.bounds.inset(by: view.safeAreaInsets)
+        let barH: CGFloat = 32
+        header.frame = CGRect(x: safe.minX, y: safe.minY, width: safe.width, height: barH + (ticker != nil ? 22 : 0))
+        let w = header.bounds.width
+        let bw: CGFloat = 38
+        showKeyboardButton.frame = CGRect(x: 2, y: 0, width: bw, height: barH)
+        // Narrow: the status takes the room between the buttons.
+        var x = w - 2
+        for b in [closeButton, layoutButton, switchButton, pasteButton, copyButton] {
+            x -= bw
+            b.frame = CGRect(x: x, y: 0, width: bw, height: barH)
+        }
+        let room = CGRect(x: showKeyboardButton.frame.maxX + 4, y: 4, width: copyButton.frame.minX - showKeyboardButton.frame.maxX - 8, height: 24)
+        let fit = min(status.sizeThatFits(room.size).width, room.width)
+        status.frame = CGRect(x: room.midX - fit / 2, y: room.minY, width: fit, height: 24)
+        ticker?.frame = CGRect(x: 0, y: barH, width: w, height: 22)
+
+        // The phone's keyboard at the bottom, or the button in its place; the strips just above.
+        let keyboardTop: CGFloat
+        if keyboardHeight > 0 {
+            keyboardTop = view.bounds.maxY - keyboardHeight
+            reopen.isHidden = true
+        } else {
+            keyboardTop = view.bounds.maxY - max(lastKeyboardHeight, view.safeAreaInsets.bottom + 120)
+            reopen.isHidden = false
+            reopen.frame = CGRect(x: safe.minX + 12, y: keyboardTop + 8, width: safe.width - 24,
+                                  height: view.bounds.maxY - keyboardTop - 8 - max(view.safeAreaInsets.bottom, 12))
+        }
+        let stripH: CGFloat = 52
+        for (i, strip) in keyStrips.enumerated() {
+            strip.frame = CGRect(x: safe.minX, y: keyboardTop - stripH * CGFloat(keyStrips.count - i), width: safe.width, height: stripH)
+        }
+        let stripsTop = keyboardTop - stripH * CGFloat(keyStrips.count)
+        stage.frame = CGRect(x: safe.minX, y: header.frame.maxY, width: safe.width, height: max(stripsTop - header.frame.maxY, 0))
+        touchpad.frame = stage.bounds
+        capture?.frame = CGRect(x: 0, y: stage.bounds.maxY - 1, width: 1, height: 1)
+    }
+
+    /// The phone's keyboard came up, went down or changed size.
+    private func phoneKeyboardMoved(to frame: CGRect?, duration: Double) {
+        guard portrait, let frame, let window = view.window else { return }
+        let inView = view.convert(frame, from: window.screen.coordinateSpace)
+        let h = max(view.bounds.maxY - inView.minY, 0)
+        // Only the keyboard is that tall at the bottom.
+        keyboardHeight = h > 120 ? h : 0
+        if keyboardHeight > 0 { lastKeyboardHeight = keyboardHeight }
+        UIView.animate(withDuration: duration) {
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    @objc private func showPhoneKeyboard() { capture?.show() }
+
+    @objc private func copyOnComputer() { keyDown(ClipboardKeys.copy) }
+
+    @objc private func pasteOnComputer() { keyDown(ClipboardKeys.paste) }
 
     private func applyTheme() {
         view.backgroundColor = UIColor(rgb: theme.bg)
@@ -242,6 +407,15 @@ final class KeyboardViewController: UIViewController {
         ticker?.theme = theme
         grip.color = UIColor(rgb: theme.fgDim)
         for b in [switchButton, layoutButton, closeButton] { b.setTitleColor(UIColor(rgb: theme.accent), for: .normal) }
+        for b in [showKeyboardButton, copyButton, pasteButton] { b.tintColor = UIColor(rgb: theme.accent) }
+        keyStrips.forEach { $0.theme = theme }
+        reopen.backgroundColor = UIColor(rgb: theme.surface)
+        reopen.layer.borderColor = UIColor(rgb: theme.accent).cgColor
+        reopen.tintColor = UIColor(rgb: theme.accent)
+        reopen.configuration?.attributedTitle = AttributedString("Tap to open the keyboard", attributes: AttributeContainer([
+            .font: UIFont.mono(14, bold: true), .foregroundColor: UIColor(rgb: theme.fg),
+        ]))
+        capture?.keyboardAppearance = theme.light ? .light : .dark
         handle.setTitleColor(UIColor(rgb: theme.accent), for: .normal)
         handle.backgroundColor = UIColor(rgb: theme.surface)
         handle.layer.borderColor = UIColor(rgb: theme.accent).cgColor
@@ -269,8 +443,11 @@ final class KeyboardViewController: UIViewController {
         if code == ClipboardKeys.copy || code == ClipboardKeys.paste { return }
         if keys.release(code) { link?.send() }
         ticker?.keyUp(code)
-        // A key went out: Ctrl or Shift latched on the touchpad were for it.
-        if !UsKeys.modifiers.contains(code) { touchpad.modifiersUsed() }
+        // A key went out: Ctrl or Shift latched on the touchpad, Super or Alt on the key strip, were for it.
+        if !UsKeys.modifiers.contains(code) {
+            touchpad.modifiersUsed()
+            keyStrips.forEach { $0.modifiersUsed() }
+        }
     }
 
     fileprivate func padButton(_ code: Int, down: Bool) {
@@ -279,6 +456,8 @@ final class KeyboardViewController: UIViewController {
         if UsKeys.modifiers.contains(code) {
             if down { ticker?.keyDown(code) } else { ticker?.keyUp(code) }
         }
+        // A click let go: Super or Alt latched on the key strip was for it (Super + drag moves a window).
+        if !down && (Wire.btnLeft...Wire.btnMiddle).contains(code) { keyStrips.forEach { $0.modifiersUsed() } }
     }
 
     fileprivate func padMotion(dx: Float, dy: Float) {
@@ -306,6 +485,8 @@ final class KeyboardViewController: UIViewController {
 
     /// Never leave a key held on the computer while we're not looking.
     private func letGo() {
+        typist?.clear()
+        keyStrips.forEach { $0.reset() }
         keyboard.releaseAll()
         touchpad.releaseAll()
         keys.releaseAll()
@@ -479,6 +660,9 @@ final class KeyboardViewController: UIViewController {
         keyboard.setCapsLock(false)
         ticker?.capsLock = false
         ticker?.clear()
+        // The other computer's cursor is somewhere else.
+        typist?.clear()
+        capture?.reset()
         // Most recently used first on the connect screen.
         model.hosts.put(next)
         applyPadSettings()
@@ -495,7 +679,14 @@ final class KeyboardViewController: UIViewController {
     }
 
     private func layoutPicked() {
-        keyboard.setLayout(model.layouts.selected(), sink: sink)
+        if model.layouts.portrait != portrait {
+            // Into or out of portrait mode: the other screen, same computer.
+            model.reopenKeyboard(host.hostId, replacing: self)
+        } else if portrait {
+            showPhoneKeyboardSoon()
+        } else {
+            keyboard.setLayout(model.layouts.selected(), sink: sink)
+        }
     }
 
     @objc private func close() {
@@ -569,7 +760,7 @@ final class KeyboardViewController: UIViewController {
         let from = panelY, to = open ? 0 : -h
         let distance = abs(to - from)
         let ms = abs(velocity) > 1 ? min(max(distance / abs(velocity) * 1000 * 2.2, 160), 360) : 220 + 140 * distance / max(h, 1)
-        animation = PanelAnimation(duration: ms / 1000, step: { [weak self] t in
+        animation = CurveAnimation(duration: ms / 1000, curve: CurveAnimation.fling, step: { [weak self] t in
             self?.setPanelY(from + (to - from) * t)
         }, done: { [weak self] in
             guard let self else { return }
@@ -596,6 +787,8 @@ final class KeyboardViewController: UIViewController {
 
     /// Between the presses and releases of a Copy or Paste shortcut.
     private static let shortcutStepMs = 25
+    /// Ctrl, Alt and Super, left and right: held, a key makes a shortcut.
+    private static let shortcutModifiers: Set<Int> = [29, 97, 56, 100, 125, 126]
     /// A swipe of the top bar faster than this throws the touchpad that way.
     private static let flickPointsPerSecond: CGFloat = 400
 }
@@ -607,6 +800,13 @@ extension KeyboardViewController: UIGestureRecognizerDelegate {
         let v = pan.velocity(in: view)
         return abs(v.y) > abs(v.x)
     }
+}
+
+extension KeyboardViewController: LayoutGate {
+    func current() -> String? { keys.layout }
+    /// Nothing typed is still unacknowledged, so a new layout can't reach keys typed before it.
+    func canSwitch() -> Bool { keys.unacked == 0 }
+    func switchTo(_ layout: String) { keys.layout = layout }
 }
 
 extension KeyboardViewController: KeyboardPull {
@@ -624,70 +824,6 @@ extension KeyboardViewController: TouchpadPanelDrag {
 
     func release(dy: CGFloat, flungUp: Bool) {
         setPad(!(flungUp || -dy > stage.bounds.height * 0.25))
-    }
-}
-
-/// Frames of the panel's flight: fast at first, easing to rest (Android's
-/// PathInterpolator(0.05, 0.7, 0.1, 1)), at the display's highest rate.
-@MainActor
-private final class PanelAnimation {
-    private var link: CADisplayLink?
-    private var start: CFTimeInterval = 0
-    private let duration: CFTimeInterval
-    private let step: (CGFloat) -> Void
-    private let done: () -> Void
-
-    init(duration: CFTimeInterval, step: @escaping (CGFloat) -> Void, done: @escaping () -> Void) {
-        self.duration = max(duration, 0.01)
-        self.step = step
-        self.done = done
-        let l = CADisplayLink(target: Frame(self), selector: #selector(Frame.tick(_:)))
-        l.preferredFrameRateRange = CAFrameRateRange(minimum: 60, maximum: 120, preferred: 120)
-        l.add(to: .main, forMode: .common)
-        link = l
-    }
-
-    func stop() {
-        link?.invalidate()
-        link = nil
-    }
-
-    fileprivate func tick(_ l: CADisplayLink) {
-        if start == 0 { start = l.timestamp }
-        let t = min((l.targetTimestamp - start) / duration, 1)
-        step(CGFloat(Self.ease(t)))
-        if t >= 1 {
-            stop()
-            done()
-        }
-    }
-
-    /// The cubic Bézier (0.05, 0.7), (0.1, 1) at time [x], solved for its y.
-    static func ease(_ x: Double) -> Double {
-        let (x1, y1, x2, y2) = (0.05, 0.7, 0.1, 1.0)
-        func bez(_ t: Double, _ a: Double, _ b: Double) -> Double { 3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t }
-        var lo = 0.0, hi = 1.0
-        for _ in 0..<30 {
-            let mid = (lo + hi) / 2
-            if bez(mid, x1, x2) < x { lo = mid } else { hi = mid }
-        }
-        return bez((lo + hi) / 2, y1, y2)
-    }
-
-    private final class Frame: NSObject {
-        weak var owner: PanelAnimation?
-
-        init(_ owner: PanelAnimation) {
-            self.owner = owner
-        }
-
-        @MainActor @objc func tick(_ l: CADisplayLink) {
-            guard let owner else {
-                l.invalidate()
-                return
-            }
-            owner.tick(l)
-        }
     }
 }
 
