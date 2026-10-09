@@ -1,4 +1,5 @@
 import OmakeyCore
+import os
 import UIKit
 
 /// Draws a layout and turns raw multi-touch into key presses. Keys fire on
@@ -37,11 +38,12 @@ final class KeyboardView: UIView {
     /// Caps Lock as sent from here or reported by the computer; kept when the layout changes.
     private let locks = KeyboardModel.Locks()
     private var keyLayers: [KeyLayer] = []
-    private var unit: CGFloat = 1
-    private var originX: CGFloat = 0
-    private var originY: CGFloat = 0
+    private var geometry: KeyGeometry?
+    private var unit: CGFloat { geometry?.unit ?? 1 }
+    private var originX: CGFloat { geometry?.originX ?? 0 }
+    private var originY: CGFloat { geometry?.originY ?? 0 }
     /// Units the right side of a split layout is moved right by.
-    private var stretch: Float = 0
+    private var stretch: Float { geometry?.stretch ?? 0 }
     private var laidOut = CGSize.zero
 
     /// Each finger's pointer slot in the model.
@@ -122,61 +124,20 @@ final class KeyboardView: UIView {
         guard let m = model, bounds.width > 0, bounds.height > 0 else { return }
         laidOut = bounds.size
         let l = m.layout
-        let w = bounds.width, h = bounds.height
-        unit = min(w / CGFloat(l.width), h / CGFloat(l.height))
-        let slack = w - unit * CGFloat(l.width)
-        // A split layout keeps each side against its screen edge: the spare
-        // width goes into the split instead of the margins.
-        stretch = l.splitAt != nil && slack > 0 ? Float(slack / unit) : 0
-        originX = stretch > 0 ? 0 : (w - unit * CGFloat(l.width)) / 2
-        originY = (h - unit * CGFloat(l.height)) / 2
-        _ = m.hitTestStretched(0, 0, stretch: stretch) // prime its rectangles
-        let gap = unit * 0.05
-        let radius = unit * 0.12
+        let g = KeyGeometry(layout: l, size: bounds.size)
+        geometry = g
+        _ = m.hitTestStretched(0, 0, stretch: g.stretch) // prime its rectangles
         let scale = traitCollection.displayScale
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         for (i, k) in l.keys.enumerated() {
             keyLayers[i].setScale(scale)
-            let drawn = k.rects.map { $0.stretched(splitAt: l.splitAt, stretch: stretch) }
-            let main = rect(drawn[0]).insetBy(dx: gap, dy: gap)
-            let shape: CGPath
-            if drawn.count > 1 {
-                shape = outline(drawn, gap: gap, radius: radius)
-            } else {
-                shape = CGPath(roundedRect: main, cornerWidth: radius, cornerHeight: radius, transform: nil)
-            }
-            keyLayers[i].place(main: main, shape: shape, unit: unit)
+            let placed = g.place(k)
+            keyLayers[i].place(main: placed.main, shape: placed.shape, unit: g.unit)
         }
         CATransaction.commit()
         refresh()
         updateAccessibility()
-    }
-
-    private func rect(_ r: KeyRect) -> CGRect {
-        CGRect(x: originX + CGFloat(r.x) * unit, y: originY + CGFloat(r.y) * unit, width: CGFloat(r.w) * unit, height: CGFloat(r.h) * unit)
-    }
-
-    /// One outline for a key made of several rectangles: each is inset by the
-    /// key gap except on sides where it meets another part, which it overlaps
-    /// instead, so the parts read as a single key.
-    private func outline(_ parts: [KeyRect], gap: CGFloat, radius: CGFloat) -> CGPath {
-        let e: Float = 1e-4
-        var path = CGMutablePath() as CGPath
-        for (n, p) in parts.enumerated() {
-            func meets(_ test: (KeyRect) -> Bool) -> Bool { parts.enumerated().contains { $0.offset != n && test($0.element) } }
-            let overlapY = { (o: KeyRect) in o.y < p.y + p.h - e && p.y < o.y + o.h - e }
-            let overlapX = { (o: KeyRect) in o.x < p.x + p.w - e && p.x < o.x + o.w - e }
-            let l = meets { overlapY($0) && abs($0.x + $0.w - p.x) < e } ? -gap : gap
-            let r = meets { overlapY($0) && abs(p.x + p.w - $0.x) < e } ? -gap : gap
-            let t = meets { overlapX($0) && abs($0.y + $0.h - p.y) < e } ? -gap : gap
-            let b = meets { overlapX($0) && abs(p.y + p.h - $0.y) < e } ? -gap : gap
-            let full = rect(p)
-            let one = CGRect(x: full.minX + l, y: full.minY + t, width: full.width - l - r, height: full.height - t - b)
-            let piece = CGPath(roundedRect: one, cornerWidth: radius, cornerHeight: radius, transform: nil)
-            path = path.isEmpty ? piece : path.union(piece)
-        }
-        return path
     }
 
     // MARK: - Drawing
@@ -224,7 +185,10 @@ final class KeyboardView: UIView {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard interactive, let m = model else { return }
+        let span = Perf.signposter.beginInterval("Key")
+        defer { Perf.signposter.endInterval("Key", span) }
         let first = slots.isEmpty
+        if first { Perf.begin(.typing) }
         var changed = false
         for t in touches {
             guard let slot = freeSlots.popLast() else { continue }
@@ -242,12 +206,19 @@ final class KeyboardView: UIView {
             }
             if pulling { continue }
             let key = m.hitTestStretched(Float((p.x - originX) / unit), Float((p.y - originY) / unit), stretch: stretch)
-            if m.down(slot, key) {
+            let model = Perf.signposter.beginInterval("Key model")
+            let down = m.down(slot, key)
+            Perf.signposter.endInterval("Key model", model)
+            if down {
+                let feel = Perf.signposter.beginInterval("Key haptic")
                 haptics?.key(down: true)
+                Perf.signposter.endInterval("Key haptic", feel)
                 changed = true
             }
         }
+        let draw = Perf.signposter.beginInterval("Key draw")
         if changed { refresh() }
+        Perf.signposter.endInterval("Key draw", draw)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -301,11 +272,13 @@ final class KeyboardView: UIView {
             }
         }
         if changed { refresh() }
+        if slots.isEmpty { Perf.end(.typing) }
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         // The system took the touches (Control Center, a call): let go of everything.
         releaseAll()
+        Perf.end(.typing)
     }
 
     /// A swipe down must cover this many key units within `swipeSeconds`: quicker than a key repeats.
@@ -344,16 +317,31 @@ private final class KeyLayer: CALayer {
     private let fn = CATextLayer()
     private let lockBar = CALayer()
     private var unit: CGFloat = 1
+    /// The key is wide enough for an Fn legend.
+    private var fnFits = false
     private var shownLabel: String?
     private var shownSub: String?
     private var shownFn: String?
+    /// The colors as last set: a layer property set again, even to the same
+    /// value, makes Core Animation draw its text or shape again.
+    private var shownFill: UInt32?
+    private var shownLabelColor: UInt32?
+    private var shownSubColor: UInt32?
+    private var shownFnColor: UInt32?
+    private var shownLocked: Bool?
+    private var shownLockColor: UInt32?
 
     override init() {
         super.init()
         for t in [label, sub, fn] {
             t.isWrapped = false
             t.truncationMode = .none
+            // Text is drawn off the main thread, so a keyboard coming up (hundreds of legends) doesn't hold up its frame.
+            t.drawsAsynchronously = true
         }
+        // Most keys have no corner or Fn legend: those layers stay hidden, nothing to draw or keep.
+        sub.isHidden = true
+        fn.isHidden = true
         label.alignmentMode = .center
         sub.alignmentMode = .left
         fn.alignmentMode = .right
@@ -383,47 +371,80 @@ private final class KeyLayer: CALayer {
         shownLabel = nil
         shownSub = nil
         shownFn = nil
+        shownFill = nil
+        shownLabelColor = nil
+        shownSubColor = nil
+        shownFnColor = nil
+        shownLocked = nil
+        shownLockColor = nil
         let w = main.width, h = main.height
         lockBar.frame = CGRect(x: w / 2 - unit * 0.15, y: h - unit * 0.12, width: unit * 0.3, height: unit * 0.04)
-        let subFont = UIFont.mono(unit * 0.2)
+        let subFont = KeyGeometry.subFont(unit: unit)
         sub.font = subFont
         sub.fontSize = subFont.pointSize
-        sub.frame = CGRect(x: unit * 0.1, y: unit * 0.26 - subFont.ascender, width: max(w - unit * 0.2, 1), height: subFont.lineHeight)
-        let fnFont = UIFont.mono(unit * 0.16)
+        sub.frame = KeyGeometry.subFrame(subFont, unit: unit, width: w)
+        let fnFont = KeyGeometry.fnFont(unit: unit)
         fn.font = fnFont
         fn.fontSize = fnFont.pointSize
-        fn.frame = CGRect(x: unit * 0.08, y: h - unit * 0.1 - fnFont.ascender, width: max(w - unit * 0.16, 1), height: fnFont.lineHeight)
-        fn.isHidden = w <= unit * 0.6
+        fn.frame = KeyGeometry.fnFrame(fnFont, unit: unit, width: w, height: h)
+        fnFits = KeyGeometry.showsFn(unit: unit, width: w)
     }
 
     func show(fill: UInt32, label text: String, labelColor: UInt32, sub subText: String?, subColor: UInt32,
               fn fnText: String?, fnColor: UInt32, locked: Bool, lockColor: UInt32) {
-        shape.fillColor = UIColor(rgb: fill).cgColor
+        if fill != shownFill {
+            shownFill = fill
+            shape.fillColor = KeyLayer.color(fill)
+        }
         if text != shownLabel {
             shownLabel = text
-            // Fitted to the key: big for one or two characters, smaller for words.
-            let size = unit * (text.count <= 2 ? 0.4 : 0.24)
-            var font = UIFont.mono(size, bold: true)
-            let maxW = bounds.width - unit * 0.12
-            let width = (text as NSString).size(withAttributes: [.font: font]).width
-            if width > maxW, width > 0 { font = UIFont.mono(size * maxW / width, bold: true) }
+            let font = KeyGeometry.labelFont(text, unit: unit, width: bounds.width)
             label.font = font
             label.fontSize = font.pointSize
             label.string = text
-            label.frame = CGRect(x: 0, y: (bounds.height - font.lineHeight) / 2, width: bounds.width, height: font.lineHeight)
+            label.frame = KeyGeometry.labelFrame(font, width: bounds.width, height: bounds.height)
         }
-        label.foregroundColor = UIColor(rgb: labelColor).cgColor
+        if labelColor != shownLabelColor {
+            shownLabelColor = labelColor
+            label.foregroundColor = KeyLayer.color(labelColor)
+        }
         if subText != shownSub {
             shownSub = subText
             sub.string = subText
+            sub.isHidden = subText == nil
         }
-        sub.foregroundColor = UIColor(rgb: subColor).cgColor
+        if subColor != shownSubColor {
+            shownSubColor = subColor
+            sub.foregroundColor = KeyLayer.color(subColor)
+        }
         if fnText != shownFn {
             shownFn = fnText
             fn.string = fnText
+            fn.isHidden = fnText == nil || !fnFits
         }
-        fn.foregroundColor = UIColor(rgb: fnColor).cgColor
-        lockBar.isHidden = !locked
-        lockBar.backgroundColor = UIColor(rgb: lockColor).cgColor
+        if fnColor != shownFnColor {
+            shownFnColor = fnColor
+            fn.foregroundColor = KeyLayer.color(fnColor)
+        }
+        if locked != shownLocked {
+            shownLocked = locked
+            lockBar.isHidden = !locked
+        }
+        if lockColor != shownLockColor {
+            shownLockColor = lockColor
+            lockBar.backgroundColor = KeyLayer.color(lockColor)
+        }
+    }
+
+    /// The theme's few colors, made once (under a lock: layers aren't the main actor's).
+    private static let colors = OSAllocatedUnfairLock(initialState: [UInt32: CGColor]())
+
+    private static func color(_ rgb: UInt32) -> CGColor {
+        colors.withLock { cache in
+            if let c = cache[rgb] { return c }
+            let c = UIColor(rgb: rgb).cgColor
+            cache[rgb] = c
+            return c
+        }
     }
 }

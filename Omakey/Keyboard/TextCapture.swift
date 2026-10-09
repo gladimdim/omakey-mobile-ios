@@ -45,7 +45,7 @@ final class TextCapture: UITextView, UITextViewDelegate {
         accessibilityIdentifier = "portrait.capture"
         #if DEBUG
         // UI tests type into it, so it has to be in their accessibility tree.
-        if ProcessInfo.processInfo.environment["OMAKEY_RESET"] != nil {
+        if ProcessInfo.processInfo.environment["OMAKEY_RESET"] != nil || Perf.stayAwake {
             isAccessibilityElement = true
             accessibilityElementsHidden = false
         }

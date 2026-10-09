@@ -34,6 +34,14 @@ struct LayoutAndKeyboardTests {
         for f in files { _ = try LayoutParser.parse(f.json, keycodes: keycodes) }
     }
 
+    /// The app reads just the chosen layout at start-up, by its file name.
+    @Test func bundledLayoutsAreNamedByTheirIds() throws {
+        #expect(BundledSpec.layoutIds().count == BundledSpec.layoutFiles().count)
+        for id in BundledSpec.layoutIds() {
+            #expect(try LayoutParser.parse(#require(BundledSpec.layoutJSON(id)), keycodes: keycodes).id == id)
+        }
+    }
+
     @Test func splitQwertyHasTwoSpacesAndACentreThumbCluster() throws {
         let split = try LayoutParser.parse(bundled("omakey-pro"), keycodes: keycodes)
         func k(_ id: String) -> LayoutKey { split.keys.first { $0.id == id }! }

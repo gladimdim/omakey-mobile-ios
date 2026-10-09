@@ -6,6 +6,8 @@ import SwiftUI
 /// code or pasted link, and the layout the keyboard opens with.
 struct ConnectView: View {
     @Bindable var model: AppModel
+    /// The paste control, once the first frame is out.
+    @State private var pasteReady = false
 
     private var p: Palette { model.palette }
 
@@ -165,17 +167,24 @@ struct ConnectView: View {
                     .buttonStyle(OmakeyButtonStyle(primary: true, palette: p))
                     .accessibilityIdentifier("omakey.scan")
                 // The system's paste control reads the clipboard without asking each time.
-                PasteButton(payloadType: String.self) { strings in
-                    let text = strings.first ?? ""
-                    Task { @MainActor in
-                        if text.isEmpty { model.show("The clipboard is empty. Copy the pairing link first.") } else { model.handleText(text) }
+                // It comes a frame after the screen: setting it up waits on the pasteboard
+                // and the system's secure controls, which would hold up the app's first frame.
+                ZStack {
+                    if pasteReady {
+                        PasteButton(payloadType: String.self) { strings in
+                            let text = strings.first ?? ""
+                            Task { @MainActor in
+                                if text.isEmpty { model.show("The clipboard is empty. Copy the pairing link first.") } else { model.handleText(text) }
+                            }
+                        }
+                        .buttonBorderShape(.roundedRectangle(radius: 10))
+                        .tint(p.accent)
+                        .labelStyle(.titleAndIcon)
+                        .accessibilityIdentifier("omakey.paste")
                     }
                 }
-                .buttonBorderShape(.roundedRectangle(radius: 10))
-                .tint(p.accent)
-                .labelStyle(.titleAndIcon)
-                .frame(maxWidth: .infinity)
-                .accessibilityIdentifier("omakey.paste")
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .onAppear { DispatchQueue.main.async { pasteReady = true } }
             }
         }
     }

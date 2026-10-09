@@ -105,6 +105,7 @@ final class KeyboardViewController: UIViewController {
         touchpad = TouchpadView(theme: theme)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
+        transitioningDelegate = QuickFade.shared
     }
 
     @available(*, unavailable)
@@ -296,6 +297,7 @@ final class KeyboardViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        Perf.end(.keyboardOpen)
         UIApplication.shared.isIdleTimerDisabled = true
         connect()
         showPhoneKeyboardSoon()
@@ -315,7 +317,7 @@ final class KeyboardViewController: UIViewController {
         super.viewWillDisappear(animated)
         letGo()
         disconnect()
-        UIApplication.shared.isIdleTimerDisabled = false
+        UIApplication.shared.isIdleTimerDisabled = Perf.stayAwake
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -329,6 +331,7 @@ final class KeyboardViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        defer { Perf.end(.keyboardBuild) }
         if portrait { layoutPortrait() } else { layoutLandscape() }
         let safe = view.bounds.inset(by: view.safeAreaInsets)
         let toast = toastLabel.sizeThatFits(CGSize(width: safe.width * 0.7, height: 200))

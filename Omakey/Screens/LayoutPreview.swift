@@ -2,44 +2,38 @@ import OmakeyCore
 import SwiftUI
 import UIKit
 
-/// A layout drawn at the width it's given, as tall as its own proportions ask.
+/// A layout drawn at the width it's given, as tall as its own proportions
+/// ask: a picture of it (`LayoutPicture`), drawn off the main thread the
+/// first time and kept, the background color meanwhile.
 struct LayoutPreview: View {
     let layout: Layout
     let theme: Theme
+    @Environment(\.displayScale) private var scale
+    @State private var picture: (key: String, image: UIImage)?
 
     var body: some View {
-        PreviewKeyboard(layout: layout, theme: theme)
+        Color(rgb: theme.bg)
             .aspectRatio(CGFloat(layout.width / layout.height), contentMode: .fit)
+            .overlay {
+                GeometryReader { g in
+                    let key = LayoutPicture.key(layout, theme, width: g.size.width, scale: scale)
+                    let image = LayoutPicture.cached(key) ?? (picture?.key == key ? picture?.image : nil)
+                    ZStack {
+                        if let image {
+                            Image(uiImage: image).resizable().transition(.opacity.animation(.easeOut(duration: 0.12)))
+                        }
+                    }
+                    .frame(width: g.size.width, height: g.size.height)
+                    .task(id: key) {
+                        guard image == nil, let drawn = await LayoutPicture.picture(layout, theme, width: g.size.width, scale: scale) else { return }
+                        picture = (key, drawn)
+                    }
+                }
+            }
             .padding(6)
             .background(Color(rgb: theme.bg), in: RoundedRectangle(cornerRadius: 8))
             .accessibilityHidden(true)
     }
-}
-
-/// The keyboard view itself, not taking touches.
-private struct PreviewKeyboard: UIViewRepresentable {
-    let layout: Layout
-    let theme: Theme
-
-    func makeUIView(context: Context) -> KeyboardView {
-        let v = KeyboardView(theme: theme)
-        v.interactive = false
-        v.setLayout(layout, sink: NoSink.shared)
-        v.accessibilityElementsHidden = true
-        return v
-    }
-
-    func updateUIView(_ v: KeyboardView, context: Context) {
-        if v.theme != theme { v.theme = theme }
-        if v.model?.layout.id != layout.id || v.model?.layout.source != layout.source { v.setLayout(layout, sink: NoSink.shared) }
-    }
-}
-
-/// Keys of a preview go nowhere.
-private final class NoSink: KeyboardSink, @unchecked Sendable {
-    static let shared = NoSink()
-    func keyDown(_ code: Int) {}
-    func keyUp(_ code: Int) {}
 }
 
 /// A sketch of portrait mode for its card: a phone, the touchpad on top, the phone's keyboard below.

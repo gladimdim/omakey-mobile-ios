@@ -7,6 +7,9 @@ import UIKit
 /// shortcuts as Ctrl+C, Alt+X, Super+Space. Typing faster than it runs speeds
 /// it up, so the newest key is always on screen. Purely local: it reads key
 /// codes, not what the computer did with them.
+///
+/// Each token is a text layer drawn once, on a tape that slides: a frame
+/// moves the tape, nothing is drawn again, so it runs at 120 Hz for little.
 @MainActor
 final class TypedTickerView: UIView {
     /// Base speed in points per second.
@@ -22,16 +25,20 @@ final class TypedTickerView: UIView {
     var theme: Theme {
         didSet {
             backgroundColor = UIColor(rgb: theme.bg)
-            setNeedsDisplay()
+            paintFade()
         }
     }
 
     private struct Token {
-        let text: String
-        let color: UInt32
+        let layer: CATextLayer
         let x: CGFloat
         let width: CGFloat
     }
+
+    /// The tokens, at their tape positions; slid left as the tape runs.
+    private let tape = CALayer()
+    /// Fades the tape out towards the left edge.
+    private let fade = CAGradientLayer()
 
     private enum Ink { case fg, layer, accent }
 
@@ -51,7 +58,33 @@ final class TypedTickerView: UIView {
         backgroundColor = UIColor(rgb: theme.bg)
         isUserInteractionEnabled = false
         isAccessibilityElement = false
-        contentMode = .redraw
+        clipsToBounds = true
+        layer.addSublayer(tape)
+        fade.startPoint = CGPoint(x: 0, y: 0.5)
+        fade.endPoint = CGPoint(x: 1, y: 0.5)
+        layer.addSublayer(fade)
+        paintFade()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        fade.frame = CGRect(x: 0, y: 0, width: min(bounds.width * 0.15, 48), height: bounds.height)
+        let y = (bounds.height - font.lineHeight) / 2
+        for t in tokens { t.layer.frame.origin.y = y }
+        slide()
+        CATransaction.commit()
+    }
+
+    private func paintFade() {
+        let bg = UIColor(rgb: theme.bg)
+        fade.colors = [bg.cgColor, bg.withAlphaComponent(0).cgColor]
+    }
+
+    /// The tape where `scroll` says: a token at tape position x shows at x - (scroll - width).
+    private func slide() {
+        tape.transform = CATransform3DMakeTranslation(bounds.width - scroll, 0, 0)
     }
 
     @available(*, unavailable)
@@ -72,7 +105,18 @@ final class TypedTickerView: UIView {
         let w = (text as NSString).size(withAttributes: [.font: font]).width
         // Caught up with the text: start again at the right edge.
         let x = max(head, scroll)
-        tokens.append(Token(text: text, color: color, x: x, width: w))
+        let l = CATextLayer()
+        l.string = text
+        l.font = font
+        l.fontSize = font.pointSize
+        l.foregroundColor = UIColor(rgb: color).cgColor
+        l.contentsScale = traitCollection.displayScale
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        l.frame = CGRect(x: x, y: (bounds.height - font.lineHeight) / 2, width: ceil(w) + 2, height: ceil(font.lineHeight))
+        tape.addSublayer(l)
+        CATransaction.commit()
+        tokens.append(Token(layer: l, x: x, width: w))
         head = x + w + (text.count > 1 || ink != .fg ? TypedTickerView.gap : 0)
         start()
     }
@@ -83,10 +127,10 @@ final class TypedTickerView: UIView {
 
     /// Clear the tape, e.g. when the keyboard goes to another computer.
     func clear() {
+        for t in tokens { t.layer.removeFromSuperlayer() }
         tokens.removeAll()
         held.removeAll()
         head = scroll
-        setNeedsDisplay()
     }
 
     private func describe(_ code: Int) -> (String, Ink)? {
@@ -117,12 +161,11 @@ final class TypedTickerView: UIView {
     private func start() {
         if link == nil {
             let l = CADisplayLink(target: Ticker(self), selector: #selector(Ticker.tick(_:)))
-            l.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 120, preferred: 60)
+            l.preferredFrameRateRange = CAFrameRateRange(minimum: 60, maximum: 120, preferred: 120)
             l.add(to: .main, forMode: .common)
             link = l
             lastFrame = 0
         }
-        setNeedsDisplay()
     }
 
     fileprivate func tick(_ l: CADisplayLink) {
@@ -132,32 +175,18 @@ final class TypedTickerView: UIView {
         let backlog = max(head - scroll, 0)
         scroll += (speed + backlog * TypedTickerView.catchUp) * CGFloat(dt)
         let left = scroll - bounds.width
-        tokens.removeAll { $0.x + $0.width < left }
-        setNeedsDisplay()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        tokens.removeAll { t in
+            guard t.x + t.width < left else { return false }
+            t.layer.removeFromSuperlayer()
+            return true
+        }
+        slide()
+        CATransaction.commit()
         if tokens.isEmpty {
             link?.invalidate()
             link = nil
-        }
-    }
-
-    override func draw(_ rect: CGRect) {
-        let w = bounds.width
-        let left = scroll - w
-        let y = (bounds.height - font.lineHeight) / 2
-        for t in tokens {
-            let x = t.x - left
-            if x > w { break }
-            (t.text as NSString).draw(at: CGPoint(x: x, y: y), withAttributes: [.font: font, .foregroundColor: UIColor(rgb: t.color)])
-        }
-        // Fade out towards the left edge.
-        guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        let fw = min(w * 0.15, 48)
-        let bg = UIColor(rgb: theme.bg)
-        if let g = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [bg.cgColor, bg.withAlphaComponent(0).cgColor] as CFArray, locations: [0, 1]) {
-            ctx.saveGState()
-            ctx.clip(to: CGRect(x: 0, y: 0, width: fw, height: bounds.height))
-            ctx.drawLinearGradient(g, start: .zero, end: CGPoint(x: fw, y: 0), options: [])
-            ctx.restoreGState()
         }
     }
 

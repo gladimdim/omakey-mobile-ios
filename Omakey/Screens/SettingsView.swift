@@ -74,6 +74,7 @@ struct SettingsView: View {
         .tint(p.accent)
         .preferredColorScheme(p.colorScheme)
         .onAppear {
+            Perf.end(.sheet)
             phoneName = model.settings.phoneName
             haptics = model.settings.haptics
             typedText = model.settings.typedText

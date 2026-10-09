@@ -53,7 +53,14 @@ final class AppModel {
     var unlinking: HostRecord?
     var scanning = false
     /// The page shown over the connect screen.
-    var sheet: Sheet?
+    var sheet: Sheet? {
+        didSet {
+            guard sheet != nil && oldValue == nil else { return }
+            Perf.begin(.sheet)
+            Perf.begin(.sheetSlide)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { Perf.end(.sheetSlide) }
+        }
+    }
 
     enum Sheet: Identifiable {
         case settings, layouts
@@ -75,6 +82,8 @@ final class AppModel {
     init() {
         palette = Palette(theme: Themes.byId(Themes.defaultId))
         refresh()
+        // The other layouts, for the Layouts page and the keyboard's ⌨, while the screen comes up.
+        layouts.prewarm()
     }
 
     /// Read the stores again: after a pairing, an unlink, a layout or theme change.
@@ -263,6 +272,8 @@ final class AppModel {
 
     private func open(_ host: HostRecord) {
         guard let top = Self.topViewController() else { return }
+        Perf.begin(.keyboardBuild)
+        Perf.begin(.keyboardOpen)
         // The keyboard looks for its own computer; the connect screen rests.
         stopBrowsing()
         let portrait = layouts.portrait

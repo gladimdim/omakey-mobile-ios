@@ -26,44 +26,49 @@ final class Haptics {
     }
 
     /// A touchpad button went down / came back up.
-    func down() { play { rigid.impactOccurred(intensity: 0.85) } }
-    func up() { play { soft.impactOccurred(intensity: 0.4) } }
+    func down() { impact(rigid, 0.85) }
+    func up() { impact(soft, 0.4) }
 
     /// A tap that clicks: the down and up of a click in one.
     func tap() {
-        play { rigid.impactOccurred(intensity: 0.85) }
-        later(45) { $0.soft.impactOccurred(intensity: 0.4) }
+        impact(rigid, 0.85)
+        later(45) { $0.impact($0.soft, 0.4) }
     }
 
     /// A long press: the deeper second click of a force click.
     func force() {
-        play { heavy.impactOccurred(intensity: 1) }
-        later(70) { $0.heavy.impactOccurred(intensity: 0.9) }
+        impact(heavy, 1)
+        later(70) { $0.impact($0.heavy, 0.9) }
     }
 
     /// A scroll strip passed a wheel notch.
-    func notch() { play { tick.selectionChanged() } }
+    func notch() {
+        guard enabled else { return }
+        tick.selectionChanged()
+        tick.prepare()
+    }
 
     /// A finger landed on the touchpad: barely there.
-    func touch() { play { soft.impactOccurred(intensity: 0.45) } }
+    func touch() { impact(soft, 0.45) }
 
     /// A finger glided a step on the touchpad, moving the pointer or scrolling: fainter still.
     func glide() {
         let now = CACurrentMediaTime()
         guard now - lastGlide >= Haptics.glideGap else { return }
         lastGlide = now
-        play { light.impactOccurred(intensity: 0.3) }
+        impact(light, 0.3)
     }
 
     func key(down: Bool) {
-        play { down ? rigid.impactOccurred(intensity: 0.6) : soft.impactOccurred(intensity: 0.3) }
+        if down { impact(rigid, 0.6) } else { impact(soft, 0.3) }
     }
 
-    private func play(_ body: () -> Void) {
+    private func impact(_ g: UIImpactFeedbackGenerator, _ intensity: CGFloat) {
         guard enabled else { return }
-        body()
-        // Keep the Taptic Engine awake for the next one: a cold start adds latency.
-        prepare()
+        g.impactOccurred(intensity: intensity)
+        // Keep the Taptic Engine awake for the next one, a cold start adds latency;
+        // just this generator, as each prepare is a call into the system.
+        g.prepare()
     }
 
     private func later(_ ms: Int, _ body: @escaping @MainActor (Haptics) -> Void) {

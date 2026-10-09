@@ -366,6 +366,7 @@ final class TouchpadView: UIView {
     // MARK: - Touches
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        Perf.begin(.touchpad)
         for t in touches { fingerDown(t, event) }
     }
 
@@ -375,10 +376,12 @@ final class TouchpadView: UIView {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { fingerUp(t, event) }
+        if (event?.touches(for: self) ?? touches).allSatisfy({ $0.phase == .ended || $0.phase == .cancelled }) { Perf.end(.touchpad) }
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         releaseAll()
+        Perf.end(.touchpad)
     }
 
     private func fingerDown(_ t: UITouch, _ event: UIEvent?) {

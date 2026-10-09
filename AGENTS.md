@@ -71,6 +71,9 @@
   scrolled to; use `scroll(to:in:)`.
 - Run them on a simulator of their own (`xcrun simctl create "Omakey UI Tests" …`),
   not one someone is using: the tours install, launch, turn and reset the app.
+- Performance runs on a connected iPhone: `scripts/perf-test.sh` (see
+  `docs/PERFORMANCE.md`). They use only the demo computer and never reset;
+  never run the other tours on someone's phone, they reset (unpair) the app.
 - The iOS 27.0 simulator doesn't show "Allow Paste?"; `ClipboardTour` expects
   that step to fail there (iOS 26.4 shows it).
 - `XCUIElement.twoFingerTap()` puts its fingers at the element's left and

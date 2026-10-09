@@ -45,6 +45,7 @@ struct LayoutsView: View {
         }
         .tint(p.accent)
         .preferredColorScheme(p.colorScheme)
+        .onAppear { Perf.end(.sheet) }
         .fileImporter(isPresented: $pickingFile, allowedContentTypes: [.json, .plainText, .data]) { result in
             guard case .success(let url) = result else { return }
             pending = model.prepareImport {

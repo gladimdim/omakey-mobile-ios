@@ -14,6 +14,17 @@ public enum BundledSpec {
         return s
     }
 
+    /// The stock layouts' ids, sorted: each is its file's name.
+    public static func layoutIds() -> [String] {
+        let urls = Bundle.module.urls(forResourcesWithExtension: "json", subdirectory: "Spec/layouts") ?? []
+        return urls.map { $0.deletingPathExtension().lastPathComponent }.sorted()
+    }
+
+    /// One stock layout's JSON, read only when asked for.
+    public static func layoutJSON(_ id: String) -> String? {
+        url(id, "Spec/layouts").flatMap { try? String(contentsOf: $0, encoding: .utf8) }
+    }
+
     /// The stock layouts' JSON, by file name.
     public static func layoutFiles() -> [(file: String, json: String)] {
         let urls = Bundle.module.urls(forResourcesWithExtension: "json", subdirectory: "Spec/layouts") ?? []

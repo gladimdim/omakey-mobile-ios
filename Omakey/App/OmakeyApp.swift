@@ -8,6 +8,8 @@ struct OmakeyApp: App {
     @State private var model: AppModel
 
     init() {
+        Perf.begin(.start)
+        defer { Perf.end(.start) }
         #if DEBUG
         // UI tests start from a fresh install: no pairings, no settings. Once
         // per token, as opening a link relaunches the app with the same one.
@@ -40,6 +42,16 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions options: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         // Which way the phone is held, for facing that way when a keyboard lets go of the lock.
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+        if Perf.stayAwake { application.isIdleTimerDisabled = true }
+        #if DEBUG
+        // Every animation N times slower, to look at transitions frame by frame (UI tests).
+        if let slow = ProcessInfo.processInfo.environment["OMAKEY_SLOW_ANIMATIONS"].flatMap(Float.init), slow > 0 {
+            NotificationCenter.default.addObserver(forName: UIWindow.didBecomeVisibleNotification, object: nil, queue: .main) { n in
+                let window = n.object as? UIWindow
+                MainActor.assumeIsolated { window?.layer.speed = 1 / slow }
+            }
+        }
+        #endif
         return true
     }
 

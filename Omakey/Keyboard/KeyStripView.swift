@@ -476,6 +476,8 @@ final class KeyStripView: UIView {
         frames = nil
         guard on, !UIAccessibility.isReduceMotionEnabled else { return }
         let l = CADisplayLink(target: Redraw(self), selector: #selector(Redraw.tick(_:)))
+        // A gentle rock: 60 frames a second is plenty, and each one draws the strip.
+        l.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 60, preferred: 60)
         l.add(to: .main, forMode: .common)
         frames = l
     }

@@ -17,8 +17,22 @@ final class LayoutStore {
         let builtIn: Bool
     }
 
-    let keycodes: Keycodes
-    private let builtIn: [Entry]
+    /// keycodes.json, parsed in the background at start-up (`prewarm`), or
+    /// here if something needs it sooner.
+    var keycodes: Keycodes {
+        if let k = parsedKeycodes { return k }
+        let k = try! Keycodes.parse(BundledSpec.keycodesJSON()) // bundled, and tested
+        parsedKeycodes = k
+        return k
+    }
+
+    private var parsedKeycodes: Keycodes?
+    /// The built-in layouts' ids, the default first, the rest by file name.
+    private let builtInIds: [String]
+    /// Built-in layouts parsed so far: start-up parses none (the connect
+    /// screen shows the chosen one's remembered name); they come in the
+    /// background (`prewarm`), or one by one when asked for sooner.
+    private var parsed: [String: Layout] = [:]
     private let dir: URL
     private let defaults: UserDefaults
     /// Parsed imports by file name, again only when the file changes.
@@ -26,32 +40,70 @@ final class LayoutStore {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        keycodes = try! Keycodes.parse(BundledSpec.keycodesJSON()) // bundled, and tested
-        let codes = keycodes
-        let parsed = BundledSpec.layoutFiles() // by file name
-            .compactMap { f in (try? LayoutParser.parse(f.json, keycodes: codes)).map { Entry(layout: $0, builtIn: true) } }
-        builtIn = parsed.filter { $0.layout.id == Self.defaultId } + parsed.filter { $0.layout.id != Self.defaultId }
+        let ids = BundledSpec.layoutIds()
+        builtInIds = ids.filter { $0 == Self.defaultId } + ids.filter { $0 != Self.defaultId }
         dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("layouts")
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
     }
 
+    private func builtIn(_ id: String) -> Layout? {
+        if let l = parsed[id] { return l }
+        guard let json = BundledSpec.layoutJSON(id), let l = try? LayoutParser.parse(json, keycodes: keycodes) else { return nil }
+        parsed[id] = l
+        rememberName(l)
+        return l
+    }
+
+    /// Layout names by id, kept so the next start-up can show the chosen one's without parsing.
+    private var names: [String: String] {
+        get { defaults.dictionary(forKey: "layoutNames") as? [String: String] ?? [:] }
+        set { defaults.set(newValue, forKey: "layoutNames") }
+    }
+
+    private func rememberName(_ l: Layout) {
+        if names[l.id] != l.name { names[l.id] = l.name }
+    }
+
+    private var builtIn: [Entry] { builtInIds.compactMap { builtIn($0).map { Entry(layout: $0, builtIn: true) } } }
+
+    /// Parse keycodes.json and the built-in layouts not read yet, off the main thread.
+    func prewarm() {
+        let missing = builtInIds.filter { parsed[$0] == nil }
+        let known = parsedKeycodes
+        Task.detached(priority: .userInitiated) {
+            guard let codes = known ?? (try? Keycodes.parse(BundledSpec.keycodesJSON())) else { return }
+            let done = missing.compactMap { id in BundledSpec.layoutJSON(id).flatMap { try? LayoutParser.parse($0, keycodes: codes) } }
+            await self.keep(codes, done)
+        }
+    }
+
+    private func keep(_ codes: Keycodes, _ layouts: [Layout]) {
+        if parsedKeycodes == nil { parsedKeycodes = codes }
+        for l in layouts where parsed[l.id] == nil { parsed[l.id] = l }
+        var n = names
+        for l in layouts { n[l.id] = l.name }
+        if n != names { names = n }
+    }
+
     /// The default layout first, the other built-in ones by file name, then imports.
     func all() -> [Entry] {
-        let ids = Set(builtIn.map(\.layout.id))
+        let ids = Set(builtInIds)
         let files = (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.contentModificationDateKey])) ?? []
         let imported = files.filter { $0.pathExtension == "json" }.sorted { $0.lastPathComponent < $1.lastPathComponent }.compactMap { f -> Entry? in
-            let stamp = (try? f.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
-            let layout: Layout?
-            if let cached = importedCache[f.lastPathComponent], cached.stamp == stamp {
-                layout = cached.layout
-            } else {
-                layout = (try? String(contentsOf: f, encoding: .utf8)).flatMap { try? LayoutParser.parse($0, keycodes: keycodes) }
-                importedCache[f.lastPathComponent] = (stamp, layout)
-            }
-            guard let layout, !ids.contains(layout.id) else { return nil }
+            guard let layout = imported(f), !ids.contains(layout.id) else { return nil }
             return Entry(layout: layout, builtIn: false)
         }
         return builtIn + imported
+    }
+
+    /// An imported layout's file, parsed again only when it changes.
+    private func imported(_ f: URL) -> Layout? {
+        let stamp = (try? f.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+        if let cached = importedCache[f.lastPathComponent], cached.stamp == stamp { return cached.layout }
+        let layout = (try? String(contentsOf: f, encoding: .utf8)).flatMap { try? LayoutParser.parse($0, keycodes: keycodes) }
+        importedCache[f.lastPathComponent] = (stamp, layout)
+        if let layout { rememberName(layout) }
+        return layout
     }
 
     /// Parse and validate without saving, to preview an import.
@@ -70,22 +122,36 @@ final class LayoutStore {
 
     /// The chosen layout; in portrait mode the default one.
     func selected() -> Layout {
+        // Without reading the rest, as at start-up: a built-in one, or an import by its file.
+        if let l = builtIn(selectedId) { return l }
+        let file = dir.appendingPathComponent("\(selectedId).json")
+        if !portrait, FileManager.default.fileExists(atPath: file.path), let l = imported(file), l.id == selectedId { return l }
+        if portrait, let l = builtIn(Self.defaultId) { return l }
         let list = all()
         return (list.first { $0.layout.id == selectedId } ?? list.first { $0.layout.id == Self.defaultId } ?? list[0]).layout
     }
 
-    /// What the keyboard opens with, for the connect screen and Settings.
-    var currentName: String { portrait ? Self.portraitName : selected().name }
+    /// What the keyboard opens with, for the connect screen and Settings:
+    /// as remembered, so start-up needn't parse the layout for its name.
+    var currentName: String {
+        if portrait { return Self.portraitName }
+        if let l = parsed[selectedId] { return l.name }
+        if let name = names[selectedId] { return name }
+        let l = selected()
+        rememberName(l)
+        return l.name
+    }
 
     /// Validates and saves an imported layout; it becomes the selected one.
     @discardableResult
     func importLayout(_ json: String) throws -> Layout {
         let layout = try LayoutParser.parse(json, keycodes: keycodes)
-        if builtIn.contains(where: { $0.layout.id == layout.id }) {
+        if builtInIds.contains(layout.id) {
             throw LayoutError("\"\(layout.id)\" is a built-in layout id; give your layout another id")
         }
         try Data(json.utf8).write(to: dir.appendingPathComponent("\(layout.id).json"), options: .atomic)
         selectedId = layout.id
+        rememberName(layout)
         return layout
     }
 
