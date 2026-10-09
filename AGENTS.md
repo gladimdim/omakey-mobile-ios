@@ -26,8 +26,8 @@
   `OmakeydStandIn` (a server that types nothing, for tests, the dev server
   and demo mode). Its tests run on the Mac: `swift test --package-path OmakeyKit`.
 - Run `scripts/check.sh` before committing: package tests plus an unsigned
-  device build. App and UI tests: `xcodebuild -project Omakey.xcodeproj
-  -scheme Omakey -destination 'id=<iPhone simulator>' test`. The UI tests
+  device build. App and UI tests: `scripts/ui-test.sh [-d <simulator>]`
+  (it stops a hung test runner after 15 minutes). The UI tests
   host the omakeyd stand-in (`OmakeydStandIn`) in their own process and
   launch the app with `OMAKEY_RESET=<token>` (Debug only), which starts it
   as a fresh install once per token.
@@ -57,6 +57,9 @@
 
 ## UI tests
 
+- `XCUIElement.twoFingerTap()` puts its fingers at the element's left and
+  right edges: tap the touchpad's surface element (`touchpad.surface`), not
+  the whole view.
 - XCUITest screenshots of the landscape keyboard come out cropped while the
   simulated phone is upright: turn it (`XCUIDevice.shared.orientation`) and
   attach `XCUIScreen.main.screenshot()`.

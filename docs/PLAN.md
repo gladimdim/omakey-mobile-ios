@@ -378,7 +378,7 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
   narrows its orientation mask and asks the window scene to turn
   (`AppModel.lockOrientation`).
 
-### M6: Touchpad
+### M6: Touchpad (done, but for the device checks)
 - `TouchpadView` port with every gesture and constant above, plus
   `PanelController` for the sheet: drag from the top bar, from a key swipe,
   from the grab bar or a side button, with the flick decision and the depth
@@ -386,6 +386,10 @@ Plan, README, `.gitignore`, MIT `LICENSE`, the public GitHub repository
 - Speed strip, preset picker, per-computer speed.
 - **Done when:** every touchpad bullet in the Android README works against
   omakeyd 0.3+, and the "update" hint shows against an older one.
+  `TouchpadTour` checks tap, drag, two-finger tap and long press on the
+  stand-in; scrolling, side buttons and the feel need a device.
+- Motion and scroll are counted in pixels (points × the display scale),
+  as Android counts them, so Android's speeds carry over unchanged.
 
 ### M7: Portrait mode
 - `TextCapture` (hidden `UITextView`): traits keep the system keyboard

@@ -10,7 +10,8 @@ work as they do with a hardware keyboard.
 test vectors byte for byte, the keyboard logic and the 10 stock layouts
 are ported (M2), and so is the UDP link with its timing rules and mDNS
 discovery (M3). The connect screen pairs by QR code or link (M4), and
-the landscape keyboard types (M5). The touchpad comes next. See
+the landscape keyboard types (M5), and the touchpad slides down over it
+(M6). Portrait mode comes next. See
 [docs/PLAN.md](docs/PLAN.md) for the plan and its milestones, and
 [docs/ANDROID_PARITY.md](docs/ANDROID_PARITY.md) for what's ported so far.
 
@@ -21,6 +22,7 @@ iPhone or a simulator (iOS 17+). From a terminal:
 
 ```bash
 scripts/check.sh                          # package tests on the Mac + unsigned device build
+scripts/ui-test.sh                        # app and UI tests on a simulator, against the omakeyd stand-in
 swift test --package-path OmakeyKit       # protocol, keyboard logic, networking
 OMAKEY_LIVE=1 swift test --package-path OmakeyKit --filter LiveDiscovery   # browse a real omakeyd on the LAN
 swift run --package-path OmakeyKit omakey-dev-server   # a computer to pair the simulator with; types nothing

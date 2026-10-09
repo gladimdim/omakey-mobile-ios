@@ -57,12 +57,12 @@ the baseline.
 
 | Feature | iOS |
 |---|---|
-| Pull-down panel and its gestures | ⏳ M6 |
-| Move, tap, hold, tap-drag, double tap | ⏳ M6 |
-| Two-finger scroll, two- and three-finger taps | ⏳ M6 |
-| Side buttons, scroll strips | ⏳ M6 |
-| Speed strip, presets, per-computer speed | 🚧 presets ✅ M2; ⏳ M6 |
-| Swipe down on a key pulls the touchpad | ⏳ M6 |
+| Pull-down panel and its gestures | ✅ M6 (header drag, handle, flick, depth effect) |
+| Move, tap, hold, tap-drag, double tap | ✅ M6 |
+| Two-finger scroll, two- and three-finger taps | ✅ M6 |
+| Side buttons, scroll strips | ✅ M6 |
+| Speed strip, presets, per-computer speed | ✅ M6 |
+| Swipe down on a key pulls the touchpad | ✅ M6 |
 
 ## Portrait mode
 
@@ -71,7 +71,7 @@ the baseline.
 | Phone keyboard mirrored (`LineDiff`, `Typist`) | 🚧 logic ✅ M2; text capture ⏳ M7 |
 | Per-character layout (`us`, `ua`) | 🚧 logic ✅ M2; keyboard language ⏳ M7 |
 | Key strips | ⏳ M7 |
-| Compact touchpad | ⏳ M7 |
+| Compact touchpad | 🚧 view ✅ M6 (`compact`); in portrait ⏳ M7 |
 
 ## Clipboard
 
