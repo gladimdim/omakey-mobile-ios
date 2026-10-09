@@ -1,14 +1,15 @@
 import Foundation
 import Testing
 @testable import OmakeyNet
+import OmakeydStandIn
 import OmakeyProtocol
 
-/// UDPLink against a fake omakeyd on loopback: the timing rules of PROTOCOL.md.
+/// UDPLink against the omakeyd stand-in on loopback: the timing rules of PROTOCOL.md.
 /// Serialized: each test owns real sockets and threads, and the timing
 /// assertions want the machine to themselves.
 @Suite(.serialized)
 struct UDPLinkTests {
-    private func connected(_ server: FakeOmakeyd, _ listener: RecordingListener, keys: KeyState = KeyState(),
+    private func connected(_ server: StandInServer, _ listener: RecordingListener, keys: KeyState = KeyState(),
                            claim: @escaping (UDPLink) -> Bool = { _ in true }) -> UDPLink {
         let link = UDPLink(host: server.host, phoneName: "iPhone", keys: keys, listener: listener, claim: claim)
         link.start()
@@ -16,7 +17,7 @@ struct UDPLinkTests {
     }
 
     @Test func handshakeThenKeysArrive() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let l = RecordingListener()
         let keys = KeyState()
@@ -29,7 +30,7 @@ struct UDPLinkTests {
         #expect(server.hellos.first?.platform == Wire.platformIOS)
         #expect(server.hellos.first?.name == "iPhone")
         #expect(link.peer == server.endpoint)
-        #expect(link.features == Wire.featurePointer)
+        #expect(link.features == Wire.featurePointer | Wire.featureClipboard)
 
         #expect(keys.press(30))
         link.send()
@@ -39,7 +40,7 @@ struct UDPLinkTests {
     }
 
     @Test func aMissingAckIsResentQuickly() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let l = RecordingListener()
         let keys = KeyState()
@@ -59,7 +60,7 @@ struct UDPLinkTests {
     }
 
     @Test func aQuietLinkSendsAHeartbeatEvery100ms() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let l = RecordingListener()
         let link = connected(server, l)
@@ -72,7 +73,7 @@ struct UDPLinkTests {
     }
 
     @Test func aForgottenPhoneIsRejectedButKeepsTrying() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         server.known = false
         let l = RecordingListener()
@@ -85,7 +86,7 @@ struct UDPLinkTests {
     }
 
     @Test func stoppingSaysByeTwice() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let l = RecordingListener()
         let link = connected(server, l)
@@ -95,7 +96,7 @@ struct UDPLinkTests {
     }
 
     @Test func aComputerThatGoesQuietIsGreetedAgain() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let l = RecordingListener()
         let link = connected(server, l)
@@ -110,20 +111,54 @@ struct UDPLinkTests {
     }
 
     @Test func lockLightsAndTheThemeReachTheListener() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let colors = (0..<UInt32(DesktopTheme.keys.count)).map { $0 * 0x111111 }
-        server.ackLeds = Ack.ledCaps
         server.theme = DesktopTheme(name: "nord", light: false, colors: colors)
         let l = RecordingListener()
-        let link = connected(server, l)
+        let keys = KeyState()
+        let link = connected(server, l, keys: keys)
         defer { link.stop() }
-        #expect(eventually { l.leds.contains(Ack.ledCaps) })
         #expect(eventually { l.themes.first?.name == "nord" })
+        #expect(eventually { l.leds.last == 0 })
+        // Caps Lock pressed on the phone: the computer's light comes on.
+        keys.press(58)
+        keys.release(58)
+        link.send()
+        #expect(eventually { l.leds.last == Ack.ledCaps })
+    }
+
+    @Test func eachKeyIsTypedOnceAndAQuietPhoneLetsGo() throws {
+        let server = try StandInServer()
+        defer { server.stop() }
+        let typed = Typed()
+        server.onEvent = { typed.append($0) }
+        let l = RecordingListener()
+        let keys = KeyState()
+        let link = connected(server, l, keys: keys)
+        #expect(eventually { l.states.last == .connected })
+        server.dropAcks = 3 // resends repeat the events; the server applies them once
+        keys.press(125)
+        link.send()
+        keys.press(57)
+        link.send()
+        keys.release(57)
+        link.send()
+        #expect(eventually { !keys.hasUnacked })
+        #expect(typed.keys == [.key(code: 125, down: true), .key(code: 57, down: true), .key(code: 57, down: false)])
+        // Nothing heard for 500 ms while Super is held: the computer lets go.
+        server.silent = true
+        #expect(eventually { server.heldKeys.isEmpty })
+        #expect(typed.keys.last == .key(code: 125, down: false))
+        // Heard again: the held set presses it again.
+        server.silent = false
+        #expect(eventually { server.heldKeys == [125] })
+        link.stop() // BYE lets go at once
+        #expect(eventually { server.heldKeys.isEmpty })
     }
 
     @Test func aWelcomeThatIsntClaimedIsNotTaken() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let l = RecordingListener()
         let link = connected(server, l, claim: { _ in false })
@@ -133,8 +168,9 @@ struct UDPLinkTests {
     }
 
     @Test func clipboardNeedsTheFeatureThenSendsAPut() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
+        server.features = Wire.featurePointer
         let l = RecordingListener()
         let link = connected(server, l)
         defer { link.stop() }
@@ -150,10 +186,17 @@ struct UDPLinkTests {
         #expect(link2.clip(ClipTransfer.put("Привіт ✓", paste: true, sensitive: false)!))
         #expect(eventually { l2.clips == [.sent] })
         #expect(server.clips.first?.flags == Clip.paste)
+        #expect(server.clipboard == "Привіт ✓")
+
+        // And back: the computer's clipboard to the phone.
+        server.clipboard = String(repeating: "selected ✓ ", count: 300) // several pieces
+        #expect(link2.clip(ClipTransfer.get(copy: true)))
+        #expect(eventually { l2.clips.count == 2 })
+        #expect(l2.clips.last == .received(text: server.clipboard, sensitive: false))
     }
 
     @Test func reachabilityFindsTheComputerAndSaysByeAtOnce() throws {
-        let server = try FakeOmakeyd()
+        let server = try StandInServer()
         defer { server.stop() }
         let probe = Reachability(phoneName: "iPhone") { _ in }
         let flag = Reachability.Flag()

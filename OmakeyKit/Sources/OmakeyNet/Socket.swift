@@ -15,7 +15,10 @@ public struct Endpoint: Hashable, Sendable, CustomStringConvertible {
     }
 
     /// Loopback, on [port]; 0 lets the system pick one when binding.
-    static func loopback(port: UInt16 = 0) -> Endpoint { Endpoint(unchecked: "127.0.0.1", port: port) }
+    public static func loopback(port: UInt16 = 0) -> Endpoint { Endpoint(unchecked: "127.0.0.1", port: port) }
+
+    /// Every local address, on [port]: where a server binds.
+    public static func any(port: UInt16) -> Endpoint { Endpoint(unchecked: "0.0.0.0", port: port) }
 
     private init(unchecked host: String, port: UInt16) {
         self.host = host
@@ -49,11 +52,11 @@ public enum MonotonicClock {
 
 /// A non-blocking IPv4 UDP socket. Sends never block; a receive with
 /// nothing waiting returns nil.
-final class UDPSocket {
-    let fd: Int32
+public final class UDPSocket {
+    public let fd: Int32
 
     /// [bindTo] nil: any address, a port the system picks.
-    init(bindTo: Endpoint? = nil) throws {
+    public init(bindTo: Endpoint? = nil) throws {
         fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
         guard fd >= 0 else { throw POSIXError(.init(rawValue: errno) ?? .EIO) }
         _ = fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK)
@@ -80,7 +83,7 @@ final class UDPSocket {
     }
 
     /// The local address, for tests that bind to loopback.
-    var localEndpoint: Endpoint {
+    public var localEndpoint: Endpoint {
         var sa = sockaddr_in()
         var len = socklen_t(MemoryLayout<sockaddr_in>.size)
         _ = withUnsafeMutablePointer(to: &sa) {
@@ -91,7 +94,7 @@ final class UDPSocket {
 
     /// False when it didn't go (no route, a Wi-Fi blip); the caller retries later.
     @discardableResult
-    func send(_ data: [UInt8], to e: Endpoint) -> Bool {
+    public func send(_ data: [UInt8], to e: Endpoint) -> Bool {
         var sa = e.sockaddr
         let n = data.withUnsafeBytes { buf in
             withUnsafePointer(to: &sa) {
@@ -104,7 +107,7 @@ final class UDPSocket {
     }
 
     /// One datagram and its sender; nil when nothing is waiting.
-    func receive(into buf: inout [UInt8]) -> (count: Int, from: Endpoint)? {
+    public func receive(into buf: inout [UInt8]) -> (count: Int, from: Endpoint)? {
         var sa = sockaddr_in()
         var len = socklen_t(MemoryLayout<sockaddr_in>.size)
         let n = buf.withUnsafeMutableBytes { b in
@@ -117,15 +120,15 @@ final class UDPSocket {
         return (n, Endpoint(sa))
     }
 
-    func close() { Darwin.close(fd) }
+    public func close() { Darwin.close(fd) }
 }
 
 /// Wakes a thread sleeping in `poll`: one end is polled, the other written to.
-final class WakePipe {
+public final class WakePipe {
     let readFD: Int32
     let writeFD: Int32
 
-    init() throws {
+    public init() throws {
         var fds: [Int32] = [0, 0]
         guard pipe(&fds) == 0 else { throw POSIXError(.init(rawValue: errno) ?? .EIO) }
         readFD = fds[0]
@@ -134,24 +137,24 @@ final class WakePipe {
     }
 
     /// Cheap and safe from any thread; a full pipe already means "wake up".
-    func wake() {
+    public func wake() {
         var b: UInt8 = 1
         _ = write(writeFD, &b, 1)
     }
 
-    func drain() {
+    public func drain() {
         var buf = [UInt8](repeating: 0, count: 64)
         while read(readFD, &buf, buf.count) > 0 {}
     }
 
-    func close() {
+    public func close() {
         Darwin.close(readFD)
         Darwin.close(writeFD)
     }
 }
 
 /// Sleeps until [socket] is readable, [wake] is written to, or [timeoutMs] passes.
-func waitReadable(_ socket: UDPSocket, _ wake: WakePipe?, timeoutMs: Int64) {
+public func waitReadable(_ socket: UDPSocket, _ wake: WakePipe?, timeoutMs: Int64) {
     var fds = [pollfd(fd: socket.fd, events: Int16(POLLIN), revents: 0)]
     if let wake { fds.append(pollfd(fd: wake.readFD, events: Int16(POLLIN), revents: 0)) }
     _ = poll(&fds, nfds_t(fds.count), Int32(min(max(timeoutMs, 1), 1000)))
