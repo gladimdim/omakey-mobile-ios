@@ -2,7 +2,7 @@
 
 What the iPhone app has of the Android app's features.
 
-**Android baseline:** `omakey-mobile` `404a43f` (1.3.0).
+**Android baseline:** `omakey-mobile` `fd9ebc2` (1.4.0).
 When Android moves on, diff from this commit, update the rows, then move
 the baseline.
 
@@ -17,6 +17,9 @@ the baseline.
 | Client state machine, claim of a WELCOME | `ClientSession.kt` | ✅ M1 |
 | Held set (ref-counted, ascending), 32-event queue, fractional motion | `KeyState.kt` | ✅ M1 |
 | Pairing link, fingerprint | `Pairing.kt` | ✅ M1 |
+| WELCOME `wake_mac` (1.4.0): feature bit 2 (`FEATURE_WAKE`), six MAC bytes after a Bluetooth slot that is then always there; an all-zero `bt_address` reads as none | `Packets.kt`, `ClientSession.kt` | ⏳ |
+| Pairing link `w=<mac hex>` (1.4.0), kept as `wakeMac` "e8:8d:…" | `Pairing.kt` | ⏳ |
+| Wake-on-LAN magic packet (six `0xFF`, the MAC 16 times, 102 bytes), subnet broadcast address | `WakeOnLan.kt` | ⏳ |
 | Clipboard transfer | `ClipTransfer.kt` | ✅ M1 |
 | Test vectors byte for byte | `TestVectorsTest.kt` | ✅ M1 |
 | HID descriptor and reports | `Hid.kt` | ✖ no HID device |
@@ -36,6 +39,10 @@ the baseline.
 | Unlink a computer | ✅ M4 (context menu) |
 | REJECT → "Pair again" | ✅ M3–M5 |
 | UDP link: timing rules, DSCP EF | ✅ M3 |
+| Wake on LAN (1.4.0): keep the last `wakeMac` a Wi-Fi WELCOME gave, forget it after one without the bit | `Stores.kt` `rememberWakeMac`, `KeyboardActivity.kt` | ⏳ |
+| Wake on LAN: no answer 2 s after opening the keyboard → magic packet to UDP port 9 at `255.255.255.255` and the Wi-Fi subnet's broadcast address, on the Wi-Fi interface (not a VPN over it), again every 5 s, at most 6; status "Waking <computer>…" | `Waker.kt`, `KeyboardActivity.kt` | ⏳ (sending broadcasts needs Apple's `com.apple.developer.networking.multicast` entitlement; bind to Wi-Fi with `NWParameters.requiredInterfaceType = .wifi`) |
+| Paired list: "○ Asleep or off · opening it wakes it" for a computer with a `wakeMac` that doesn't answer | `MainActivity.kt` | ⏳ |
+| Log of each connect: time taken and the address that answered | `KeyboardLink.kt` | ⏳ (no keys or addresses of real machines in logs) |
 | Bluetooth fallback to omakeyd | ✖ no Bluetooth in the iOS app (dropped 2026-10-09) |
 | Bluetooth keyboard mode | ✖ no Bluetooth in the iOS app (and iOS can't be a HID keyboard) |
 
@@ -93,6 +100,7 @@ the baseline.
 | Layout links (raw DEFLATE, base64url) | ✅ M2 |
 | Layouts page, previews, share, import, remove | ✅ M9 (import from Files and links; another app's share sheet ⏳ later) |
 | Settings: layout, theme, computers, haptics, typed text | ✅ M9 |
+| Settings: Wake on LAN switch, on by default (1.4.0); computers that can be woken say "Wake on LAN" | ⏳ |
 | Phone name (iOS only) | ✅ M4 (Settings) |
 
 ## iOS only
